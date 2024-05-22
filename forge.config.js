@@ -1,5 +1,6 @@
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
+const path = require('path');
 
 module.exports = {
   packagerConfig: {
@@ -8,12 +9,16 @@ module.exports = {
       'app',
       'static'
     ],
+    iconUrl: path.resolve('gevpoint.svg'),
+    setUpIcon: path.resolve('gevpoint.svg'),
   },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
-      config: {},
+      config: {
+       name : "Gevpoint"
+      },
     },
     {
       name: '@electron-forge/maker-zip',

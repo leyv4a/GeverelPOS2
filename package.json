@@ -1,8 +1,7 @@
 {
-  "name": "desktop-app-template",
-  "productName": "desktop-app-template",
+  "name": "com.geverel.gevpoint",
   "version": "0.0.1",
-  "description": "Electron aplication with a express server and sqlite database embedded using a react front end ",
+  "description": "Gevpoint - Geverel Point of Sales",
   "main": "index.js",
   "scripts": {
     "start": "electron-forge start",
