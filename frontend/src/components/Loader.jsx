@@ -3,13 +3,14 @@ import './loader.css'
 
 export default function Loader() {
   return (
-        <section className="dots-container h-screen ">
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-        </section>
+    <div className="loader my-auto mx-auto "></div>
+        // <section className="dots-container h-screen ">
+        // <div className="dot"></div>
+        // <div className="dot"></div>
+        // <div className="dot"></div>
+        // <div className="dot"></div>
+        // <div className="dot"></div>
+        // </section>
 
   )
 }
