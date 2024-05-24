@@ -7,7 +7,15 @@ export default {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: '#000000' // el color principal por defecto
+        },
+        textColor: {
+          primary: '#f2f2f2', // color de foreground personalizado
+          // Puedes agregar más colores personalizados aquí
+        },
+      },
   },
   plugins: [nextui()],
 }

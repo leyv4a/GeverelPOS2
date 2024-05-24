@@ -1,4 +1,7 @@
 import React from 'react';
+import { FaChevronDown } from "react-icons/fa";
+import { HiMagnifyingGlass } from "react-icons/hi2";
+import { IoMdMore } from "react-icons/io";
 import {
     Table,
     TableHeader,
@@ -38,7 +41,7 @@ const GenericTable = ({ columns, data }) => {
         let filteredData = [...data];
         if (hasSearchFilter) {
             filteredData = filteredData.filter((item) =>
-                item.name.toLowerCase().includes(filterValue.toLowerCase())
+                item.nombre.toLowerCase().includes(filterValue.toLowerCase())
             );
         }
         return filteredData;
@@ -64,16 +67,16 @@ const GenericTable = ({ columns, data }) => {
     const renderCell = React.useCallback((item, columnKey) => {
         const cellValue = item[columnKey];
         switch (columnKey) {
-            case "name":
-                return (
-                    <User
-                        avatarProps={{ radius: "lg", src: item.avatar }}
-                        description={item.email}
-                        name={cellValue}
-                    >
-                        {item.email}
-                    </User>
-                );
+            // case "nombre":
+            //     return (
+            //         <User
+            //             avatarProps={{ radius: "sm", src: item.avatar }}
+            //             description={item.email}
+            //             name={cellValue}
+            //         >
+            //             {item.email}
+            //         </User>
+            //     );
             case "role":
                 return (
                     <div className="flex flex-col">
@@ -81,19 +84,19 @@ const GenericTable = ({ columns, data }) => {
                         <p className="text-bold text-tiny capitalize text-default-400">{item.team}</p>
                     </div>
                 );
-            case "actions":
+            case "acciones":
                 return (
                     <div className="relative flex justify-end items-center gap-2">
                         <Dropdown>
                             <DropdownTrigger>
                                 <Button isIconOnly size="sm" variant="light">
-                                    ...
+                                    <IoMdMore/>
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu>
-                                <DropdownItem>View</DropdownItem>
-                                <DropdownItem>Edit</DropdownItem>
-                                <DropdownItem>Delete</DropdownItem>
+                                <DropdownItem>Ver</DropdownItem>
+                                <DropdownItem>Editar</DropdownItem>
+                                <DropdownItem>Borrar</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                     </div>
@@ -102,18 +105,6 @@ const GenericTable = ({ columns, data }) => {
                 return cellValue;
         }
     }, []);
-
-    const onNextPage = React.useCallback(() => {
-        if (page < pages) {
-            setPage(page + 1);
-        }
-    }, [page, pages]);
-
-    const onPreviousPage = React.useCallback(() => {
-        if (page > 1) {
-            setPage(page - 1);
-        }
-    }, [page]);
 
     const onRowsPerPageChange = React.useCallback((e) => {
         setRowsPerPage(Number(e.target.value));
@@ -141,8 +132,8 @@ const GenericTable = ({ columns, data }) => {
                     <Input
                         isClearable
                         className="w-full sm:max-w-[44%]"
-                        placeholder="Search by name..."
-                        startContent={'Lupa'}
+                        placeholder="Buscar por nombre"
+                        startContent={<HiMagnifyingGlass/>}
                         value={filterValue}
                         onClear={() => onClear()}
                         onValueChange={onSearchChange}
@@ -150,13 +141,13 @@ const GenericTable = ({ columns, data }) => {
                     <div className="flex gap-3">
                         <Dropdown>
                             <DropdownTrigger className="hidden sm:flex">
-                                <Button endContent={'>'} variant="flat">
-                                    Columns
+                                <Button endContent={<FaChevronDown/>} variant="flat">
+                                    Columnas
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu
                                 disallowEmptySelection
-                                aria-label="Table Columns"
+                                aria-label="Columnas de la tabla"
                                 closeOnSelect={false}
                                 selectedKeys={visibleColumns}
                                 selectionMode="multiple"
@@ -164,7 +155,7 @@ const GenericTable = ({ columns, data }) => {
                             >
                                 {columns.map((column) => (
                                     <DropdownItem key={column.uid} className="capitalize">
-                                        {column.name}
+                                        {column.nombre}
                                     </DropdownItem>
                                 ))}
                             </DropdownMenu>
@@ -172,16 +163,16 @@ const GenericTable = ({ columns, data }) => {
                     </div>
                 </div>
                 <div className="flex justify-between items-center">
-                    <span className="text-default-400 text-small">Total {data.length} items</span>
+                    <span className="text-default-400 text-small">Elementos totales:  {data.length} </span>
                     <label className="flex items-center text-default-400 text-small">
-                        Rows per page:
+                        Filas por pagina:   
                         <select
-                            className="bg-transparent outline-none text-default-400 text-small"
+                            className="ms-1 bg-transparent outline-none text-default-400 text-small me-3"
                             onChange={onRowsPerPageChange}
                         >
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="15">15</option>
+                            <option value="5"> 5</option>
+                            <option value="10"> 10</option>
+                            <option value="15"> 15</option>
                         </select>
                     </label>
                 </div>
@@ -195,44 +186,38 @@ const GenericTable = ({ columns, data }) => {
         onSearchChange,
         hasSearchFilter,
     ]);
-
+            
     const bottomContent = React.useMemo(() => {
         return (
             <div className="py-2 px-2 flex justify-between items-center">
                 <span className="w-[30%] text-small text-default-400">
                     {selectedKeys === "all"
-                        ? "All items selected"
-                        : `${selectedKeys.size} of ${filteredItems.length} selected`}
+                        ? "Todos los objetos seleccionados"
+                        : `${selectedKeys.size} de ${filteredItems.length} seleccionados`}
                 </span>
                 <Pagination
                     isCompact
                     showControls
                     showShadow
-                    color="primary"
+                    color='primary'
+                    className='text-foregrund'
                     page={page}
                     total={pages}
                     onChange={setPage}
+                
                 />
-                <div className="hidden sm:flex w-[30%] justify-end gap-2">
-                    <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
-                        Previous
-                    </Button>
-                    <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
-                        Next
-                    </Button>
-                </div>
             </div>
         );
     }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
 
     return (
         <Table
-            aria-label="Example table with custom cells, pagination and sorting"
+            aria-label="Tabla generica"
             isHeaderSticky
             bottomContent={bottomContent}
             bottomContentPlacement="outside"
             classNames={{
-                wrapper: "max-h-[382px]",
+                wrapper: "min-h-[360px] max-h-[60vh]",
             }}
             selectedKeys={selectedKeys}
             selectionMode="multiple"
@@ -246,10 +231,10 @@ const GenericTable = ({ columns, data }) => {
                 {(column) => (
                     <TableColumn
                         key={column.uid}
-                        align={column.uid === "actions" ? "center" : "start"}
+                        align={column.uid === "acciones" ? "center" : "start"}
                         allowsSorting={column.sortable}
                     >
-                        {column.name}
+                        {column.nombre}
                     </TableColumn>
                 )}
             </TableHeader>

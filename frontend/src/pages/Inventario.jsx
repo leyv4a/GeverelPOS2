@@ -43,11 +43,13 @@ export default function Inventario() {
   return (
     <div className='w-full h-full'>
       <NavigationBar items={items} onSectionChange={handleSectionChange} currentSection={section}/>
+      <div className='my-auto'>
       <Suspense fallback={<Loader/>}>
       {
         sectionMapping[section]
       }
       </Suspense>
+      </div>
     </div>
   )
 }
