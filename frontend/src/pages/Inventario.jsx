@@ -8,7 +8,6 @@ const RegistrarSalida = lazy(() => import('../inventario/RegistrarSalida'));
 
 
 export default function Inventario() {
-  const active = true;
   const [section, setSection] = useState('')
 
   const handleSectionChange = (e)=> {
@@ -44,10 +43,11 @@ export default function Inventario() {
   return (
     <div className='w-full h-full'>
       <NavigationBar items={items} onSectionChange={handleSectionChange} currentSection={section}/>
-      <Suspense fallback={<Loader/>}/>
+      <Suspense fallback={<Loader/>}>
       {
         sectionMapping[section]
       }
+      </Suspense>
     </div>
   )
 }
