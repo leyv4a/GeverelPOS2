@@ -33,19 +33,83 @@ db.all = promisify(db.all);
 // Función para inicializar tablas
 const initializeTables = async () => {
   const createUsersTable = `
-    CREATE TABLE IF NOT EXISTS users (
+    CREATE TABLE IF NOT EXISTS usuario (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
-      email TEXT
-    )
-  `;
+      usuario TEXT NOT NULL,
+      password TEXT NOT NULL,
+      tipo INTEGER NOT NULL DEFAULT 1
+    )`;
+  const createCategoryTable = `
+  CREATE TABLE IF NOT EXISTS categoria (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL
+  )`;
+
+  const createProductTable = `
+  CREATE TABLE IF NOT EXISTS producto (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    categoriaId INTEGER NOT NULL,
+    nombre TEXT NOT NULL,
+    descripcion TEXT NOT NULL,
+    stock REAL NOT NULL,
+    stockMin REAL NOT NULL,
+    precioVenta REAL NOT NULL,
+    precioCompra REAL NOT NULL,
+    codigo TEXT,
+    FOREIGN KEY (categoriaId) REFERENCES categoria(id)
+  )`;
+
+  const createWalletTable = `
+  CREATE TABLE IF NOT EXISTS cartera (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tipo TEXT NOT NULL,
+    descripcion TEXT NOT NULL,
+    monto REAL NOT NULL,
+    fecha TEXT NOT NULL
+  )`;
+
+  const createSalesTable = `
+  CREATE TABLE IF NOT EXISTS ventas(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fecha TEXT NOT NULL,
+    monto REAL NOT NULL,
+    usuarioId INTEGER NOT NULL,
+    FOREIGN KEY (usuarioId) REFERENCES usuario(id)
+  )`;
+
+  const createTransactionsTable = `
+  CREATE TABLE IF NOT EXISTS transacciones(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    productoid INTEGER NOT NULL,
+    tipo TEXT NOT NULL,
+    motivo TEXT NOT NULL,
+    monto REAL NOT NULL,
+    fecha TEXT NOT NULL
+
+  )`;
+
+  // const createConfigTable = `
+  // CREATE TABLE IF NOT EXIST configuracion(
+  //   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  // )`;
 
  
   try {
     await db.run(createUsersTable);
     logToFile('Users table created or already exists');
+    await db.run(createCategoryTable);
+    logToFile('Category table created or already exists');
+    await db.run(createProductTable);
+    logToFile('Product table created or already exists');
+    await db.run(createWalletTable);
+    logToFile('Wallet table created or already exists');
+    await db.run(createSalesTable);
+    logToFile('Sales table created or already exists');
+    await db.run(createTransactionsTable);
+    logToFile('Transactions table created or already exists');
   } catch (err) {
     logToFile('Error initializing tables: ' + err);
+    console.log(err);
   }
 };
 

@@ -1,7 +1,53 @@
-import React from 'react'
+import React, {Suspense, lazy, useState} from 'react'
+import NavigationBar from '../components/NavigationBar';
+import Loader from '../components/Loader';
+const AgregarProducto = lazy(() => import('../inventario/AgregarProductos'));
+const AgregarCategoria = lazy(() => import('../inventario/AgregarCategorias'));
+const RegistrarEntrada = lazy(() => import('../inventario/RegistrarEntrada'));
+const RegistrarSalida = lazy(() => import('../inventario/RegistrarSalida'));
+
 
 export default function Inventario() {
+  const active = true;
+  const [section, setSection] = useState('')
+
+  const handleSectionChange = (e)=> {
+    setSection(e);
+  }
+
+  const items = [
+    {
+      name: 'Agregar Producto',
+      section: 'agregarProducto'
+    },
+    {
+      name: 'Agregar Categoria',
+      section: 'agregarCategoria'
+    },
+    {
+      name: 'Registrar Entrada',
+      section:'registrarEntrada'
+    },
+    {
+      name: 'Registrar Salida',
+      section:'registrarSalida'
+    }
+
+  ]
+
+  const sectionMapping = {
+    agregarProducto: <AgregarProducto/>,
+    agregarCategoria: <AgregarCategoria/>,
+    registrarEntrada: <RegistrarEntrada/>,
+    registrarSalida: <RegistrarSalida/>
+  }
   return (
-    <div className='w-full h-full my-auto flex text-6xl justify-center'>Inventario</div>
+    <div className='w-full h-full'>
+      <NavigationBar items={items} onSectionChange={handleSectionChange} currentSection={section}/>
+      <Suspense fallback={<Loader/>}/>
+      {
+        sectionMapping[section]
+      }
+    </div>
   )
 }

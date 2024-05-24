@@ -8,13 +8,14 @@ const Panel = lazy(()=> import('./pages/Panel'));
 const Inventario = lazy(()=> import('./pages/Inventario'));
 const Monedero = lazy(()=> import('./pages/Monedero'));
 
+
 import Loader from './components/Loader';
 function App() {
   
   return (
     <>
    <HashRouter>
-     <main className='flex w-screen'>
+     <main className='flex max-w-screen max-h-screen'>
       <CompleteSidebar/>
       <Suspense fallback={<Loader/>}>
         <Routes>
