@@ -20,6 +20,7 @@ export default function AgregarCategorias() {
     if(!response.ok) toast.error('¡Tuvimos un error!')
     return response.json()
   }).then(data => {
+    console.log(data)
     setCategories(data)
   }).catch((e)=> {
     console.log(e)
@@ -57,6 +58,23 @@ export default function AgregarCategorias() {
     });
   }
 
+  const deleteCategoryById = async (id) => {
+    await fetch(`http://localhost:3001/api/category/${id}`,{
+      method: 'DELETE',
+      mode: 'cors'
+    }).then(response => {
+      if (!response.ok) {
+        toast.error('Error al eliminar la categoria.');
+      }
+      return response.json(); // Parsear la respuesta JSON
+    }).then(()=>{
+      toast.success('Categoría eliminada correctamente');
+      getCategories();
+    }).catch((error)=>{
+      console.log(error)
+      toast.error('Error en la comunicacion con la base de datos...');
+    })
+  }
   const columns = [
     { uid: 'id', nombre: 'Id', sortable: false },
     { uid: 'nombre', nombre: 'Nombre', sortable: true },
@@ -77,7 +95,7 @@ getCategories();
         </form>
       </div>
       <div className="w-[50%]">
-        <GenericTable  columns={columns} data={categories}/>
+        <GenericTable  columns={columns} data={categories} onDelete={deleteCategoryById}/>
       </div>
       <div>
         <ToastContainer  position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>

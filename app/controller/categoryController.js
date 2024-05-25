@@ -27,6 +27,18 @@ class CategoryController {
         return res.status(201).json({ message: `Category created sucessfully`});
     }    
 
+    static async deleteCategoryById(req,res){
+        const name = await categoryModel.deleteById(req.params.id);
+        if(!name){ 
+            res.status(404).json({error: 'Algo salio mal'}) 
+            logToFile(`Error deleting category`)
+            return;
+        }
+        logToFile(`Category deleted`);
+        return res.status(200).json({ message: `Category deleted sucessfully`});
+
+    }
+
 }
 
 module.exports = CategoryController;

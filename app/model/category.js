@@ -16,6 +16,15 @@ class CategoryModel{
             return false;
         }
     }
+    static async deleteById(id){
+        const sql = "DELETE FROM categoria WHERE id =?";
+        try {
+            await db.run(sql, [id]);
+            return true; // Retorna true si la inserción es exitosa
+        } catch (error) {
+            return false;
+        }
+    }
 }
 
 module.exports = CategoryModel;

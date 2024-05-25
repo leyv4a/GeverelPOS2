@@ -22,7 +22,7 @@ import {
     Tooltip,
 } from "@nextui-org/react";
 
-const GenericTable = ({ columns, data }) => {
+const GenericTable = ({ columns, data, onDelete}) => {
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
     const [visibleColumns, setVisibleColumns] = React.useState(new Set(columns.map(col => col.uid)));
@@ -101,9 +101,11 @@ const GenericTable = ({ columns, data }) => {
                       </span>
                     </Tooltip>
                     <Tooltip color="danger" content="Delete user">
-                      <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                      <button className="text-lg text-danger cursor-pointer active:opacity-50" onClick={()=>{
+                        onDelete(item.id)
+                      }}>
                       <FaTrash/>
-                      </span>
+                      </button>
                     </Tooltip>
                   </div>
                           
@@ -111,7 +113,7 @@ const GenericTable = ({ columns, data }) => {
             default:
                 return cellValue;
         }
-    }, []);
+    }, [onDelete]);
 
     const onRowsPerPageChange = React.useCallback((e) => {
         setRowsPerPage(Number(e.target.value));
@@ -227,7 +229,7 @@ const GenericTable = ({ columns, data }) => {
                 wrapper: "min-h-[360px] max-h-[60vh]",
             }}
             selectedKeys={selectedKeys}
-            selectionMode="multiple"
+            // selectionMode="multiple" Habiliar la seleccion multiple
             sortDescriptor={sortDescriptor}
             topContent={topContent}
             topContentPlacement="outside"
