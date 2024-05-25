@@ -1,7 +1,9 @@
 import React from 'react';
 import { FaChevronDown } from "react-icons/fa";
 import { HiMagnifyingGlass } from "react-icons/hi2";
-import { IoMdMore } from "react-icons/io";
+import { IoMdEye } from "react-icons/io";
+import { FaTrash } from "react-icons/fa";
+import { RiPencilFill } from "react-icons/ri";
 import {
     Table,
     TableHeader,
@@ -17,6 +19,7 @@ import {
     DropdownItem,
     User,
     Pagination,
+    Tooltip,
 } from "@nextui-org/react";
 
 const GenericTable = ({ columns, data }) => {
@@ -86,20 +89,24 @@ const GenericTable = ({ columns, data }) => {
                 );
             case "acciones":
                 return (
-                    <div className="relative flex justify-end items-center gap-2">
-                        <Dropdown>
-                            <DropdownTrigger>
-                                <Button isIconOnly size="sm" variant="light">
-                                    <IoMdMore/>
-                                </Button>
-                            </DropdownTrigger>
-                            <DropdownMenu>
-                                <DropdownItem>Ver</DropdownItem>
-                                <DropdownItem>Editar</DropdownItem>
-                                <DropdownItem>Borrar</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                    </div>
+                    <div className="relative flex items-center gap-2">
+                    <Tooltip content="Detalles">
+                      <span className="text-lg text-default-400 hover:text-foreground cursor-pointer active:opacity-50">
+                      <IoMdEye/>
+                      </span>
+                    </Tooltip>
+                    <Tooltip content="Editar">
+                      <span className="text-lg text-default-400 hover:text-foreground cursor-pointer active:opacity-50">
+                      <RiPencilFill />
+                      </span>
+                    </Tooltip>
+                    <Tooltip color="danger" content="Delete user">
+                      <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                      <FaTrash/>
+                      </span>
+                    </Tooltip>
+                  </div>
+                          
                 );
             default:
                 return cellValue;
@@ -238,7 +245,7 @@ const GenericTable = ({ columns, data }) => {
                     </TableColumn>
                 )}
             </TableHeader>
-            <TableBody emptyContent={"No items found"} items={sortedItems}>
+            <TableBody emptyContent={"No hay elementos"} items={sortedItems}>
                 {(item) => (
                     <TableRow key={item.id}>
                         {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

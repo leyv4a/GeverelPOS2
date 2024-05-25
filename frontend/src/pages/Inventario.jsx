@@ -8,7 +8,7 @@ const RegistrarSalida = lazy(() => import('../inventario/RegistrarSalida'));
 
 
 export default function Inventario() {
-  const [section, setSection] = useState('')
+  const [section, setSection] = useState('agregarProducto')
 
   const handleSectionChange = (e)=> {
     setSection(e);

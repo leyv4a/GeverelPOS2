@@ -2,24 +2,32 @@ import React from 'react'
 import {Input} from "@nextui-org/input";
 import {Button, ButtonGroup} from "@nextui-org/button";
 import GenericTable from '../components/GenericTable'
-import { productColumns, products } from '../components/data.js';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function AgregarCategorias() {
 
   const [categories, setCategories] = React.useState([])
   const [name, setName] = React.useState('')
+
  
  const getCategories = async() => { await fetch('http://localhost:3001/api/category', {
    method: 'GET',
+   mode: 'cors',
    headers: {
      'Content-Type': 'application/json'
     }
   }).then(response => {
-    if(!response.ok) console.log('q tiste')
-      return response.json()
+    if(!response.ok) toast.error('¡Tuvimos un error!')
+    return response.json()
   }).then(data => {
     setCategories(data)
+  }).catch((e)=> {
+    console.log(e)
+    toast.error('Error al cargar categorías', {
+      bodyClassName : 'text-foreground'
+    });
   })
-  }
+ };
 
   const createCategory = async (e) => {
     e.preventDefault();
@@ -33,17 +41,18 @@ export default function AgregarCategorias() {
       })
     }).then(response => {
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        toast.error('Error en la comunicacion con la base de datos...');
       }
       return response.json(); // Parsear la respuesta JSON
     })
     .then(data => {
-      console.log(data); // Manejar los datos
+      toast.success('Categoría creada correctamente');
       getCategories();
       setName('');
 
     })
     .catch(error => {
+      toast.error('Error al crear categoría');
       console.error('There was a problem with the fetch operation:', error);
     });
   }
@@ -51,6 +60,7 @@ export default function AgregarCategorias() {
   const columns = [
     { uid: 'id', nombre: 'Id', sortable: false },
     { uid: 'nombre', nombre: 'Nombre', sortable: true },
+    { uid: 'acciones', nombre: 'Acciones', sortable: false },
 ];
 
 React.useEffect(()=>{
@@ -62,12 +72,15 @@ getCategories();
       <div className="w-[50%]">
         <form onSubmit={e => {createCategory(e)}} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
           <h2 className='text-2xl text-center'>Registrar nueva categoria</h2>
-          <Input variant='underlined'  value={name} onChange={e =>{setName(e.target.value)}} isRequired type="text" label="Nombre" size='sm' className=''/>
-          <Button color='primary' type='submit' className="border my-auto " >Agregar</Button>
+          <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={name} onChange={e =>{setName(e.target.value)}} isRequired type="text" label="Nombre" size='sm' className=''/>
+          <Button color='primary' type='submit'  className="border my-auto " >Agregar</Button>
         </form>
       </div>
       <div className="w-[50%]">
         <GenericTable  columns={columns} data={categories}/>
+      </div>
+      <div>
+        <ToastContainer  position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>
       </div>
     </div>
     </>
