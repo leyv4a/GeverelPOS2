@@ -88,6 +88,7 @@ export function SidebarItem({ icon, text, active, alert, buttonRef, functionKey,
         : "hover:bg-indigo-50 text-gray-600"
       }
       `}
+      tabindex="-1"
       >
       <small className="me-1 text-[10px]">{functionKey}</small>{icon}
       <span

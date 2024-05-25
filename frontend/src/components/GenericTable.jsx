@@ -20,7 +20,9 @@ import {
     User,
     Pagination,
     Tooltip,
+    Popover, PopoverTrigger, PopoverContent
 } from "@nextui-org/react";
+import ContentPopOver from './PopoverContent';
 
 const GenericTable = ({ columns, data, onDelete}) => {
     const [filterValue, setFilterValue] = React.useState("");
@@ -101,11 +103,28 @@ const GenericTable = ({ columns, data, onDelete}) => {
                       </span>
                     </Tooltip>
                     <Tooltip color="danger" content="Delete user">
-                      <button className="text-lg text-danger cursor-pointer active:opacity-50" onClick={()=>{
+                      {/* <button className="text-lg text-danger cursor-pointer active:opacity-50" onClick={()=>{
                         onDelete(item.id)
                       }}>
                       <FaTrash/>
-                      </button>
+                      </button> */}
+                          <div className="flex flex-wrap gap-4">
+                            <Popover
+                            showArrow
+                            offset={10}
+                            placement="bottom"
+                            backdrop={'blur'}
+                            >
+                            <PopoverTrigger>
+                            <button className="text-lg text-danger cursor-pointer active:opacity-50" 
+                            // onClick={()=>{onDelete(item.id)}}
+                            >
+                            <FaTrash/>
+                            </button>
+                            </PopoverTrigger>
+                            <ContentPopOver/>
+                            </Popover>
+                        </div>
                     </Tooltip>
                   </div>
                           

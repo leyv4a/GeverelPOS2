@@ -1,6 +1,6 @@
 import React from 'react'
 import {Input} from "@nextui-org/input";
-import {Button, ButtonGroup} from "@nextui-org/button";
+import {Button} from "@nextui-org/button";
 import GenericTable from '../components/GenericTable'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -59,6 +59,7 @@ export default function AgregarCategorias() {
   }
 
   const deleteCategoryById = async (id) => {
+
     await fetch(`http://localhost:3001/api/category/${id}`,{
       method: 'DELETE',
       mode: 'cors'
@@ -76,7 +77,7 @@ export default function AgregarCategorias() {
     })
   }
   const columns = [
-    { uid: 'id', nombre: 'Id', sortable: false },
+    { uid: 'id', nombre: 'Id', sortable: true },
     { uid: 'nombre', nombre: 'Nombre', sortable: true },
     { uid: 'acciones', nombre: 'Acciones', sortable: false },
 ];
