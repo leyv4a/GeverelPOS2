@@ -8,74 +8,73 @@ export default function AgregarCategorias() {
 
   const [categories, setCategories] = React.useState([])
   const [name, setName] = React.useState('')
+  const [isButtonLoading, setIsButtonLoading] = React.useState(false);
 
  
- const getCategories = async() => { await fetch('http://localhost:3001/api/category', {
-   method: 'GET',
-   mode: 'cors',
-   headers: {
-     'Content-Type': 'application/json'
-    }
-  }).then(response => {
-    if(!response.ok) toast.error('¡Tuvimos un error!')
-    return response.json()
-  }).then(data => {
-    console.log(data)
-    setCategories(data)
-  }).catch((e)=> {
-    console.log(e)
-    toast.error('Error al cargar categorías', {
-      bodyClassName : 'text-foreground'
+ const getCategories = async() => {
+  try {
+    const response = await fetch('http://localhost:3001/api/category', {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
-  })
- };
+    if(!response.ok) toast.error('¡Error obteniendo categorias!');
+    const data = await response.json();
+    setCategories(data)
+  } catch (error) {
+    console.log(error)
+     toast.error('Error al cargar categorías', {
+       bodyClassName : 'text-foreground'
+     });
+  }
+ }
 
-  const createCategory = async (e) => {
-    e.preventDefault();
-    await fetch('http://localhost:3001/api/category',{
+ const createCategory = async (e) => {
+  e.preventDefault();
+  setIsButtonLoading(true);
+  try {
+    const response = await fetch('http://localhost:3001/api/category', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        name: name
-      })
-    }).then(response => {
-      if (!response.ok) {
-        toast.error('Error en la comunicacion con la base de datos...');
-      }
-      return response.json(); // Parsear la respuesta JSON
-    })
-    .then(data => {
-      toast.success('Categoría creada correctamente');
-      getCategories();
-      setName('');
-
-    })
-    .catch(error => {
-      toast.error('Error al crear categoría');
-      console.error('There was a problem with the fetch operation:', error);
+      body: JSON.stringify({ name })
     });
+    
+    if (!response.ok) {
+      throw new Error('Error en la comunicación con la base de datos');
+    }
+
+    // const data = await response.json();
+    toast.success('Categoría creada correctamente');
+    getCategories();
+    setName('');
+  } catch (error) {
+    toast.error('Error al crear categoría');
+    console.error('There was a problem with the fetch operation:', error);
+  } finally {
+    setIsButtonLoading(false);
   }
+};
 
   const deleteCategoryById = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/category/${id}`, {
+        method: 'DELETE',
+        mode: 'cors'
+      });
 
-    await fetch(`http://localhost:3001/api/category/${id}`,{
-      method: 'DELETE',
-      mode: 'cors'
-    }).then(response => {
-      if (!response.ok) {
-        toast.error('Error al eliminar la categoria.');
-      }
-      return response.json(); // Parsear la respuesta JSON
-    }).then(()=>{
+      if (!response.ok) toast.error('Error al eliminar la categoria.');
       toast.success('Categoría eliminada correctamente');
       getCategories();
-    }).catch((error)=>{
-      console.log(error)
+    } catch (error) {
+      console.log(error);
       toast.error('Error en la comunicacion con la base de datos...');
-    })
+    }
   }
+  
   const columns = [
     { uid: 'id', nombre: 'Id', sortable: true },
     { uid: 'nombre', nombre: 'Nombre', sortable: true },
@@ -92,7 +91,7 @@ getCategories();
         <form onSubmit={e => {createCategory(e)}} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
           <h2 className='text-2xl text-center'>Registrar nueva categoria</h2>
           <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={name} onChange={e =>{setName(e.target.value)}} isRequired type="text" label="Nombre" size='sm' className=''/>
-          <Button color='primary' type='submit'  className="border my-auto " >Agregar</Button>
+          <Button isLoading={isButtonLoading} color='primary' type='submit'  className="border my-auto " >Agregar</Button>
         </form>
       </div>
       <div className="w-[50%]">

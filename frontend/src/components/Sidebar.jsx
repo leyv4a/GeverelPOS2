@@ -44,8 +44,8 @@ export default function Sidebar({ children }) {
           `}
           >
             <div className="leading-4">
-              <h4 className="font-semibold">John Doe</h4>
-              <span className="text-xs text-gray-600">johndoe@gmail.com</span>
+              <h4 className="font-semibold">Gabriel Leyva</h4>
+              <span className="text-xs text-gray-600">gleyvaesquivel@gmail.com</span>
             </div>
             <FiMoreVertical  />
           </div>
@@ -54,7 +54,6 @@ export default function Sidebar({ children }) {
     </aside>
   )
 }
-
 
 export function SidebarItem({ icon, text, active, alert, buttonRef, functionKey, to }) {
   const { expanded } = useContext(SidebarContext)
