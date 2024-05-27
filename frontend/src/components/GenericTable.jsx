@@ -3,6 +3,7 @@ import { FaChevronDown } from "react-icons/fa";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { IoMdEye } from "react-icons/io";
 import { FaTrash } from "react-icons/fa";
+import { HiOutlineChevronDoubleLeft,HiOutlineChevronDoubleRight } from "react-icons/hi2";
 import { RiPencilFill } from "react-icons/ri";
 import {
     Table,
@@ -24,7 +25,7 @@ import {
 } from "@nextui-org/react";
 import ContentPopOver from './PopoverContent';
 
-const GenericTable = ({ columns, data, onDelete}) => {
+const GenericTable = ({ columns, data, onDelete, handleFullTable, isFullTable}) => {
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
     const [visibleColumns, setVisibleColumns] = React.useState(new Set(columns.map(col => col.uid)));
@@ -102,29 +103,23 @@ const GenericTable = ({ columns, data, onDelete}) => {
                       <RiPencilFill />
                       </span>
                     </Tooltip>
-                    <Tooltip color="danger" content="Delete user">
-                      {/* <button className="text-lg text-danger cursor-pointer active:opacity-50" onClick={()=>{
-                        onDelete(item.id)
-                      }}>
-                      <FaTrash/>
-                      </button> */}
-                          <div className="flex flex-wrap gap-4">
+                    <Tooltip color="danger" content="Eliminar">
+                        <div className="flex flex-wrap gap-4">
                             <Popover
                             showArrow
                             offset={10}
                             placement="bottom"
                             backdrop={'blur'}
                             >
-                            <PopoverTrigger>
+                            <PopoverTrigger >
                             <button className="text-lg text-danger cursor-pointer active:opacity-50" 
-                            // onClick={()=>{onDelete(item.id)}}
                             >
                             <FaTrash/>
                             </button>
                             </PopoverTrigger>
-                            <ContentPopOver/>
+                            <ContentPopOver name={item.nombre} id={item.id} onDelete={onDelete}/>
                             </Popover>
-                        </div>
+                    </div>
                     </Tooltip>
                   </div>
                           
@@ -161,6 +156,7 @@ const GenericTable = ({ columns, data, onDelete}) => {
                         isClearable
                         className="w-full sm:max-w-[44%]"
                         placeholder="Buscar por nombre"
+                        variant="bordered"
                         startContent={<HiMagnifyingGlass/>}
                         value={filterValue}
                         onClear={() => onClear()}
@@ -169,7 +165,7 @@ const GenericTable = ({ columns, data, onDelete}) => {
                     <div className="flex gap-3">
                         <Dropdown>
                             <DropdownTrigger className="hidden sm:flex">
-                                <Button endContent={<FaChevronDown/>} variant="flat">
+                                <Button variant="bordered" endContent={<FaChevronDown/>}>
                                     Columnas
                                 </Button>
                             </DropdownTrigger>
@@ -218,11 +214,14 @@ const GenericTable = ({ columns, data, onDelete}) => {
     const bottomContent = React.useMemo(() => {
         return (
             <div className="py-2 px-2 flex justify-between items-center">
-                <span className="w-[30%] text-small text-default-400">
+                {/* <span className="w-[30%] text-small text-default-400">
                     {selectedKeys === "all"
                         ? "Todos los objetos seleccionados"
                         : `${selectedKeys.size} de ${filteredItems.length} seleccionados`}
-                </span>
+                </span> */}
+                <Button isIconOnly variant='borderer' onPress={handleFullTable}>
+                {isFullTable ?  <HiOutlineChevronDoubleRight /> :  <HiOutlineChevronDoubleLeft /> }
+                </Button>
                 <Pagination
                     isCompact
                     showControls
@@ -230,6 +229,7 @@ const GenericTable = ({ columns, data, onDelete}) => {
                     color='primary'
                     className='text-foregrund'
                     page={page}
+                    variant="borderer"
                     total={pages}
                     onChange={setPage}
                 
@@ -243,7 +243,7 @@ const GenericTable = ({ columns, data, onDelete}) => {
             aria-label="Tabla generica"
             isHeaderSticky
             bottomContent={bottomContent}
-            bottomContentPlacement="outside"
+            bottomContentPlacement="inside"
             classNames={{
                 wrapper: "min-h-[360px] max-h-[60vh]",
             }}
@@ -251,7 +251,7 @@ const GenericTable = ({ columns, data, onDelete}) => {
             // selectionMode="multiple" Habiliar la seleccion multiple
             sortDescriptor={sortDescriptor}
             topContent={topContent}
-            topContentPlacement="outside"
+            topContentPlacement="inside"
             onSelectionChange={setSelectedKeys}
             onSortChange={setSortDescriptor}
         >

@@ -1,14 +1,18 @@
-import React, {Suspense, lazy, useState} from 'react'
+import React, {useState, Suspense, lazy} from 'react'
 import NavigationBar from '../components/NavigationBar';
-import Loader from '../components/Loader';
-const AgregarProducto = lazy(() => import('../inventario/AgregarProductos'));
-const AgregarCategoria = lazy(() => import('../inventario/AgregarCategorias'));
-const RegistrarEntrada = lazy(() => import('../inventario/RegistrarEntrada'));
-const RegistrarSalida = lazy(() => import('../inventario/RegistrarSalida'));
+// import Loader from '../components/Loader';
+import AgregarCategorias from '../inventario/AgregarCategorias';
+import AgregarProductos from '../inventario/AgregarProductos';
+import RegistrarEntrada from '../inventario/RegistrarEntrada';
+import RegistrarSalida from '../inventario/RegistrarSalida';
+// const AgregarProductos = lazy(() => import('../inventario/AgregarProductos'));
+// const AgregarCategorias = lazy(() => import('../inventario/AgregarCategorias'));
+// const RegistrarEntrada = lazy(() => import('../inventario/RegistrarEntrada'));
+// const RegistrarSalida = lazy(() => import('../inventario/RegistrarSalida'));
 
 
 export default function Inventario() {
-  const [section, setSection] = useState('agregarProducto')
+  const [section, setSection] = useState('')
 
   const handleSectionChange = (e)=> {
     setSection(e);
@@ -35,21 +39,19 @@ export default function Inventario() {
   ]
 
   const sectionMapping = {
-    agregarProducto: <AgregarProducto/>,
-    agregarCategoria: <AgregarCategoria/>,
+    agregarProducto: <AgregarProductos/>,
+    agregarCategoria: <AgregarCategorias/>,
     registrarEntrada: <RegistrarEntrada/>,
     registrarSalida: <RegistrarSalida/>
   }
   return (
     <div className='w-full h-full'>
       <NavigationBar items={items} onSectionChange={handleSectionChange} currentSection={section}/>
-      <div className='my-auto'>
-      <Suspense fallback={<Loader/>}>
+      <Suspense fallback={<p>..</p>}>
       {
         sectionMapping[section]
       }
       </Suspense>
-      </div>
     </div>
   )
 }

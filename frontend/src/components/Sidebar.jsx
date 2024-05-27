@@ -62,7 +62,6 @@ export function SidebarItem({ icon, text, active, alert, buttonRef, functionKey,
     const handleKeyDown = (event) => {
         if (event.key === functionKey ) {
           event.preventDefault(); // Previene la acción por defecto del F1
-          console.log(`${functionKey} pressed`); // Añade un log para verificar la captura
           if (buttonRef.current) {
             buttonRef.current.click();
           }
@@ -87,7 +86,7 @@ export function SidebarItem({ icon, text, active, alert, buttonRef, functionKey,
         : "hover:bg-indigo-50 text-gray-600"
       }
       `}
-      tabindex="-1"
+      tabIndex="-1"
       >
       <small className="me-1 text-[10px]">{functionKey}</small>{icon}
       <span
