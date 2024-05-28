@@ -2,7 +2,7 @@ import React from 'react'
 import {Input} from "@nextui-org/input";
 import {Button} from "@nextui-org/button";
 import GenericTable from '../components/GenericTable'
-// import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
 export default function AgregarCategorias() {
 
@@ -30,9 +30,9 @@ const handleFullTable = () => {
     setCategories(data)
   } catch (error) {
     console.log(error)
-    //  toast.error('Error al cargar categorías', {
-    //    bodyClassName : 'text-foreground'
-    //  });
+     toast.error('Error al cargar categorías', {
+       bodyClassName : 'text-foreground'
+     });
   }
  }
 
@@ -53,11 +53,11 @@ const handleFullTable = () => {
     }
 
     // const data = await response.json();
-    // toast.success('Categoría creada correctamente');
+    toast.success('Categoría creada correctamente');
     getCategories();
     setName('');
   } catch (error) {
-    // toast.error('Error al crear categoría');
+    toast.error('Error al crear categoría');
     console.error('There was a problem with the fetch operation:', error);
   } finally {
     setIsButtonLoading(false);
@@ -75,11 +75,11 @@ const handleFullTable = () => {
         throw new Error('Error al eliminar la categoria.');
       }
       console.log(response)
-      // toast.success('Categoría eliminada correctamente');
+      toast.success('Categoría eliminada correctamente');
       getCategories();
     } catch (error) {
       console.log(error);
-      // toast.error(error);
+      toast.error(error);
     }
   }
   
@@ -94,9 +94,6 @@ getCategories();
 },[])
   return (
     <>
-    <div>
-      asd
-    </div>
     <div className='flex gap-6 max-h-[100%] p-5'>
       <div className={isFullTable? 'hidden':' w-[50%]' }>
         <form onSubmit={e => {createCategory(e)}} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
@@ -109,7 +106,7 @@ getCategories();
         <GenericTable isFullTable={isFullTable} handleFullTable={handleFullTable}  columns={columns} data={categories} onDelete={deleteCategoryById}/>
       </div>
       <div>
-        {/* <ToastContainer  position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/> */}
+        <ToastContainer  position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>
       </div>
     </div>
     </>
