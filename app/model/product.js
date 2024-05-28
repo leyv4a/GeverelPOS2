@@ -21,16 +21,3 @@ class ProductModel {
 
 
 module.exports = ProductModel;
-
-// CREATE TABLE IF NOT EXISTS producto (
-//     id INTEGER PRIMARY KEY AUTOINCREMENT,
-//     categoriaId INTEGER NOT NULL,
-//     nombre TEXT NOT NULL,
-//     descripcion TEXT NOT NULL,
-//     stock REAL NOT NULL,
-//     stockMin REAL NOT NULL,
-//     precioVenta REAL NOT NULL,
-//     precioCompra REAL NOT NULL,
-//     codigo TEXT,
-//     FOREIGN KEY (categoriaId) REFERENCES categoria(id)
-//   )`;
