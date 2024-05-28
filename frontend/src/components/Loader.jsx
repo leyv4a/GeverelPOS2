@@ -1,8 +1,10 @@
 import React from 'react'
-import './loader.css'
+
 
 export default function Loader() {
   return (
-    <div className="loader my-auto mx-auto"></div>
+    <div className="loader-container">
+      <div className="loader my-auto mx-auto"></div>
+    </div>
   )
 }

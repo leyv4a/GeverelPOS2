@@ -3,8 +3,7 @@ import {Input} from "@nextui-org/input";
 import {Button} from "@nextui-org/button";
 import GenericTable from '../components/GenericTable'
 import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
-export default function AgregarCategorias() {
+function AgregarCategorias() {
 
   const [categories, setCategories] = React.useState([])
   const [name, setName] = React.useState('')
@@ -112,3 +111,5 @@ getCategories();
     </>
   )
 }
+
+export default AgregarCategorias;

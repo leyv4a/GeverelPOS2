@@ -8,7 +8,6 @@ const Panel = lazy(()=> import('./pages/Panel'));
 const Inventario = lazy(()=> import('./pages/Inventario'));
 const Monedero = lazy(()=> import('./pages/Monedero'));
 
-
 import Loader from './components/Loader';
 function App() {
   
@@ -21,7 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Tienda/>}/>
           <Route path="/panel" element={<Panel/>}/>
-          <Route path="/inventario" element={<Inventario/>}/>
+          <Route  path="/inventario/*" element={<Inventario/>}/>
           <Route path="/monedero" element={<Monedero/>}/>
         </Routes>
       </Suspense>

@@ -1,22 +1,22 @@
-import React, {useState, Suspense, lazy} from 'react'
+import React, {useState} from 'react'
 import NavigationBar from '../components/NavigationBar';
-// import Loader from '../components/Loader';
-import AgregarCategorias from '../inventario/AgregarCategorias';
-import AgregarProductos from '../inventario/AgregarProductos';
-import RegistrarEntrada from '../inventario/RegistrarEntrada';
-import RegistrarSalida from '../inventario/RegistrarSalida';
-// const AgregarProductos = lazy(() => import('../inventario/AgregarProductos'));
-// const AgregarCategorias = lazy(() => import('../inventario/AgregarCategorias'));
-// const RegistrarEntrada = lazy(() => import('../inventario/RegistrarEntrada'));
-// const RegistrarSalida = lazy(() => import('../inventario/RegistrarSalida'));
+
+const AgregarProductos = React.lazy(()=> import('../inventario/AgregarProductos'));
+const RegistrarEntrada = React.lazy(() => import('../inventario/RegistrarEntrada'));
+const AgregarCategorias = React.lazy(() => import('../inventario/AgregarCategorias'));
+const RegistrarSalida = React.lazy(() => import('../inventario/RegistrarSalida'));
+
+import Loader from '../components/Loader';
+import { Route, Routes, Navigate } from 'react-router-dom';
 
 
 export default function Inventario() {
-  const [section, setSection] = useState('')
 
-  const handleSectionChange = (e)=> {
-    setSection(e);
-  }
+  const [section, setSection] = useState('agregarProducto');
+
+  const handleSectionChange = (section) => {
+    setSection(section);
+  };
 
   const items = [
     {
@@ -38,20 +38,19 @@ export default function Inventario() {
 
   ]
 
-  const sectionMapping = {
-    agregarProducto: <AgregarProductos/>,
-    agregarCategoria: <AgregarCategorias/>,
-    registrarEntrada: <RegistrarEntrada/>,
-    registrarSalida: <RegistrarSalida/>
-  }
+  
   return (
     <div className='w-full h-full'>
-      <NavigationBar items={items} onSectionChange={handleSectionChange} currentSection={section}/>
-      <Suspense fallback={<p>..</p>}>
-      {
-        sectionMapping[section]
-      }
-      </Suspense>
+      <NavigationBar items={items} currentSection={section} onSectionChange={handleSectionChange} />
+      <React.Suspense fallback={<Loader/>}>
+      <Routes>
+         <Route path="/" element={<Navigate to="agregarProducto" replace />} />
+          <Route path="agregarProducto" element={<AgregarProductos />} />
+          <Route path="agregarCategoria" element={<AgregarCategorias />} />
+          <Route path="registrarEntrada" element={<RegistrarEntrada />} />
+          <Route path="registrarSalida" element={<RegistrarSalida />} />
+        </Routes>
+      </React.Suspense>
     </div>
   )
 }

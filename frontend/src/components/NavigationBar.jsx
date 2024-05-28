@@ -1,5 +1,7 @@
 import React from 'react'
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button} from "@nextui-org/react";
+import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Button} from "@nextui-org/react";
+import {Link} from 'react-router-dom';
+import { IoChevronForwardCircle } from "react-icons/io5";
 export default function NavigationBar({items, onSectionChange, currentSection}) {
 
  const buttonRef = React.useRef(null);
@@ -26,11 +28,13 @@ export default function NavigationBar({items, onSectionChange, currentSection}) 
     <NavbarContent className="hidden sm:flex gap-4 " justify="start">
      {items.map((item, key) => (
          <NavbarItem key={key}>
-         <Link  color='foreground' className={`cursor-pointer ${currentSection === item.section ? 'font-bold ' : ''}`}
-         onPress={()=>onSectionChange(item.section)}
-         ref={item.section === 'agregarProducto' ? buttonRef : null}>
-          {item.name}
-         </Link>
+          <Link to={item.section}>
+            <Button disableRipple color='foreground'  className={` cursor-pointer ${currentSection === item.section ? 'font-bold ' : ''}`}
+            onPress={()=>onSectionChange(item.section)}
+            ref={item.section === 'agregarProducto' ? buttonRef : null}>
+              {item.name}
+            </Button>
+          </Link>
        </NavbarItem>
      ))}
     </NavbarContent>

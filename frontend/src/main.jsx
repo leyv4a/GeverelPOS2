@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import {NextUIProvider} from '@nextui-org/react'
 import './index.css'
+import './components/loader.css'
 import 'react-toastify/dist/ReactToastify.css'
 
 
