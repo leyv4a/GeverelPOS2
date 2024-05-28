@@ -53,6 +53,7 @@ const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable}) 
         return filteredData;
     }, [data, filterValue, hasSearchFilter]);
 
+
     const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
     const items = React.useMemo(() => {
@@ -69,7 +70,7 @@ const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable}) 
             return sortDescriptor.direction === "descending" ? -cmp : cmp;
         });
     }, [sortDescriptor, items]);
-
+   
     const renderCell = React.useCallback((item, columnKey) => {
         const cellValue = item[columnKey];
         switch (columnKey) {
@@ -148,6 +149,8 @@ const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable}) 
         setPage(1);
     }, []);
 
+  
+
     const topContent = React.useMemo(() => {
         return (
             <div className="flex flex-col gap-4">
@@ -223,19 +226,18 @@ const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable}) 
                 {isFullTable ?  <HiOutlineChevronDoubleRight /> :  <HiOutlineChevronDoubleLeft /> }
                 </Button>
                 <Pagination
-                    isCompact
-                    showControls
-                    showShadow
-                    color='primary'
-                    className='text-foregrund'
-                    page={page}
-                    variant="borderer"
-                    total={pages}
-                    onChange={setPage}
+                page={page}
+                total={pages == 0? 1 : pages}
+                onChange={setPage}
+                showControls
+                loop 
+                showShadow
+                isCompact
+                variant="borderer"
                 />
             </div>
         );
-    }, [selectedKeys, items.length, page, pages,isFullTable,hasSearchFilter]);
+    }, [selectedKeys, items.length, page, isFullTable, pages,hasSearchFilter]);
 
     return (
         <Table
