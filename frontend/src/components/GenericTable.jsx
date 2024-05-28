@@ -21,11 +21,11 @@ import {
     User,
     Pagination,
     Tooltip,
-    Popover, PopoverTrigger, PopoverContent
+    Popover, PopoverTrigger
 } from "@nextui-org/react";
 import ContentPopOver from './PopoverContent';
 
-const GenericTable = ({ columns, data, onDelete, handleFullTable, isFullTable}) => {
+const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable}) => {
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
     const [visibleColumns, setVisibleColumns] = React.useState(new Set(columns.map(col => col.uid)));
@@ -196,7 +196,7 @@ const GenericTable = ({ columns, data, onDelete, handleFullTable, isFullTable}) 
                         >
                             <option value="5"> 5</option>
                             <option value="10"> 10</option>
-                            <option value="15"> 15</option>
+                            {/* <option value="15"> 15</option> */}
                         </select>
                     </label>
                 </div>
@@ -232,11 +232,10 @@ const GenericTable = ({ columns, data, onDelete, handleFullTable, isFullTable}) 
                     variant="borderer"
                     total={pages}
                     onChange={setPage}
-                
                 />
             </div>
         );
-    }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+    }, [selectedKeys, items.length, page, pages,isFullTable,hasSearchFilter]);
 
     return (
         <Table
@@ -245,7 +244,7 @@ const GenericTable = ({ columns, data, onDelete, handleFullTable, isFullTable}) 
             bottomContent={bottomContent}
             bottomContentPlacement="inside"
             classNames={{
-                wrapper: "min-h-[360px] max-h-[60vh]",
+                wrapper: "min-h-[360px] ",
             }}
             selectedKeys={selectedKeys}
             // selectionMode="multiple" Habiliar la seleccion multiple

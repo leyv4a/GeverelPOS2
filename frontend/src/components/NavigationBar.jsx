@@ -1,7 +1,6 @@
 import React from 'react'
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Button} from "@nextui-org/react";
 import {Link} from 'react-router-dom';
-import { IoChevronForwardCircle } from "react-icons/io5";
 export default function NavigationBar({items, onSectionChange, currentSection}) {
 
  const buttonRef = React.useRef(null);
