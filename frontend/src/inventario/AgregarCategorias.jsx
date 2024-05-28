@@ -29,7 +29,7 @@ const handleFullTable = () => {
     setCategories(data)
   } catch (error) {
     console.log(error)
-     toast.error('Error al cargar categorías', {
+     toast.error('Error en la comunicacion con la base de datos', {
        bodyClassName : 'text-foreground'
      });
   }
@@ -51,12 +51,12 @@ const handleFullTable = () => {
       throw new Error('Error en la comunicación con la base de datos');
     }
 
-    // const data = await response.json();
-    toast.success('Categoría creada correctamente');
+    const result = await response.json();
+    toast.success(result.message);
     getCategories();
     setName('');
   } catch (error) {
-    toast.error('Error al crear categoría');
+    toast.error(error.message);
     console.error('There was a problem with the fetch operation:', error);
   } finally {
     setIsButtonLoading(false);
@@ -73,8 +73,9 @@ const handleFullTable = () => {
       if (!response.ok) {
         throw new Error('Error al eliminar la categoria.');
       }
-      console.log(response)
-      toast.success('Categoría eliminada correctamente');
+       
+    const result = await response.json();
+    toast.success(result.message);  // Mostrar el mensaje recibido del servidor
       getCategories();
     } catch (error) {
       console.log(error);

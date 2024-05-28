@@ -28,7 +28,7 @@ export default function NavigationBar({items, onSectionChange, currentSection}) 
      {items.map((item, key) => (
          <NavbarItem key={key}>
           <Link to={item.section}>
-            <Button disableRipple color='foreground'  className={` cursor-pointer ${currentSection === item.section ? 'font-bold ' : ''}`}
+            <Button tabIndex="-1" disableRipple color='foreground'  className={` cursor-pointer ${currentSection === item.section ? 'font-bold ' : ''}`}
             onPress={()=>onSectionChange(item.section)}
             ref={item.section === 'agregarProducto' ? buttonRef : null}>
               {item.name}
