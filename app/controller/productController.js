@@ -2,7 +2,6 @@ const ProductModel = require('../model/product');
 const logToFile = require('../utils/logger');
 
 class ProductController {
-
     static async getAllProducts(req,res){
       
         try {
@@ -36,6 +35,19 @@ class ProductController {
             logToFile(error);
             res.status(500).json({ error: 'Error en el servidor' });
         }
+    }
+
+    static async deleteProductById(req, res){
+        const id = await ProductModel.deleteById(req.params.id);
+        if (!id) {
+            res.status(400).json({error: "Algo salio mal al eliminar la categoria"});
+            logToFile(`Error deleting product ${req.params.id}`);
+            return;
+        }
+        logToFile(`product deleted ${req.params.id}`)
+        return res
+        .status(200)
+        .json({ message: `Producto eliminado correctamente` });
     }
 }
 

@@ -25,6 +25,16 @@ class ProductModel {
             return { success: false, message: error.message };
         }
     }
+
+    static async deleteById(id) {
+        const sql = "DELETE FROM producto WHERE id = ?";
+        try {
+            await db.run(sql, [id]);
+            return true; // Retorna true si la inserción es exitosa
+        } catch (error) {
+            return false;
+        }
+    }
 }
 
 

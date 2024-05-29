@@ -27,12 +27,18 @@ export default function AgregarProductos() {
     setDescripcion('');
     setStockMin('');
     setCodigo('');
+    setCategory(0)
+    setUnidad('')
   }
 
   const [isFullTable, setIsFullTable] = React.useState(false);
 
   const handleFullTable = () => {
     setIsFullTable(!isFullTable);
+  }
+
+  const handleEditar = () => {
+    
   }
 
   const getProducts = async () => {
@@ -108,6 +114,27 @@ export default function AgregarProductos() {
     }
   }
 
+  const deleteProductById = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/product/${id}`, {
+        method: 'DELETE',
+        mode: 'cors'
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar el producto.');
+      }
+       
+    const result = await response.json();
+    toast.success(result.message);  // Mostrar el mensaje recibido del servidor
+      getProducts();
+      getCategories();
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+    }
+  }
+
   const columns = [ 
   { uid: 'id', nombre: 'Id', sortable: true },
   { uid: 'nombre', nombre: 'Nombre', sortable: true },
@@ -161,16 +188,15 @@ export default function AgregarProductos() {
               onValueChange={setUnidad}
               orientation="horizontal"
               size='sm'
-              
             >
               <Radio value="kg">Kilogramos</Radio>
-              <Radio value="u">Unidad</Radio>
+              <Radio value="unidad">Unidad</Radio>
             </RadioGroup>
           <Button isLoading={isButtonLoading} color='primary' type='submit'  className="border my-auto " >Agregar</Button>
           </form>
         </div>
         <div className={isFullTable? 'w-[100%]' : 'w-[50%]'}>
-          <GenericTable columns={columns} data={products} onDelete={'delete by id request'} isFullTable={isFullTable} handleFullTable={handleFullTable} onDetails={true}/>
+          <GenericTable columns={columns} data={products} onDelete={deleteProductById} isFullTable={isFullTable} handleFullTable={handleFullTable} onDetails={true}/>
         </div>
         <div>
           <ToastContainer position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>

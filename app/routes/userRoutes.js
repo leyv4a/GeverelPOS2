@@ -13,6 +13,7 @@ router.delete('/category/:id', CategoryController.deleteCategoryById);
 
 router.get('/product', ProductController.getAllProducts);
 router.post('/product', ProductController.createProduct);
+router.delete('/product/:id', ProductController.deleteProductById);
 
 
 module.exports = router;
