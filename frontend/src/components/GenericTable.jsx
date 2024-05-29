@@ -25,7 +25,7 @@ import {
 } from "@nextui-org/react";
 import ContentPopOver from './PopoverContent';
 
-const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable}) => {
+const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable, onDetails}) => {
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
     const [visibleColumns, setVisibleColumns] = React.useState(new Set(columns.map(col => col.uid)));
@@ -35,6 +35,16 @@ const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable}) 
         direction: "ascending",
     });
     const [page, setPage] = React.useState(1);
+
+    React.useEffect(() => {
+        if (columns.length > 4) {
+            const initialVisibleColumns = new Set(columns.slice(0, 4).map(col => col.uid));
+            initialVisibleColumns.add(columns[columns.length - 1].uid);
+            setVisibleColumns(initialVisibleColumns);
+        } else {
+            setVisibleColumns(new Set(columns.map(col => col.uid)));
+        }
+    }, [columns]);
 
     const hasSearchFilter = Boolean(filterValue);
 
@@ -94,11 +104,11 @@ const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable}) 
             case "acciones":
                 return (
                     <div className="relative flex items-center gap-2">
-                    <Tooltip content="Detalles">
+                     {onDetails ?   <Tooltip content="Detalles">
                       <span className="text-lg text-default-400 hover:text-foreground cursor-pointer active:opacity-50">
                       <IoMdEye/>
                       </span>
-                    </Tooltip>
+                    </Tooltip> : ''}   
                     <Tooltip content="Editar">
                       <span className="text-lg text-default-400 hover:text-foreground cursor-pointer active:opacity-50">
                       <RiPencilFill />

@@ -4,25 +4,21 @@ const logToFile = require('../utils/logger');
 class ProductModel {
 
     static async getAll(){
-        const sql = 'SELECT id, categoriaId, nombre, descripcion, stock, stockMin, precioVenta, precioCompra, codigo FROM producto'
+        const sql =
+        `SELECT 
+        producto.id, producto.nombre,producto.descripcion,categoria.nombre AS categoria ,producto.codigo , producto.unidad ,producto.stock, producto.stockMin, producto.precioVenta, producto.precioCompra
+        FROM producto
+        INNER JOIN categoria WHERE producto.categoriaId = categoria.id
+        `
         const rows = await db.all(sql);
         return rows;
     }
 
-    // static async create(categoriaId, nombre, descripcion,stock,stockMin, precioVenta, precioCompra, codigo){
-    //     const sql = 'INSERT INTO producto (categoriaId, nombre, descripcion, stock, stockMin, precioVenta, precioCompra, codigo) VALUES (?,?,?,?,?,?,?,?)'
-    //     try {
-    //         await db.run(sql, [categoriaId, nombre, descripcion, stock, stockMin, precioVenta, precioCompra, codigo]);
-    //         return true; // Retorna true si la inserción es exitosa
-    //     } catch (error) {
-    //         return false;
-    //     }
-    // }
 
-    static async create(nombre, descripcion,stockMin,codigo){
-        const sql = 'INSERT INTO producto ( nombre, descripcion, stockMin, codigo) VALUES (?,?,?,?)'
+    static async create(nombre, descripcion,stockMin,codigo,unidad, categoriaId){
+        const sql = 'INSERT INTO producto ( nombre, descripcion, stockMin, codigo, unidad, categoriaId) VALUES (?,?,?,?,?,?)'
         try {
-            await db.run(sql, [ nombre, descripcion, stockMin, codigo]);
+            await db.run(sql, [ nombre, descripcion, stockMin, codigo,unidad, categoriaId]);
             return { success: true, message: 'Producto creado exitosamente' };
         } catch (error) {
             logToFile(error.message) 

@@ -16,14 +16,14 @@ class ProductController {
 
     static async createProduct(req,res){
         try {
-            const { nombre, descripcion,stockMin,codigo} = req.body;
+            const { nombre, descripcion,stockMin,codigo,unidad, categoriaId} = req.body;
 
-            if (!nombre || !descripcion || !stockMin| !codigo) {
+            if (!nombre || !descripcion || !stockMin || !codigo || !unidad || !categoriaId) {
                 res.status(400).json({error : 'Todos los campos son requeridos'})
                 return;
             }
 
-            const result = await ProductModel.create(nombre, descripcion, stockMin, codigo)
+            const result = await ProductModel.create(nombre, descripcion, stockMin, codigo, unidad, categoriaId)
 
             if (!result.success) {
                 logToFile('Error creando el producto: ' + result.message);

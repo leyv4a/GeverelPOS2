@@ -48,14 +48,15 @@ const initializeTables = async () => {
   const createProductTable = `
   CREATE TABLE IF NOT EXISTS producto (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    categoriaId INTEGER ,
     nombre TEXT NOT NULL UNIQUE ,
     descripcion TEXT NOT NULL,
+    categoriaId INTEGER ,
+    codigo TEXT UNIQUE,
+    unidad TEXT NOT NULL,
     stock REAL ,
     stockMin REAL NOT NULL,
     precioVenta REAL,
     precioCompra REAL ,
-    codigo TEXT UNIQUE,
     FOREIGN KEY (categoriaId) REFERENCES categoria(id)
   )`;
 
