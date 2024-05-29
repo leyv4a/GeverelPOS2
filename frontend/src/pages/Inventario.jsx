@@ -10,7 +10,7 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 
 export default function Inventario() {
 
-  const [section, setSection] = useState('agregarProductos');
+  const [section, setSection] = useState('agregarProducto');
 
   const handleSectionChange = (section) => {
     setSection(section);

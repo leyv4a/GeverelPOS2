@@ -9,8 +9,8 @@ module.exports = {
       'app',
       'static'
     ],
-    iconUrl: path.resolve('gevpoint.svg'),
-    setUpIcon: path.resolve('gevpoint.svg'),
+    iconUrl: path.join(__dirname, '/static/gevpoint.svg'),
+    setUpIcon: path.join(__dirname, '/static/gevpoint.svg'),
   },
   rebuildConfig: {},
   makers: [

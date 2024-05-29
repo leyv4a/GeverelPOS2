@@ -9,7 +9,6 @@ export default function NavigationBar({items, onSectionChange, currentSection}) 
     const handleKeyDown = (event) => {
         if (event.key === 'F7' ) {
           event.preventDefault(); // Previene la acción por defecto del F1
-          console.log(`F2 pressed`); // Añade un log para verificar la captura
           if (buttonRef.current) {
             buttonRef.current.click();
           }

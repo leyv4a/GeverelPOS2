@@ -1,5 +1,5 @@
 {
-  "name": "com.geverel.gevpoint",
+  "name": "gevpoint",
   "version": "0.0.1",
   "description": "Gevpoint - Geverel Point of Sales",
   "main": "index.js",
