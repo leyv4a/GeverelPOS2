@@ -4,5 +4,8 @@
 
 NO FUNCIONA LAZY, SUSPENSE EN INVENTARIO.
 
+TABLE: 
+- USAR PROPS PARA PASAR onDetails null para que no se muestre el ojo en tablas basicas
+
 MAKE AGAIN
  - INVITATION NO LASTNAME

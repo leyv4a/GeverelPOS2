@@ -1,4 +1,5 @@
 const db = require('../database/database'); // Importa la conexión a la base de datos SQLite
+const logToFile = require('../utils/logger');
 
 class ProductModel {
 
@@ -8,13 +9,24 @@ class ProductModel {
         return rows;
     }
 
-    static async create(categoriaId, nombre, descripcion,stock,stockMin, precioVenta, precioCompra, codigo){
-        const sql = 'INSERT INTO producto (categoriaId, nombre, descripcion, stock, stockMin, precioVenta, precioCompra, codigo) VALUES (?,?,?,?,?,?,?,?)'
+    // static async create(categoriaId, nombre, descripcion,stock,stockMin, precioVenta, precioCompra, codigo){
+    //     const sql = 'INSERT INTO producto (categoriaId, nombre, descripcion, stock, stockMin, precioVenta, precioCompra, codigo) VALUES (?,?,?,?,?,?,?,?)'
+    //     try {
+    //         await db.run(sql, [categoriaId, nombre, descripcion, stock, stockMin, precioVenta, precioCompra, codigo]);
+    //         return true; // Retorna true si la inserción es exitosa
+    //     } catch (error) {
+    //         return false;
+    //     }
+    // }
+
+    static async create(nombre, descripcion,stockMin,codigo){
+        const sql = 'INSERT INTO producto ( nombre, descripcion, stockMin, codigo) VALUES (?,?,?,?)'
         try {
-            await db.run(sql, [categoriaId, nombre, descripcion, stock, stockMin, precioVenta, precioCompra, codigo]);
-            return true; // Retorna true si la inserción es exitosa
+            await db.run(sql, [ nombre, descripcion, stockMin, codigo]);
+            return { success: true, message: 'Producto creado exitosamente' };
         } catch (error) {
-            return false;
+            logToFile(error.message) 
+            return { success: false, message: error.message };
         }
     }
 }

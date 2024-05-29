@@ -47,17 +47,16 @@ const handleFullTable = () => {
       body: JSON.stringify({ name })
     });
     
-    if (!response.ok) {
-      throw new Error('Error en la comunicación con la base de datos');
+    const result = await response.json();
+    if (!response.ok ) {
+      throw new Error(result.error || 'Error en la comunicación con la base de datos');
     }
 
-    const result = await response.json();
     toast.success(result.message);
     getCategories();
     setName('');
   } catch (error) {
     toast.error(error.message);
-    console.error('There was a problem with the fetch operation:', error);
   } finally {
     setIsButtonLoading(false);
   }

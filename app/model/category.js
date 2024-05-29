@@ -1,4 +1,5 @@
 const db = require('../database/database'); // Importa la conexión a la base de datos SQLite
+const logToFile = require('../utils/logger')
 
 class CategoryModel{
     static async getAll() {
@@ -11,9 +12,10 @@ class CategoryModel{
         const sql = "INSERT INTO categoria (nombre) VALUES (?)"
         try {
             await db.run(sql, [name]);
-            return true; // Retorna true si la inserción es exitosa
+            return { success: true, message: 'Categoria creada exitosamente' };
         } catch (error) {
-            return false;
+            logToFile(error.message) 
+            return { success: false, message: error.message };
         }
     }
     static async deleteById(id){

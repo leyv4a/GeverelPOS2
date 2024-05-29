@@ -16,23 +16,25 @@ class ProductController {
 
     static async createProduct(req,res){
         try {
-            const {categoriaId, nombre, descripcion,stock,stockMin, precioVenta, precioCompra, codigo} = req.body;
+            const { nombre, descripcion,stockMin,codigo} = req.body;
 
-            if (!categoriaId || !nombre || !descripcion || !stock||!stockMin|| !precioVenta || !precioCompra || !codigo) {
+            if (!nombre || !descripcion || !stockMin| !codigo) {
                 res.status(400).json({error : 'Todos los campos son requeridos'})
                 return;
             }
 
-            const created = await ProductModel.create(categoriaId, nombre, descripcion,stock,stockMin, precioVenta, precioCompra, codigo)
+            const result = await ProductModel.create(nombre, descripcion, stockMin, codigo)
 
-            if (!created) {
-                logToFile('Error creando el producto');
-                return res.status(500).json({error :'Algo salio mal'});
+            if (!result.success) {
+                logToFile('Error creando el producto: ' + result.message);
+                res.status(400).json({ error: result.message });
+                return;
             }
                 logToFile('Producto creado');
-                return res.status(201).json({message : 'Producto creado correctamente'});
+                res.status(201).json({ message: result.message });
         } catch (error) {
-            
+            logToFile(error);
+            res.status(500).json({ error: 'Error en el servidor' });
         }
     }
 }
