@@ -85,13 +85,13 @@ const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable, o
     const renderCell = React.useCallback((item, columnKey) => {
         const cellValue = item[columnKey];
         switch (columnKey) {
-            case "nombreP":
-                return (
-                    <div className='flex flex-col'>
-                        {item.nombre}
-                        <small className='m-0 p-0 text-gray-500'>{item.categoria}</small>
-                    </div>
-                );
+            // case "nombreP":
+            //     return (
+            //         <div className='flex flex-col'>
+            //             {item.nombre}
+            //             <small className='m-0 p-0 text-gray-500'>{item.categoria}</small>
+            //         </div>
+            //     );
             // case "role":
             //     return (
                     // <div className="flex flex-col">
@@ -254,7 +254,7 @@ const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable, o
             bottomContent={bottomContent}
             bottomContentPlacement="inside"
             classNames={{
-                wrapper: "min-h-[360px] ",
+                wrapper: "min-h-[286px] ",
             }}
             selectedKeys={selectedKeys}
             // selectionMode="multiple" Habiliar la seleccion multiple
@@ -277,7 +277,7 @@ const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable, o
             </TableHeader>
             <TableBody emptyContent={"No hay elementos"} items={sortedItems}>
                 {(item) => (
-                    <TableRow key={item.id}>
+                    <TableRow className='capitalize' key={item.id}>
                         {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
                     </TableRow>
                 )}

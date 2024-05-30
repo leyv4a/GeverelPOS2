@@ -8,7 +8,8 @@ class ProductModel {
         `SELECT 
         producto.id, producto.nombre,producto.descripcion,categoria.nombre AS categoria ,producto.codigo , producto.unidad ,producto.stock, producto.stockMin, producto.precioVenta, producto.precioCompra, producto.categoriaId
         FROM producto
-        INNER JOIN categoria WHERE producto.categoriaId = categoria.id
+        INNER JOIN categoria ON producto.categoriaId = categoria.id
+        ORDER BY producto.categoriaId
         `
         const rows = await db.all(sql);
         return rows;

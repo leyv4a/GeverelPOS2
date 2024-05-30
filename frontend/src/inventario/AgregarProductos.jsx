@@ -46,6 +46,12 @@ export default function AgregarProductos() {
 
   const [isFullTable, setIsFullTable] = React.useState(false);
 
+  const handleRadioKeyDown = (event, value) => {
+    if (event.key === 'Enter') {
+      setUnidad(value);
+    }
+  };
+
   const handleFullTable = () => {
     setIsFullTable(!isFullTable);
   }
@@ -145,8 +151,8 @@ export default function AgregarProductos() {
 
   const columns = [ 
   { uid: 'id', nombre: 'Id', sortable: true },
-  { uid: 'nombreP', nombre: 'Nombre', sortable: true },
-  // { uid: 'categoria', nombre: 'Categoria', sortable: true },
+  { uid: 'nombre', nombre: 'Nombre', sortable: true },
+  { uid: 'categoria', nombre: 'Categoria', sortable: true },
   { uid: 'descripcion', nombre: 'Descripcion', sortable: false },
   { uid: 'codigo', nombre: 'Codigo', sortable: false },
   { uid: 'unidad', nombre: 'Unidad', sortable: true },
@@ -197,8 +203,8 @@ export default function AgregarProductos() {
               orientation="horizontal"
               size='sm'
             >
-              <Radio value="kg">Kilogramos</Radio>
-              <Radio value="unidad">Unidad</Radio>
+              <Radio value="kg"  onKeyDown={(e) => handleRadioKeyDown(e, 'kg')} tabIndex="0">Kilogramos</Radio>
+              <Radio value="unidad"  onKeyDown={(e) => handleRadioKeyDown(e, 'unidad')} tabIndex="0">Unidad</Radio>
             </RadioGroup>
           <Button isLoading={isButtonLoading} color='primary' type='submit'  className="border my-auto " >Agregar</Button>
           </form>
