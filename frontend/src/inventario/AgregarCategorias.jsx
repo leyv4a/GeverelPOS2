@@ -92,6 +92,24 @@ const handleFullTable = () => {
 
   const updateCategoryById = async (e) => {
     e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:3001/api/category`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id, name })
+      })
+      if (!response.ok) {
+        throw new Error('Error al actualizar la categoria.');
+      }
+      const result = await response.json();
+      toast.success(result.message);  // Mostrar el mensaje recibido del servidor
+      getCategories();
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
+    }
   }
   
   const columns = [

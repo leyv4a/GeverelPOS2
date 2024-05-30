@@ -10,6 +10,7 @@ router.post('/users', UserController.createUser);
 router.get('/category', CategoryController.getAllCategories);
 router.post('/category', CategoryController.createCategory);
 router.delete('/category/:id', CategoryController.deleteCategoryById);
+router.put('/category', CategoryController.updateCategoryById)
 
 router.get('/product', ProductController.getAllProducts);
 router.post('/product', ProductController.createProduct);

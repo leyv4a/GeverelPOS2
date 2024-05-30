@@ -47,6 +47,26 @@ class CategoryController {
       .status(200)
       .json({ message: `Categoria eliminada correctamente` });
   }
+  static async updateCategoryById(req, res) {
+    try {
+      const { name, id } = req.body;
+      if (!name || !id) {
+        res.status(400).json({ error: "Todos los campos son requeridos" });
+        return;
+      }
+      const result = await categoryModel.updateById(id, name);
+      if (!result.success) {
+        logToFile("Error actualizando el producto: " + result.message);
+        res.status(400).json({ error: result.message });
+        return;
+      }
+      logToFile("Producto actualizado");
+      res.status(201).json({ message: result.message });
+    } catch (error) {
+      logToFile(error);
+      res.status(500).json({ error: "Error en el servidor" });
+    }
+  }
 }
 
 module.exports = CategoryController;

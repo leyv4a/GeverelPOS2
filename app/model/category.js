@@ -27,6 +27,16 @@ class CategoryModel{
             return false;
         }
     }
+
+    static async updateById(id, name){
+        const sql = "UPDATE categoria set nombre = ? WHERE id = ?";
+        try {
+            await db.run(sql, [name,id]);
+            return { success: true, message: 'Categoria actualizada exitosamente' };
+        } catch (error) {
+            return { success: false, message: error.message };;
+        }
+    }
 }
 
 module.exports = CategoryModel;
