@@ -14,13 +14,26 @@ export default function AgregarProductos() {
   const [category, setCategory] = React.useState(0)
   const [isButtonLoading, setIsButtonLoading] = React.useState(false);
   //Guardan los valores de los input para agregar un nuevo producto
+  const [id, setId] = React.useState('');
   const [nombre, setNombre] = React.useState('');
   const [descripcion, setDescripcion] = React.useState('');
   //Este se debe agregar al registrar entrada nueva
-  // const [stock, setStock] = React.useState('');
   const [stockMin, setStockMin] = React.useState('');
   const [codigo, setCodigo] = React.useState('');
   const [unidad, setUnidad] = React.useState('');
+
+  const [editing, setEditing] = React.useState(false);
+
+  const handleEditing = (item) => {
+    setEditing(!editing)
+    setId(item.id),
+    setNombre(item.nombre),
+    setDescripcion(item.descripcion),
+    setStockMin(item.stockMin),
+    setCodigo(item.codigo),
+    setCategory(item.categoriaId),
+    setUnidad(item.unidad);
+  }
   // const [] = React.useState('');
   const resetFields = () => {
     setNombre('');
@@ -35,10 +48,6 @@ export default function AgregarProductos() {
 
   const handleFullTable = () => {
     setIsFullTable(!isFullTable);
-  }
-
-  const handleEditar = () => {
-    
   }
 
   const getProducts = async () => {
@@ -79,7 +88,6 @@ export default function AgregarProductos() {
     }
    }
 
-  // nombre,categoriaId, descripcion,stock,stockMin, precioVenta, precioCompra, codigo, unidad, categoriaId
   const createProduct = async (e) => {
     e.preventDefault();
     setIsButtonLoading(true)
@@ -137,8 +145,8 @@ export default function AgregarProductos() {
 
   const columns = [ 
   { uid: 'id', nombre: 'Id', sortable: true },
-  { uid: 'nombre', nombre: 'Nombre', sortable: true },
-  { uid: 'categoria', nombre: 'Categoria', sortable: true },
+  { uid: 'nombreP', nombre: 'Nombre', sortable: true },
+  // { uid: 'categoria', nombre: 'Categoria', sortable: true },
   { uid: 'descripcion', nombre: 'Descripcion', sortable: false },
   { uid: 'codigo', nombre: 'Codigo', sortable: false },
   { uid: 'unidad', nombre: 'Unidad', sortable: true },
@@ -161,21 +169,21 @@ export default function AgregarProductos() {
           <h2 className='text-2xl text-center w-full'>Registrar nuevo producto</h2>
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
             <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={nombre} onChange={e =>{setNombre(e.target.value)}} isRequired type="text" label="Nombre" size='sm'/>
-            <Select
-              isRequired
-              size='sm'
-              label="Categoria"
-              variant="underlined"
-              selectedKeys={category}
-              className="max-w-xs"
-              onChange={e => setCategory(e.target.value)}
-            >
-              {categories.map((items) => (
-                <SelectItem value={items.id} key={items.id}>
-                  {items.nombre}
-                </SelectItem>
-              ))}
-            </Select> 
+              <Select
+                isRequired
+                size='sm'
+                label="Categoria"
+                variant="underlined"
+                selectedKeys={[category.toString()]} // Asegúrate de que sea un array de string
+                className="max-w-xs"
+                onChange={e => setCategory(parseInt(e.target.value))}
+              >
+                {categories.map((items) => (
+                  <SelectItem value={items.id.toString()} key={items.id}>
+                    {items.nombre}
+                  </SelectItem>
+                ))}
+              </Select>
           </div>
           <Input errorMessage="Por favor rellene este campo." variant='underlined' value={descripcion} onChange={e =>{setDescripcion(e.target.value)}} isRequired type="text" label="Descripcion" size='sm'/>
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
@@ -196,7 +204,7 @@ export default function AgregarProductos() {
           </form>
         </div>
         <div className={isFullTable? 'w-[100%]' : 'w-[50%]'}>
-          <GenericTable columns={columns} data={products} onDelete={deleteProductById} isFullTable={isFullTable} handleFullTable={handleFullTable} onDetails={true}/>
+          <GenericTable columns={columns} data={products} onDelete={deleteProductById} isFullTable={isFullTable} handleFullTable={handleFullTable} onDetails={true} handleEditing={handleEditing}/>
         </div>
         <div>
           <ToastContainer position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>

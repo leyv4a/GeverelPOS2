@@ -11,10 +11,11 @@ function AgregarCategorias() {
   const [isButtonLoading, setIsButtonLoading] = React.useState(false);
 
   const [editing, setEditing] = React.useState(false);
-  const handleEditing = (id, nombre) => {
+
+  const handleEditing = (item) => {
     setEditing(!editing)
-    setName(nombre);
-    setId(id);
+    setName(item.nombre);
+    setId(item.id);
   }
   
   const [isFullTable, setIsFullTable] = React.useState(false);
@@ -92,6 +93,7 @@ const handleFullTable = () => {
 
   const updateCategoryById = async (e) => {
     e.preventDefault();
+    setIsButtonLoading(true);
     try {
       const response = await fetch(`http://localhost:3001/api/category`, {
         method: 'PUT',
@@ -109,6 +111,11 @@ const handleFullTable = () => {
     } catch (error) {
       toast.error(error.message);
       console.log(error);
+    }finally{
+      setName('');
+      setId('');
+      setIsButtonLoading(false);
+      setEditing(false);
     }
   }
   

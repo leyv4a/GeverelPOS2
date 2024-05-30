@@ -6,7 +6,7 @@ class ProductModel {
     static async getAll(){
         const sql =
         `SELECT 
-        producto.id, producto.nombre,producto.descripcion,categoria.nombre AS categoria ,producto.codigo , producto.unidad ,producto.stock, producto.stockMin, producto.precioVenta, producto.precioCompra
+        producto.id, producto.nombre,producto.descripcion,categoria.nombre AS categoria ,producto.codigo , producto.unidad ,producto.stock, producto.stockMin, producto.precioVenta, producto.precioCompra, producto.categoriaId
         FROM producto
         INNER JOIN categoria WHERE producto.categoriaId = categoria.id
         `

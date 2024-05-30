@@ -21,7 +21,8 @@ import {
     User,
     Pagination,
     Tooltip,
-    Popover, PopoverTrigger
+    Popover, PopoverTrigger,
+    Badge
 } from "@nextui-org/react";
 import ContentPopOver from './PopoverContent';
 
@@ -84,33 +85,30 @@ const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable, o
     const renderCell = React.useCallback((item, columnKey) => {
         const cellValue = item[columnKey];
         switch (columnKey) {
-            // case "nombre":
-            //     return (
-            //         <User
-            //             avatarProps={{ radius: "sm", src: item.avatar }}
-            //             description={item.email}
-            //             name={cellValue}
-            //         >
-            //             {item.email}
-            //         </User>
-            //     );
-            case "role":
+            case "nombreP":
                 return (
-                    <div className="flex flex-col">
-                        <p className="text-bold text-small capitalize">{cellValue}</p>
-                        <p className="text-bold text-tiny capitalize text-default-400">{item.team}</p>
+                    <div className='flex flex-col'>
+                        {item.nombre}
+                        <small className='m-0 p-0 text-gray-500'>{item.categoria}</small>
                     </div>
                 );
+            // case "role":
+            //     return (
+                    // <div className="flex flex-col">
+                    //     <p className="text-bold text-small capitalize">{cellValue}</p>
+                    //     <p className="text-bold text-tiny capitalize text-default-400">{item.team}</p>
+                    // </div>
+                // );
             case "acciones":
                 return (
                     <div className="relative flex items-center gap-2">
-                     {onDetails ?   <Tooltip content="Detalles">
+                     {onDetails ?   <Tooltip color='primary' content="Detalles">
                       <span className="text-lg text-default-400 hover:text-foreground cursor-pointer active:opacity-50">
                       <IoMdEye/>
                       </span>
                     </Tooltip> : ''}   
-                    <Tooltip content="Editar">
-                      <button onClick={() => handleEditing(item.id, item.nombre)} className="text-lg text-default-400 hover:text-foreground cursor-pointer active:opacity-50">
+                    <Tooltip color='primary' content="Editar">
+                      <button onClick={() => handleEditing(item)} className="text-lg text-default-400 hover:text-foreground cursor-pointer active:opacity-50">
                       <RiPencilFill />
                       </button>
                     </Tooltip>
