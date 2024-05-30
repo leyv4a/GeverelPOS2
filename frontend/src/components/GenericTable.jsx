@@ -25,7 +25,7 @@ import {
 } from "@nextui-org/react";
 import ContentPopOver from './PopoverContent';
 
-const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable, onDetails}) => {
+const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable, onDetails, handleEditing}) => {
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
     const [visibleColumns, setVisibleColumns] = React.useState(new Set(columns.map(col => col.uid)));
@@ -110,9 +110,9 @@ const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable, o
                       </span>
                     </Tooltip> : ''}   
                     <Tooltip content="Editar">
-                      <span className="text-lg text-default-400 hover:text-foreground cursor-pointer active:opacity-50">
+                      <button onClick={() => handleEditing(item.id, item.nombre)} className="text-lg text-default-400 hover:text-foreground cursor-pointer active:opacity-50">
                       <RiPencilFill />
-                      </span>
+                      </button>
                     </Tooltip>
                     <Tooltip color="danger" content="Eliminar">
                         <div className="flex flex-wrap gap-4">

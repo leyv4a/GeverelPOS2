@@ -6,8 +6,16 @@ import { ToastContainer, toast } from 'react-toastify';
 function AgregarCategorias() {
 
   const [categories, setCategories] = React.useState([])
-  const [name, setName] = React.useState('')
+  const [name, setName] = React.useState('');
+  const [id, setId] = React.useState(0);
   const [isButtonLoading, setIsButtonLoading] = React.useState(false);
+
+  const [editing, setEditing] = React.useState(false);
+  const handleEditing = (id, nombre) => {
+    setEditing(!editing)
+    setName(nombre);
+    setId(id);
+  }
   
   const [isFullTable, setIsFullTable] = React.useState(false);
 
@@ -81,6 +89,10 @@ const handleFullTable = () => {
       toast.error(error);
     }
   }
+
+  const updateCategoryById = async (e) => {
+    e.preventDefault();
+  }
   
   const columns = [
     { uid: 'id', nombre: 'Id', sortable: true },
@@ -95,14 +107,21 @@ getCategories();
     <>
     <div className='flex gap-6 max-h-[100%] p-5'>
       <div className={isFullTable? 'hidden':' w-[50%]' }>
-        <form onSubmit={e => {createCategory(e)}} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
+        <form onSubmit={e => {editing ? updateCategoryById(e):createCategory(e)}} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
           <h2 className='text-2xl text-center'>Registrar nueva categoria</h2>
           <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={name} onChange={e =>{setName(e.target.value)}} isRequired type="text" label="Nombre" size='sm' className=''/>
-          <Button isLoading={isButtonLoading} color='primary' type='submit'  className="border my-auto " >Agregar</Button>
+          {editing? 
+          <div className='flex gap-2'>
+            <Button isLoading={isButtonLoading} color='primary' type='submit'className="border my-auto w-full">Editar</Button>
+            <Button onClick={()=> handleEditing()} color='danger' className="border my-auto w-full " >Cancelar</Button>
+          </div> 
+        : <Button isLoading={isButtonLoading} color='primary' type='submit' className="border my-auto ">Agregar</Button>
+        }
+          
         </form>
       </div>
       <div className={isFullTable? 'w-[100%]' : 'w-[50%]'}>
-        <GenericTable isFullTable={isFullTable} handleFullTable={handleFullTable}  columns={columns} data={categories} onDelete={deleteCategoryById} onDetails={false}/>
+        <GenericTable isFullTable={isFullTable} handleFullTable={handleFullTable}  columns={columns} data={categories} onDelete={deleteCategoryById} onDetails={false} handleEditing={handleEditing}/>
       </div>
       <div>
         <ToastContainer  position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>
