@@ -207,6 +207,7 @@ const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable, o
                         >
                             <option value="5"> 5</option>
                             <option value="10"> 10</option>
+                            <option value="100"> 100</option>
                             {/* <option value="15"> 15</option> */}
                         </select>
                     </label>
@@ -254,7 +255,7 @@ const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable, o
             bottomContent={bottomContent}
             bottomContentPlacement="inside"
             classNames={{
-                wrapper: "min-h-[286px] ",
+                wrapper: "min-h-[286px] max-h-[70vh]",
             }}
             selectedKeys={selectedKeys}
             // selectionMode="multiple" Habiliar la seleccion multiple

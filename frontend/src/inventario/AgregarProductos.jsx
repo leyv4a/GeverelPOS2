@@ -56,6 +56,11 @@ export default function AgregarProductos() {
     setIsFullTable(!isFullTable);
   }
 
+  const updateProductById = async(e, id) =>{
+    e.preventDefault();
+    console.log(id)
+  } 
+
   const getProducts = async () => {
     try {
     const response = await fetch(`http://localhost:3001/api/product`,{
@@ -171,7 +176,7 @@ export default function AgregarProductos() {
     <>
       <div className='flex gap-6 p-5 max-h-[100%]'>
         <div className={isFullTable? 'hidden':' w-[50%]' }>
-          <form onSubmit={e => { createProduct(e)}} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
+          <form onSubmit={e => { editing? updateProductById(e, id) : createProduct(e)}} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
           <h2 className='text-2xl text-center w-full'>Registrar nuevo producto</h2>
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
             <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={nombre} onChange={e =>{setNombre(e.target.value)}} isRequired type="text" label="Nombre" size='sm'/>
@@ -206,7 +211,13 @@ export default function AgregarProductos() {
               <Radio value="kg"  onKeyDown={(e) => handleRadioKeyDown(e, 'kg')} tabIndex="0">Kilogramos</Radio>
               <Radio value="unidad"  onKeyDown={(e) => handleRadioKeyDown(e, 'unidad')} tabIndex="0">Unidad</Radio>
             </RadioGroup>
+                {editing?  
+          <div className='flex gap-2'>
+            <Button isLoading={isButtonLoading} color='primary' type='submit'  className="border my-auto w-full" >Editar</Button>
+            <Button onClick={() => {resetFields();handleEditing(); }} color='danger' className="border my-auto w-full" >Cancelar</Button>
+          </div> :
           <Button isLoading={isButtonLoading} color='primary' type='submit'  className="border my-auto " >Agregar</Button>
+          }
           </form>
         </div>
         <div className={isFullTable? 'w-[100%]' : 'w-[50%]'}>

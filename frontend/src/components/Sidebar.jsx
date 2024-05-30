@@ -1,3 +1,4 @@
+import { Tooltip } from "@nextui-org/react";
 import { useContext, createContext, useState, useRef, useEffect } from "react"
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa6";
 import { FiMoreVertical } from "react-icons/fi";
@@ -17,7 +18,8 @@ export default function Sidebar({ children }) {
             className={`overflow-hidden transition-all ${
               expanded ? "w-32" : "w-0"
             }`}
-            alt=""
+            
+            alt="gevpoint"
           />
           <button
             onClick={() => setExpanded((curr) => !curr)}
@@ -83,7 +85,7 @@ export function SidebarItem({ icon, text, active, alert, buttonRef, functionKey,
       ${
         active
         ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
-        : "hover:bg-indigo-50 text-gray-600"
+        : "hover:bg-foreground hover:text-background text-gray-600"
       }
       `}
       tabIndex="-1"
@@ -108,13 +110,15 @@ export function SidebarItem({ icon, text, active, alert, buttonRef, functionKey,
         <div
         className={`
         absolute left-full rounded-md px-2 py-1 ml-6
-        bg-indigo-100 text-indigo-800 text-sm
-        invisible opacity-20 -translate-x-3 transition-all
+        bg-foreground text-background text-sm
+        invisible opacity-0 transition-all duration-200
         group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
         `}
+        style={{ zIndex: 10 }}
         >
           {text}
         </div>
+        
       )}
     </LinkRouter>
   )
