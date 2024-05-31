@@ -36,11 +36,11 @@ class ProductModel {
             return false;
         }
     }
-    
+    // id, nombre, descripcion, stockMin, codigo,  unidad ,categoriaId: category
     static async updateById(id, nombre, descripcion, stockMin,codigo,unidad, categoriaId){
         const sql= 'UPDATE producto set nombre = ?, descripcion = ?, stockMin = ?, codigo = ?, unidad = ?, categoriaId = ? WHERE id = ?';
         try {
-            await db.run(sql, [id, nombre, descripcion, stockMin, codigo, unidad, categoriaId]);
+            await db.run(sql, [nombre, descripcion, stockMin, codigo, unidad, categoriaId, id]);
             return { success: true, message: 'Producto actualizado exitosamente' };
         } catch (error) {
             logToFile(error);

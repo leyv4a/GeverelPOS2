@@ -56,9 +56,31 @@ export default function AgregarProductos() {
     setIsFullTable(!isFullTable);
   }
 
-  const updateProductById = async(e, id) =>{
+  const updateProductById = async(e) =>{
     e.preventDefault();
-    console.log(id)
+    setIsButtonLoading(true);
+    try {
+      const response = await fetch('http://localhost:3001/api/product',{
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id, nombre, descripcion, stockMin, codigo,  unidad ,categoriaId: category})
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Error en la comunicación con la base de datos');
+      }
+      toast.success(result.message);
+      resetFields();
+      getProducts();
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error.message);
+    }finally{
+      setIsButtonLoading(false);
+    }
   } 
 
   const getProducts = async () => {
@@ -176,7 +198,7 @@ export default function AgregarProductos() {
     <>
       <div className='flex gap-6 p-5 max-h-[100%]'>
         <div className={isFullTable? 'hidden':' w-[50%]' }>
-          <form onSubmit={e => { editing? updateProductById(e, id) : createProduct(e)}} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
+          <form onSubmit={e => { editing? updateProductById(e) : createProduct(e)}} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
           <h2 className='text-2xl text-center w-full'>Registrar nuevo producto</h2>
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
             <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={nombre} onChange={e =>{setNombre(e.target.value)}} isRequired type="text" label="Nombre" size='sm'/>

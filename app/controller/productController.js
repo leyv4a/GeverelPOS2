@@ -70,6 +70,7 @@ class ProductController {
 
   static async updateProductById(req,res){
     try {
+      
       const {id, nombre, descripcion, stockMin, codigo, unidad, categoriaId } =
         req.body;
 
