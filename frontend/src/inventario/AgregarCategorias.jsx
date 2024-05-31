@@ -137,12 +137,11 @@ getCategories();
           <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={name} onChange={e =>{setName(e.target.value)}} isRequired type="text" label="Nombre" size='sm' className=''/>
           {editing? 
           <div className='flex gap-2'>
-            <Button isLoading={isButtonLoading} color='primary' type='submit'className="border my-auto w-full">Editar</Button>
-            <Button onClick={()=> handleEditing()} color='danger' className="border my-auto w-full " >Cancelar</Button>
+            <Button radius="sm" isLoading={isButtonLoading} color='primary' type='submit'className="border my-auto w-full">Editar</Button>
+            <Button radius="sm" onClick={()=> handleEditing()} color='danger' className="border my-auto w-full " >Cancelar</Button>
           </div> 
-        : <Button isLoading={isButtonLoading} color='primary' type='submit' className="border my-auto ">Agregar</Button>
+        : <Button radius="sm" isLoading={isButtonLoading} color='primary' type='submit' className="border my-auto ">Agregar</Button>
         }
-          
         </form>
       </div>
       <div className={isFullTable? 'w-[100%]' : 'w-[50%]'}>

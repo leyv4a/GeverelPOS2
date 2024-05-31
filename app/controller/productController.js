@@ -68,6 +68,45 @@ class ProductController {
       .json({ message: `Producto eliminado correctamente` });
   }
 
+  static async updateProductById(req,res){
+    try {
+      const {id, nombre, descripcion, stockMin, codigo, unidad, categoriaId } =
+        req.body;
+
+      if (
+        !id ||
+        !nombre ||
+        !descripcion ||
+        !stockMin ||
+        !codigo ||
+        !unidad ||
+        !categoriaId
+      ) {
+        res.status(400).json({ error: "Todos los campos son requeridos" });
+        return;
+      }
+
+      const result = await ProductModel.updateById(
+        id,
+        nombre,
+        descripcion,
+        stockMin,
+        codigo,
+        unidad,
+        categoriaId
+      );
+      if (!result.success) {
+        logToFile("Error actualizando el producto: " + result.message);
+        res.status(400).json({ error: result.message });
+        return;
+      }
+      logToFile("Producto actualizado");
+      res.status(200).json({ message: result.message });
+    } catch (error) {
+      logToFile(error);
+      res.status(500).json({ error: "Error en el servidor" });
+    }
+  }
 }
 
 module.exports = ProductController;

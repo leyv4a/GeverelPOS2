@@ -36,6 +36,17 @@ class ProductModel {
             return false;
         }
     }
+    
+    static async updateById(id, nombre, descripcion, stockMin,codigo,unidad, categoriaId){
+        const sql= 'UPDATE producto set nombre = ?, descripcion = ?, stockMin = ?, codigo = ?, unidad = ?, categoriaId = ? WHERE id = ?';
+        try {
+            await db.run(sql, [id, nombre, descripcion, stockMin, codigo, unidad, categoriaId]);
+            return { success: true, message: 'Producto actualizado exitosamente' };
+        } catch (error) {
+            logToFile(error);
+            return { success: false, message: error.message};
+        }
+    }
 }
 
 
