@@ -8,9 +8,7 @@ module.exports = {
     extraResource: [
       'app',
       'static'
-    ],
-    iconUrl: path.join(__dirname, '/static/gevpoint.svg'),
-    setUpIcon: path.join(__dirname, '/static/gevpoint.svg'),
+      ],
   },
   rebuildConfig: {},
   makers: [

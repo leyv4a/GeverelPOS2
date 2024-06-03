@@ -1,8 +1,8 @@
-import { Tooltip } from "@nextui-org/react";
-import { useContext, createContext, useState, useRef, useEffect } from "react"
+import { useContext, createContext, useState, useEffect } from "react"
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa6";
 import { FiMoreVertical } from "react-icons/fi";
 import { Link as LinkRouter } from 'react-router-dom';
+
 
 const SidebarContext = createContext()
 
@@ -14,8 +14,9 @@ export default function Sidebar({ children }) {
       <nav className="h-full flex flex-col bg-white border-r shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center">
           <img
-            // src="https://img.logoipsum.com/243.svg"
-            src="/TheGevpoint.svg"
+            // src="https://img.logoipsum.com/243.svg" 
+            src={'TheGevpoint.svg'}
+            // src={path.join(__dirname, '/static/TheGevpoint.svg')}
             className={`overflow-hidden transition-all ${
               expanded ? "w-40" : "w-0"
             }`}
@@ -36,7 +37,7 @@ export default function Sidebar({ children }) {
 
         <div className="border-t flex p-3">
           <img
-            src="https://ui-avatars.com/api/?name=Gabriel+Leyva&background=c7d2fe&color=3730a3&bold=true"
+            src="https://ui-avatars.com/api/?name=Gabriel+Leyva&background=c13ffe&color=ffffff&bold=true"
             alt=""
             className="w-10 h-10 rounded-md"
           />
@@ -54,7 +55,7 @@ export default function Sidebar({ children }) {
           </div>
         </div>
       </nav>
-    </aside>
+    </aside> 
   )
 }
 

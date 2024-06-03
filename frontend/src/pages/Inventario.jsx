@@ -18,19 +18,19 @@ export default function Inventario() {
 
   const items = [
     {
-      name: 'Agregar Producto',
+      name: 'Productos',
       section: 'agregarProducto'
     },
     {
-      name: 'Agregar Categoria',
+      name: 'Categorias',
       section: 'agregarCategoria'
     },
     {
-      name: 'Registrar Entrada',
+      name: 'Entradas',
       section:'registrarEntrada'
     },
     {
-      name: 'Registrar Salida',
+      name: 'Salidas',
       section:'registrarSalida'
     }
 

@@ -22,6 +22,8 @@ const createWindow = () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
+    iconUrl: path.join(__dirname, '/static/gevpoint.svg'),
+    setUpIcon: path.join(__dirname, '/static/gevpoint.svg'),
   });
 
   // and load the index.html of the app.

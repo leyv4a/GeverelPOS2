@@ -80,6 +80,7 @@ export default function AgregarProductos() {
       console.log(error.message);
     }finally{
       setIsButtonLoading(false);
+      setEditing(false);
     }
   } 
 
@@ -248,8 +249,8 @@ export default function AgregarProductos() {
         <div>
           <ToastContainer position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>
         </div>
-        <div className="flex flex-col gap-3">
-    </div>
+        {/* <div className="flex flex-col gap-3">
+        </div> */}
       </div>
     </>
   )
