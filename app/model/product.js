@@ -15,6 +15,24 @@ class ProductModel {
         return rows;
     }
 
+    static async getById(id){
+        const sql = `SELECT producto.id, producto.nombre, producto.descripcion,categoria.nombre AS categoria ,producto.codigo , producto.unidad ,producto.stock, producto.stockMin, producto.precioVenta, producto.precioCompra, producto.categoriaId
+        FROM producto
+        INNER JOIN categoria ON producto.categoriaId = categoria.id
+        WHERE producto.id = ?
+        ORDER BY producto.categoriaId 
+        `
+        try {
+           const product =  await db.get(sql, [id])
+           if (!product) {
+             throw new Error('Producto no encontrado');
+           }
+           return {success: true, rows : product};
+        } catch (error) {
+            logToFile(error.message)
+            return {success:false, message: error.message}
+        }
+    }
 
     static async create(nombre, descripcion,stockMin,codigo,unidad, categoriaId){
         const sql = 'INSERT INTO producto ( nombre, descripcion, stockMin, codigo, unidad, categoriaId) VALUES (?,?,?,?,?,?)'

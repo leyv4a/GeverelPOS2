@@ -13,6 +13,24 @@ class ProductController {
         .json({ error: "Error obteniendo productos de la base de datos" });
     }
   }
+  
+  static async getProductById(req, res){
+    try {
+      const id = req.params.id;
+      if (!id) {
+        res.status(400).json({ error: 'El id es requerido' });
+      }
+      const product = await ProductModel.getById(id);
+      if (!product.success) {
+        logToFile(product.message)
+        return res.status(404).json({ error: product.message });
+      }
+      return res.status(200).json(product.rows);
+    } catch (error) {
+      logToFile(error.message)
+      res.status(500).json({ error: "Error en el servidor" });
+    }
+  }
 
   static async createProduct(req, res) {
     try {

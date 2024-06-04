@@ -17,6 +17,7 @@ router.get('/product', ProductController.getAllProducts);
 router.post('/product', ProductController.createProduct);
 router.delete('/product/:id', ProductController.deleteProductById);
 router.put('/product', ProductController.updateProductById);
+router.get('/product/:id', ProductController.getProductById);
 
 router.get('/transaction/entry', TransactionController.getAllEntryTransactions);
 router.post('/transaction/entry', TransactionController.createTransactionEntry);
