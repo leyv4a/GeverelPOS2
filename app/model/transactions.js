@@ -4,7 +4,7 @@ const logToFile = require('../utils/logger');
 class TransactionModel {
 
     static async getAllEntradas() {
-        const sql = "SELECT * FROM transacciones WHERE tipo = 'Entrada'"
+        const sql = "SELECT transacciones.id, producto.nombre, producto.codigo, transacciones.tipo, transacciones.motivo, transacciones.cantidad, transacciones.fecha FROM transacciones INNER JOIN producto ON transacciones.productoId = producto.id WHERE tipo = 'Entrada'"
         const rows = await db.all(sql);
         return rows;
     }

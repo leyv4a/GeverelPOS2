@@ -1,30 +1,67 @@
 import React from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import GenericTable from '../components/GenericTable';
+import { Button, Input } from '@nextui-org/react';
 export default function RegistrarEntrada() {
 
+  const [producto, setProducto] = React.useState('');
+  const [fecha, setFecha] = React.useState('');
+
+  const [data, setData] = React.useState([]);
   const [isFullTable, setIsFullTable] = React.useState(false);
 
   const handleFullTable = () => {
     setIsFullTable(!isFullTable);
   }
 
+  const getEntradas = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/transaction/entry',{
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type' : 'application/json'
+        }
+      })
+      if (!response.ok) throw new Error('Error al cargar las entradas');
+      const data = await response.json();
+      setData(data);
+    } catch (error) {
+      console.log(error)
+      toast.error('Error en la comunicacion con la base de datos', {
+        bodyClassName : 'text-foreground'
+      })
+      
+    }
+  }
+
   const columns = [
     // { uid: 'id', nombre: 'Id', sortable: true },
     { uid: 'nombre', nombre: 'Nombre', sortable: true },
     { uid: 'codigo', nombre: 'Codigo', sortable: true },
-    { uid: 'tipo', nombre: 'Tipo', sortable: true },
+    // { uid: 'tipo', nombre: 'Tipo', sortable: true },
+    { uid: 'fecha', nombre: 'Fecha', sortable: true },
     { uid: 'motivo', nombre: 'Motivo', sortable: true },
     { uid: 'cantidad', nombre: 'Cantidad', sortable: false },
     { uid: 'acciones', nombre: 'Acciones', sortable: false },
   ];
+
+  React.useEffect(() => {
+    getEntradas();
+  }, [])
   return (
     <div className='flex gap-6 max-h-[100%] p-5'>
       <div className={isFullTable? 'hidden': 'w-[50%]'}>
-        1
+      <div className="flex w-full gap-4">
+        <div className='flex'>
+          <Input isRequired size='sm' variant='underlined' type="text" label="Producto" value={producto} onChange={e=> setProducto(e.target.value)}/>
+          <Button size='lg' color="primary" radius='none' disableRipple >Buscar</Button>
         </div>
+         <Input size='sm' variant='underlined' isReadOnly disabled value={fecha} label="Fecha" className='max-w-[40%]'/>
+      </div>  
+      </div>
       <div className={isFullTable? 'w-[100%]': 'w-[50%]'}>
-        <GenericTable columns={columns} data={[]} isFullTable={isFullTable} handleFullTable={handleFullTable}/>
+        <GenericTable columns={columns} data={data} isFullTable={isFullTable} handleFullTable={handleFullTable}/>
       </div>
       <div>
           <ToastContainer position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>

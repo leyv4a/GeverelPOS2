@@ -85,7 +85,7 @@ const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable, o
     const renderCell = React.useCallback((item, columnKey) => {
         const cellValue = item[columnKey];
         switch (columnKey) {
-            // case "nombreP":
+            // case "nombre":
             //     return (
             //         <div className='flex flex-col'>
             //             {item.nombre}
