@@ -81,12 +81,12 @@ const initializeTables = async () => {
   const createTransactionsTable = `
   CREATE TABLE IF NOT EXISTS transacciones(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    productoid INTEGER NOT NULL,
+    productoId INTEGER NOT NULL,
     tipo TEXT NOT NULL,
     motivo TEXT NOT NULL,
-    monto REAL NOT NULL,
-    fecha TEXT NOT NULL
-
+    cantidad REAL NOT NULL,
+    fecha TEXT NOT NULL,
+    FOREIGN KEY (productoId) REFERENCES producto(id)
   )`;
 
   // const createConfigTable = `
@@ -109,7 +109,7 @@ const initializeTables = async () => {
     await db.run(createTransactionsTable);
     logToFile('Transactions table created or already exists');
   } catch (err) {
-    logToFile('Error initializing tables: ' + err);
+    logToFile('Error initializing tables: ' + err.message);
     console.log(err);
   }
 };

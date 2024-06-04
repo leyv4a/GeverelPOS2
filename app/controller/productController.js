@@ -7,7 +7,7 @@ class ProductController {
       const products = await ProductModel.getAll();
       res.status(200).json(products);
     } catch (error) {
-      logToFile(error);
+      logToFile(error.message);
       res
         .status(500)
         .json({ error: "Error obteniendo productos de la base de datos" });
@@ -48,7 +48,7 @@ class ProductController {
       logToFile("Producto creado");
       res.status(201).json({ message: result.message });
     } catch (error) {
-      logToFile(error);
+      logToFile(error.message);
       res.status(500).json({ error: "Error en el servidor" });
     }
   }
@@ -104,7 +104,7 @@ class ProductController {
       logToFile("Producto actualizado");
       res.status(200).json({ message: result.message });
     } catch (error) {
-      logToFile(error);
+      logToFile(error.message);
       res.status(500).json({ error: "Error en el servidor" });
     }
   }
