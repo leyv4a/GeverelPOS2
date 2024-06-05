@@ -16,9 +16,9 @@ class ProductController {
   
   static async getProductByCode(req, res){
     try {
-      const code = req.params.id;
+      const code = req.params.code;
       if (!code) {
-        res.status(400).json({ error: 'El id es requerido' });
+        res.status(400).json({ error: 'El codigo es requerido' });
       }
       const product = await ProductModel.getByCode(code);
       if (!product.success) {

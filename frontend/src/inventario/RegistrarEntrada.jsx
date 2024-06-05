@@ -4,10 +4,14 @@ import GenericTable from '../components/GenericTable';
 import { Button, Input } from '@nextui-org/react';
 export default function RegistrarEntrada() {
 
+  //Guardara el nombre del producto resultante de la api
   const [producto, setProducto] = React.useState('');
-  const [productoEncontrado, setProductoEncontrado] = React.useState('')
+  //Guardara el codigo del input para buscar en la api
   const [codigo, setCodigo] = React.useState('');
   const [fecha, setFecha] = React.useState('');
+  const [unidad,setUnidad] = React.useState('');
+
+  const [isButtonLoading, setIsButtonLoading] = React.useState(false);
 
   const [data, setData] = React.useState([]);
   const [isFullTable, setIsFullTable] = React.useState(false);
@@ -39,7 +43,9 @@ export default function RegistrarEntrada() {
   //Se esta buscando por id cambiar el metodo en la api para buscar por codigo
   const getProductByCode = async (e) => {
     e.preventDefault();
+    setIsButtonLoading(true)
     try {
+      if(codigo === '' ) throw new Error('Todos los campos son necesarios');
       const response = await fetch(`http://localhost:3001/api/product/${codigo}`,{
         method: 'GET',
         mode: 'cors',
@@ -48,15 +54,17 @@ export default function RegistrarEntrada() {
         }
       })
       if (!response.ok) throw new Error('Error al buscar el producto');
-      const producto = await response.json();
-      setProductoEncontrado(producto[0].nombre);
-      console.log(producto)
+      const result = await response.json();
+      console.log(result)
+      setProducto(result.nombre);
+      setUnidad(result.unidad)
     } catch (error) {
       console.log(error.message)
-      toast.error('Error en la comunicacion con la base de datos', {
+      toast.error(error.message || 'Error en la comunicacion con la base de datos', {
         bodyClassName : 'text-foreground'
       })
-      
+    }finally{
+      setIsButtonLoading(false)
     }
   }
 
@@ -80,24 +88,32 @@ export default function RegistrarEntrada() {
     if (producto == '') {
       setFecha('')
     }
-  }, [productoEncontrado])
+  }, [producto])
   return (
     <div className='flex gap-6 max-h-[100%] p-5'>
       <div className={isFullTable? 'hidden': 'w-[50%]'}>
       <div className="flex w-full gap-4">
         <div className='flex'>
-          <Input isRequired size='sm' variant='underlined' type="text" label="Producto" value={producto} onChange={e=> setProducto(e.target.value)}/>
-          <Button size='lg' color="primary" radius='none' disableRipple onClick={e => getProductByCode(e)} >Buscar</Button>
+          <Input isRequired size='sm' variant='underlined' type="text" label="Producto" value={codigo} onChange={e=> setCodigo(e.target.value)}/>
+          <Button isLoading={isButtonLoading} size='lg' color="primary" radius='none' disableRipple onClick={e => getProductByCode(e)}>Buscar</Button>
         </div>
          <Input size='sm' variant='underlined' isReadOnly disabled value={fecha} label="Fecha" className='max-w-[40%]'/>
       </div>  
       {
-        productoEncontrado != '' ? 
+        producto != '' ? 
         <div className='flex w-full gap-4'>
-            {`El producto es ${productoEncontrado}`}
+          <p>El producto es: <em>{producto}</em></p>
+        </div> :''
+      }
+      {
+        producto != '' && unidad == 'kg' ?
+         'El producto son kilos' 
+         : producto != '' && unidad == 'unidad' ? 
+         <div className='flex w-full gap-4'>
+            <Input isRequired size='sm' variant='underlined' type="number" label="Unidades" />
+            <Input isRequired size='sm' variant='underlined' type="text" label="Inversion" />
         </div>
-        :
-        ''
+         : ''
       }
       </div>
       <div className={isFullTable? 'w-[100%]': 'w-[50%]'}>
