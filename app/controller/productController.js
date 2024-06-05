@@ -14,13 +14,13 @@ class ProductController {
     }
   }
   
-  static async getProductById(req, res){
+  static async getProductByCode(req, res){
     try {
-      const id = req.params.id;
-      if (!id) {
+      const code = req.params.id;
+      if (!code) {
         res.status(400).json({ error: 'El id es requerido' });
       }
-      const product = await ProductModel.getById(id);
+      const product = await ProductModel.getByCode(code);
       if (!product.success) {
         logToFile(product.message)
         return res.status(404).json({ error: product.message });

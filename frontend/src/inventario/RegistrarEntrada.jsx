@@ -5,6 +5,8 @@ import { Button, Input } from '@nextui-org/react';
 export default function RegistrarEntrada() {
 
   const [producto, setProducto] = React.useState('');
+  const [productoEncontrado, setProductoEncontrado] = React.useState('')
+  const [codigo, setCodigo] = React.useState('');
   const [fecha, setFecha] = React.useState('');
 
   const [data, setData] = React.useState([]);
@@ -34,6 +36,29 @@ export default function RegistrarEntrada() {
       
     }
   }
+  //Se esta buscando por id cambiar el metodo en la api para buscar por codigo
+  const getProductByCode = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:3001/api/product/${codigo}`,{
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type' : 'application/json'
+        }
+      })
+      if (!response.ok) throw new Error('Error al buscar el producto');
+      const producto = await response.json();
+      setProductoEncontrado(producto[0].nombre);
+      console.log(producto)
+    } catch (error) {
+      console.log(error.message)
+      toast.error('Error en la comunicacion con la base de datos', {
+        bodyClassName : 'text-foreground'
+      })
+      
+    }
+  }
 
   const columns = [
     // { uid: 'id', nombre: 'Id', sortable: true },
@@ -49,16 +74,31 @@ export default function RegistrarEntrada() {
   React.useEffect(() => {
     getEntradas();
   }, [])
+  React.useEffect(()=> {
+    const date = new Date();
+    setFecha(date.getFullYear())
+    if (producto == '') {
+      setFecha('')
+    }
+  }, [productoEncontrado])
   return (
     <div className='flex gap-6 max-h-[100%] p-5'>
       <div className={isFullTable? 'hidden': 'w-[50%]'}>
       <div className="flex w-full gap-4">
         <div className='flex'>
           <Input isRequired size='sm' variant='underlined' type="text" label="Producto" value={producto} onChange={e=> setProducto(e.target.value)}/>
-          <Button size='lg' color="primary" radius='none' disableRipple >Buscar</Button>
+          <Button size='lg' color="primary" radius='none' disableRipple onClick={e => getProductByCode(e)} >Buscar</Button>
         </div>
          <Input size='sm' variant='underlined' isReadOnly disabled value={fecha} label="Fecha" className='max-w-[40%]'/>
       </div>  
+      {
+        productoEncontrado != '' ? 
+        <div className='flex w-full gap-4'>
+            {`El producto es ${productoEncontrado}`}
+        </div>
+        :
+        ''
+      }
       </div>
       <div className={isFullTable? 'w-[100%]': 'w-[50%]'}>
         <GenericTable columns={columns} data={data} isFullTable={isFullTable} handleFullTable={handleFullTable}/>

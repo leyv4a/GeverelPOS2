@@ -15,15 +15,15 @@ class ProductModel {
         return rows;
     }
 
-    static async getById(id){
+    static async getByCode(code){
         const sql = `SELECT producto.id, producto.nombre, producto.descripcion,categoria.nombre AS categoria ,producto.codigo , producto.unidad ,producto.stock, producto.stockMin, producto.precioVenta, producto.precioCompra, producto.categoriaId
         FROM producto
         INNER JOIN categoria ON producto.categoriaId = categoria.id
-        WHERE producto.id = ?
+        WHERE producto.codigo = ?
         ORDER BY producto.categoriaId 
         `
         try {
-           const product =  await db.get(sql, [id])
+           const product =  await db.get(sql, [code])
            if (!product) {
              throw new Error('Producto no encontrado');
            }
