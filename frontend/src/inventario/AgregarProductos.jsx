@@ -21,6 +21,7 @@ export default function AgregarProductos() {
   const [stockMin, setStockMin] = React.useState('');
   const [codigo, setCodigo] = React.useState('');
   const [unidad, setUnidad] = React.useState('');
+  const [inicial, setInicial] = React.useState('');
 
   const [editing, setEditing] = React.useState(false);
 
@@ -42,6 +43,14 @@ export default function AgregarProductos() {
     setCodigo('');
     setCategory(0)
     setUnidad('')
+  }
+
+  const handleCategoryChange = (value) => {
+    const selectedCategory = categories.find(item => item.id.toString() === value);
+    if (selectedCategory) {
+      setCategory(parseInt(value));
+      setInicial(selectedCategory.inicial);
+    }
   }
 
   const [isFullTable, setIsFullTable] = React.useState(false);
@@ -202,7 +211,7 @@ export default function AgregarProductos() {
           <form onSubmit={e => { editing? updateProductById(e) : createProduct(e)}} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
           <h2 className='text-2xl text-center w-full'>Registrar nuevo producto</h2>
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-            <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={nombre} onChange={e =>{setNombre(e.target.value)}} isRequired type="text" label="Nombre" size='sm'/>
+            <Input pattern="[A-Za-z\s]+" errorMessage="Por favor rellene este campo." variant='underlined'  value={nombre} onChange={e =>{setNombre(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}} isRequired type="text" label="Nombre" size='sm'/>
               <Select
                 isRequired
                 size='sm'
@@ -210,19 +219,19 @@ export default function AgregarProductos() {
                 variant="underlined"
                 selectedKeys={[category.toString()]} // Asegúrate de que sea un array de string
                 className="max-w-xs"
-                onChange={e => setCategory(parseInt(e.target.value))}
+                onChange={e => handleCategoryChange(e.target.value)}
               >
                 {categories.map((items) => (
-                  <SelectItem value={items.id.toString()} key={items.id}>
+                  <SelectItem className='capitalize' value={`${items.id.toString()}|${items.inicial}`} key={items.id}>
                     {items.nombre}
                   </SelectItem>
                 ))}
               </Select>
           </div>
-          <Input errorMessage="Por favor rellene este campo." variant='underlined' value={descripcion} onChange={e =>{setDescripcion(e.target.value)}} isRequired type="text" label="Descripcion" size='sm'/>
+          <Input pattern="[A-Za-z\s]+" variant='underlined' value={descripcion} onChange={e =>{setDescripcion(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}} isRequired type="text" label="Descripcion" size='sm'/>
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-            <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={codigo} onChange={e =>{setCodigo(e.target.value)}} isRequired type="text" label="Codigo" size='sm'/>
-            <Input errorMessage="Por favor rellene este campo." variant='underlined' value={stockMin} onChange={e =>{setStockMin(e.target.value)}} isRequired type="text" label="Stock Min." size='sm'/>
+            <Input pattern="\d+" errorMessage="Por favor rellene este campo." variant='underlined'  value={inicial+codigo} onChange={e =>{setCodigo(e.target.value.replace(/[^\d]/g, ''))}} isRequired type="text" label="Codigo" size='sm'  maxLength={4}/>
+            <Input pattern="\d+" variant='underlined' value={stockMin} onChange={e =>{setStockMin(e.target.value.replace(/[^\d]/g, ''))}} isRequired type="text" label="Stock Min." size='sm'/>
           </div>
             <RadioGroup
               label="Selecciona la unidad de medida"
