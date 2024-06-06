@@ -2,7 +2,8 @@ import React from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import GenericTable from '../components/GenericTable';
 import { Button, Input,RadioGroup, Radio } from '@nextui-org/react';
-import { FaMagnifyingGlass,FaWeightScale, FaKeyboard  } from "react-icons/fa6";
+import { FaMagnifyingGlass, FaKeyboard  } from "react-icons/fa6";
+import { RiWeightLine as FaWeightScale} from "react-icons/ri";
 export default function RegistrarEntrada() {
 
   //Guardara el nombre del producto resultante de la api
@@ -48,6 +49,22 @@ export default function RegistrarEntrada() {
     } catch (error) {
       toast.error(error.message);
     }
+  }
+
+  const resetFields = async () => {
+    setProducto('');
+    setCodigo('');
+    setFecha('');
+    setUnidad('');
+    setMotivo('');
+    setCantidad('');
+    setInversion('');
+    setMargen('');
+    setMargenManual('');
+    setPrecioVentaManual('');
+    setIsManual(true);
+    setIsButtonLoading(false);
+    setIsButtonLoading2(false);
   }
 
   const addEntradas = async (e) => {
@@ -110,6 +127,7 @@ export default function RegistrarEntrada() {
       setUnidad(result.unidad)
     } catch (error) {
       console.log(error.message)
+      resetFields();
       toast.error(error.message || 'Error en la comunicacion con la base de datos', {
         bodyClassName : 'text-foreground'
       })

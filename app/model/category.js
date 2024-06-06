@@ -3,15 +3,15 @@ const logToFile = require('../utils/logger')
 
 class CategoryModel{
     static async getAll() {
-        const sql = "SELECT id, nombre FROM categoria"
+        const sql = "SELECT id, nombre, inicial FROM categoria"
         const rows = await db.all(sql);
         return rows;
     }
 
-    static async create(name){
-        const sql = "INSERT INTO categoria (nombre) VALUES (?)"
+    static async create(name, inicial){
+        const sql = "INSERT INTO categoria (nombre, inicial) VALUES (?, ?)"
         try {
-            await db.run(sql, [name]);
+            await db.run(sql, [name,inicial]);
             return { success: true, message: 'Categoria creada exitosamente' };
         } catch (error) {
             logToFile(error.message) 
@@ -28,10 +28,10 @@ class CategoryModel{
         }
     }
 
-    static async updateById(id, name){
-        const sql = "UPDATE categoria set nombre = ? WHERE id = ?";
+    static async updateById(id, name, inicial){
+        const sql = "UPDATE categoria set nombre = ?, inicial = ? WHERE id = ?";
         try {
-            await db.run(sql, [name,id]);
+            await db.run(sql, [name,inicial,id]);
             return { success: true, message: 'Categoria actualizada exitosamente' };
         } catch (error) {
             return { success: false, message: error.message };;

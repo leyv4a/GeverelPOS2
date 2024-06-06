@@ -15,12 +15,12 @@ class CategoryController {
   }
   static async createCategory(req, res) {
     try {
-      const { name } = req.body;
-      if (!name) {
-        res.status(400).json({ error: "El nombre es requerido" });
+      const { name, inicial } = req.body;
+      if (!name || !inicial) {
+        res.status(400).json({ error: "Todos los campos son requeridos" });
         return;
       }
-      const result = await categoryModel.create(name);
+      const result = await categoryModel.create(name, inicial);
       if (!result.success) {
         logToFile(`Error creating category ${result.message}`);
         return res.status(500).json({ error: result.message });
@@ -49,12 +49,12 @@ class CategoryController {
   }
   static async updateCategoryById(req, res) {
     try {
-      const { name, id } = req.body;
-      if (!name || !id) {
+      const { name,inicial, id } = req.body;
+      if (!name || !id ||!inicial) {
         res.status(400).json({ error: "Todos los campos son requeridos" });
         return;
       }
-      const result = await categoryModel.updateById(id, name);
+      const result = await categoryModel.updateById(id, name, inicial);
       if (!result.success) {
         logToFile("Error actualizando el producto: " + result.message);
         res.status(400).json({ error: result.message });

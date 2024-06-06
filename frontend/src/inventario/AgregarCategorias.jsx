@@ -7,6 +7,7 @@ function AgregarCategorias() {
 
   const [categories, setCategories] = React.useState([])
   const [name, setName] = React.useState('');
+  const [inicial, setInicial] = React.useState('');
   const [id, setId] = React.useState(0);
   const [isButtonLoading, setIsButtonLoading] = React.useState(false);
 
@@ -15,6 +16,7 @@ function AgregarCategorias() {
   const handleEditing = (item) => {
     setEditing(!editing)
     setName(item.nombre);
+    setInicial(item.inicial);
     setId(item.id);
   }
   
@@ -53,7 +55,7 @@ const handleFullTable = () => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ name })
+      body: JSON.stringify({ name, inicial })
     });
     
     const result = await response.json();
@@ -64,6 +66,7 @@ const handleFullTable = () => {
     toast.success(result.message);
     getCategories();
     setName('');
+    setInicial('');
   } catch (error) {
     toast.error(error.message);
   } finally {
@@ -100,7 +103,7 @@ const handleFullTable = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ id, name })
+        body: JSON.stringify({ id, name, inicial })
       })
       if (!response.ok) {
         throw new Error('Error al actualizar la categoria.');
@@ -114,6 +117,7 @@ const handleFullTable = () => {
     }finally{
       setName('');
       setId('');
+      setInicial('');
       setIsButtonLoading(false);
       setEditing(false);
     }
@@ -122,6 +126,7 @@ const handleFullTable = () => {
   const columns = [
     { uid: 'id', nombre: 'Id', sortable: true },
     { uid: 'nombre', nombre: 'Nombre', sortable: true },
+    { uid: 'inicial', nombre: 'Inicial', sortable: true },
     { uid: 'acciones', nombre: 'Acciones', sortable: false },
   ];
 
@@ -134,11 +139,14 @@ getCategories();
       <div className={isFullTable? 'hidden':' w-[50%]' }>
         <form onSubmit={e => {editing ? updateCategoryById(e):createCategory(e)}} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
           <h2 className='text-2xl text-center'>Registrar nueva categoria</h2>
+          <div className='flex gap-4'>
           <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={name} onChange={e =>{setName(e.target.value)}} isRequired type="text" label="Nombre" size='sm' className=''/>
+          <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={inicial} onChange={e =>{setInicial(e.target.value)}} isRequired type="text" label="Inicial" size='sm' className='max-w-[10vw]'/>
+          </div>
           {editing? 
           <div className='flex gap-2'>
             <Button radius="sm" isLoading={isButtonLoading} color='primary' type='submit'className="border my-auto w-full">Editar</Button>
-            <Button radius="sm" onClick={()=> handleEditing()} color='danger' className="border my-auto w-full " >Cancelar</Button>
+            <Button radius="sm" onClick={handleEditing} color='danger' className="border my-auto w-full " >Cancelar</Button>
           </div> 
         : <Button radius="sm" isLoading={isButtonLoading} color='primary' type='submit' className="border my-auto ">Agregar</Button>
         }
