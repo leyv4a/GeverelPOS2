@@ -2,6 +2,7 @@ import React from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import GenericTable from '../components/GenericTable';
 import { Button, Input,RadioGroup, Radio } from '@nextui-org/react';
+import { FaMagnifyingGlass,FaWeightScale, FaKeyboard  } from "react-icons/fa6";
 export default function RegistrarEntrada() {
 
   //Guardara el nombre del producto resultante de la api
@@ -156,7 +157,7 @@ export default function RegistrarEntrada() {
         <div className="flex w-full gap-4">
         <div className='flex'>
           <Input isRequired size='sm' variant='underlined' type="text" label="Producto" value={codigo} onChange={e=> setCodigo(e.target.value)}/>
-          <Button isLoading={isButtonLoading} size='lg' color="primary" radius='none' disableRipple onClick={e => getProductByCode(e)}>Buscar</Button>
+          <Button isIconOnly isLoading={isButtonLoading} size='lg' color="primary" radius='none' disableRipple onClick={e => getProductByCode(e)}><FaMagnifyingGlass/></Button>
         </div>
          <Input size='sm' variant='underlined' isReadOnly disabled value={fecha} label="Fecha" className='max-w-[40%]'/>
       </div>  
@@ -171,8 +172,8 @@ export default function RegistrarEntrada() {
         <div className='flex w-full gap-4'>
         <div className='flex'>
           <Input isRequired size='sm' variant='underlined' value={cantidad} onChange={e=> setCantidad(e.target.value)} isDisabled={isManual} label="Cantidad" />
-          <Button size='lg' color="primary" radius='none' disableRipple>Pesar</Button>
-          <Button size='lg' color="foreground" onClick={e => setIsManual(!isManual)} className="border border-primary" radius='none' disableRipple>Manual</Button>
+          <Button isIconOnly size='lg' color="primary" radius='none' disableRipple><FaWeightScale/></Button>
+          <Button isIconOnly size='lg' color="foreground" onClick={e => setIsManual(!isManual)} className="border border-primary" radius='none' disableRipple><FaKeyboard /></Button>
         </div>
         <Input isRequired size='sm' variant='underlined' value={inversion} onChange={e => setInversion(e.target.value)} type="text" label="Costo por kilo" className='max-w-[40%]'/>
        </div>
