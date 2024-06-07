@@ -34,6 +34,11 @@ export default function RegistrarEntrada() {
     setIsFullTable(!isFullTable);
   }
 
+  const handleCancelar = (e)=> {
+    e.preventDefault();
+    resetFields();
+  }
+
   const calculatePrecioVenta = async () => {
     try {
       let calculatedPrecioVenta = 0;
@@ -244,12 +249,17 @@ export default function RegistrarEntrada() {
         :
         ''
       }
+      <div className='flex'>
+
+      
       {
         margen != '' || margenManual != ''  ? 
-        <Button isLoading={isButtonLoading2} size='md' color="primary" type='submit' disableRipple >Agregar</Button>
+        <Button isLoading={isButtonLoading2} size='md' color="primary" type='submit' disableRipple className='w-full'>Agregar</Button>
         :
         ''
       }
+       <Button  size='md' color="primary" onClick={e => handleCancelar(e)}  disableRipple className={producto != '' ? 'w-full' : 'hidden'}>Cancelar</Button>
+       </div>
         </form>
       </div>
       <div className={isFullTable? 'w-[100%]': 'w-[50%]'}>

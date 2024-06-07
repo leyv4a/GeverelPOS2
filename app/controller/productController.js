@@ -50,11 +50,11 @@ class ProductController {
       }
 
       const result = await ProductModel.create(
-        nombre,
-        descripcion,
+        nombre.toLowerCase(),
+        descripcion.toLowerCase(),
         stockMin,
-        codigo,
-        unidad,
+        codigo.toLowerCase(),
+        unidad.toLowerCase(),
         categoriaId
       );
 
@@ -107,11 +107,11 @@ class ProductController {
 
       const result = await ProductModel.updateById(
         id,
-        nombre,
-        descripcion,
+        nombre.toLowerCase(),
+        descripcion.toLowerCase(),
         stockMin,
-        codigo,
-        unidad,
+        codigo.toLowerCase(),
+        unidad.toLowerCase(),
         categoriaId
       );
       if (!result.success) {

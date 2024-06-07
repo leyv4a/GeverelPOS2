@@ -247,10 +247,10 @@ export default function AgregarProductos() {
             </RadioGroup>
                 {editing?  
           <div className='flex gap-2'>
-            <Button radius="sm" isLoading={isButtonLoading} color='primary' type='submit'  className="border my-auto w-full" >Editar</Button>
-            <Button radius="sm" onClick={() => {resetFields();handleEditing(); }} color='danger' className="border my-auto w-full" >Cancelar</Button>
+            <Button radius="sm" isLoading={isButtonLoading} color='primary' type='submit'  className=" my-auto w-full" >Editar</Button>
+            <Button radius="sm" onClick={() => {resetFields();handleEditing(); }} color='danger' className=" my-auto w-full" >Cancelar</Button>
           </div> :
-          <Button radius="sm" isLoading={isButtonLoading} color='primary' type='submit'  className="border my-auto " >Agregar</Button>
+          <Button radius="sm" isLoading={isButtonLoading} color='primary' type='submit'  className=" my-auto " >Agregar</Button>
           }
           </form>
         </div>

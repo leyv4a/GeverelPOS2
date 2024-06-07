@@ -13,7 +13,7 @@ class TransactionController {
                 return;
             }
 
-            const result = await TransactionModel.createEntrada(productoId, tipo, motivo, cantidad, fecha)
+            const result = await TransactionModel.createEntrada(productoId, tipo.toLowerCase(), motivo.toLowerCase(), cantidad, fecha)
 
             if (!result.success) {
                 logToFile(`Error creating transaction ${result.message}`);

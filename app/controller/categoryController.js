@@ -20,7 +20,7 @@ class CategoryController {
         res.status(400).json({ error: "Todos los campos son requeridos" });
         return;
       }
-      const result = await categoryModel.create(name, inicial);
+      const result = await categoryModel.create(name.toLowerCase(), inicial.toLowerCase());
       if (!result.success) {
         logToFile(`Error creating category ${result.message}`);
         return res.status(500).json({ error: result.message });
@@ -54,7 +54,7 @@ class CategoryController {
         res.status(400).json({ error: "Todos los campos son requeridos" });
         return;
       }
-      const result = await categoryModel.updateById(id, name, inicial);
+      const result = await categoryModel.updateById(id, name.toLowerCase(), inicial.toLowerCase());
       if (!result.success) {
         logToFile("Error actualizando el producto: " + result.message);
         res.status(400).json({ error: result.message });
