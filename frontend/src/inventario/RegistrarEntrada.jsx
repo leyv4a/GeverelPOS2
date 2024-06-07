@@ -174,7 +174,7 @@ export default function RegistrarEntrada() {
         <form onSubmit={e=>addEntradas(e)} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
         <div className="flex w-full gap-4">
         <div className='flex'>
-          <Input isRequired size='sm' variant='underlined' type="text" label="Producto" value={codigo} onChange={e=> setCodigo(e.target.value)}/>
+          <Input isRequired size='sm' variant='underlined' type="text" label="Producto" value={codigo} onChange={e=> setCodigo(e.target.value)} maxLength={4}/>
           <Button isIconOnly isLoading={isButtonLoading} size='lg' color="primary" radius='none' disableRipple onClick={e => getProductByCode(e)}><FaMagnifyingGlass/></Button>
         </div>
          <Input size='sm' variant='underlined' isReadOnly disabled value={fecha} label="Fecha" className='max-w-[40%]'/>
@@ -189,16 +189,16 @@ export default function RegistrarEntrada() {
         producto != '' && unidad == 'kg' ?
         <div className='flex w-full gap-4'>
         <div className='flex'>
-          <Input isRequired size='sm' variant='underlined' value={cantidad} onChange={e=> setCantidad(e.target.value)} isDisabled={isManual} label="Cantidad" />
+          <Input isRequired size='sm' variant='underlined' value={cantidad} onChange={e=> setCantidad(e.target.value.replace(/[^0-9.]/g, ''))} isDisabled={isManual} label="Cantidad" />
           <Button isIconOnly size='lg' color="primary" radius='none' disableRipple><FaWeightScale/></Button>
           <Button isIconOnly size='lg' color="foreground" onClick={e => setIsManual(!isManual)} className="border border-primary" radius='none' disableRipple><FaKeyboard /></Button>
         </div>
-        <Input isRequired size='sm' variant='underlined' value={inversion} onChange={e => setInversion(e.target.value)} type="text" label="Costo por kilo" className='max-w-[40%]'/>
+        <Input isRequired size='sm' variant='underlined' value={inversion} onChange={e => setInversion(e.target.value.replace(/[^0-9.]/g, ''))} type="text" label="Costo por kilo" className='max-w-[40%]'/>
        </div>
          : producto != '' && unidad == 'unidad' ? 
          <div className='flex w-full gap-4'>
-            <Input isRequired size='sm' variant='underlined' value={cantidad} onChange={e => setCantidad(e.target.value)} type="number" label="Cantidad" />
-            <Input isRequired size='sm' variant='underlined' value={inversion} onChange={e => setInversion(e.target.value)} type="text" label="Costo por unidad" />
+            <Input isRequired size='sm' variant='underlined' value={cantidad} onChange={e => setCantidad(e.target.value.replace(/[^0-9.]/g, ''))} label="Cantidad" />
+            <Input isRequired size='sm' variant='underlined' value={inversion} onChange={e => setInversion(e.target.value.replace(/[^0-9.]/g, ''))} type="text" label="Costo por unidad" />
         </div>
          : ''
       }
@@ -237,9 +237,9 @@ export default function RegistrarEntrada() {
       {
         margen === 'manual' ? 
         <div className='flex gap-3 items-center'>
-        <Input isDisabled={precioVentaManual != '' ? true : false} isRequired size='sm' value={margenManual} onChange={e => setMargenManual(e.target.value)} variant='underlined' type="text" label="Margen" />
+        <Input isDisabled={precioVentaManual != '' ? true : false} isRequired size='sm' value={margenManual} onChange={e => setMargenManual(e.target.value.replace(/[^0-9.]/g, ''))} variant='underlined' type="text" maxLength={4} label="Margen" />
         <p className='mx-4'>ó</p>
-        <Input isDisabled={margenManual != '' ? true : false} isRequired size='sm' value={precioVentaManual} onChange={e=> setPrecioVentaManual(e.target.value)} variant='underlined' type="number" label="Precio" />
+        <Input isDisabled={margenManual != '' ? true : false} isRequired size='sm' value={precioVentaManual} onChange={e=> setPrecioVentaManual(e.target.value.replace(/[^0-9.]/g, ''))} variant='underlined' label="Precio" />
         </div>
         :
         ''

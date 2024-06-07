@@ -34,6 +34,7 @@ export default function AgregarProductos() {
     setCodigo(item.codigo),
     setCategory(item.categoriaId),
     setUnidad(item.unidad);
+    setInicial(item.inicial);
   }
   // const [] = React.useState('');
   const resetFields = () => {
@@ -43,6 +44,7 @@ export default function AgregarProductos() {
     setCodigo('');
     setCategory(0)
     setUnidad('')
+    setInicial('')
   }
 
   const handleCategoryChange = (value) => {
@@ -144,7 +146,7 @@ export default function AgregarProductos() {
           nombre: nombre,
           descripcion : descripcion,
           stockMin: stockMin,
-          codigo: codigo,
+          codigo: inicial+codigo,
           unidad: unidad,
           categoriaId: category
         })    
@@ -211,7 +213,7 @@ export default function AgregarProductos() {
           <form onSubmit={e => { editing? updateProductById(e) : createProduct(e)}} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
           <h2 className='text-2xl text-center w-full'>Registrar nuevo producto</h2>
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-            <Input pattern="[A-Za-z\s]+" errorMessage="Por favor rellene este campo." variant='underlined'  value={nombre} onChange={e =>{setNombre(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}} isRequired type="text" label="Nombre" size='sm'/>
+            <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={nombre} onChange={e =>{setNombre(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}} isRequired type="text" label="Nombre" size='sm'/>
               <Select
                 isRequired
                 size='sm'
@@ -228,10 +230,10 @@ export default function AgregarProductos() {
                 ))}
               </Select>
           </div>
-          <Input pattern="[A-Za-z\s]+" variant='underlined' value={descripcion} onChange={e =>{setDescripcion(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}} isRequired type="text" label="Descripcion" size='sm'/>
+          <Input variant='underlined' value={descripcion} onChange={e =>{setDescripcion(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}} isRequired type="text" label="Descripcion" size='sm'/>
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-            <Input pattern="\d+" errorMessage="Por favor rellene este campo." variant='underlined'  value={inicial+codigo} onChange={e =>{setCodigo(e.target.value.replace(/[^\d]/g, ''))}} isRequired type="text" label="Codigo" size='sm'  maxLength={4}/>
-            <Input pattern="\d+" variant='underlined' value={stockMin} onChange={e =>{setStockMin(e.target.value.replace(/[^\d]/g, ''))}} isRequired type="text" label="Stock Min." size='sm'/>
+            <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={inicial+codigo} onChange={e =>{setCodigo(e.target.value.replace(/[^\d]/g, ''))}} isRequired type="text" label="Codigo" size='sm'  maxLength={4}/>
+            <Input variant='underlined' value={stockMin} onChange={e =>{setStockMin(e.target.value.replace(/[^\d]/g, ''))}} isRequired type="text" label="Stock Min." size='sm'/>
           </div>
             <RadioGroup
               label="Selecciona la unidad de medida"
