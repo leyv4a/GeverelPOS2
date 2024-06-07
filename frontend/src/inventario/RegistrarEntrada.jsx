@@ -189,6 +189,7 @@ export default function RegistrarEntrada() {
     <div className='flex gap-6 max-h-[100%] p-5'>
       <div className={isFullTable? 'hidden': 'w-[50%]'}>
         <form onSubmit={e=>addEntradas(e)} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
+        <h2 className='text-2xl text-center w-full'>Registrar entradas</h2>
         <div className="flex w-full gap-4">
         <div className='flex'>
           <Input isRequired size='sm' variant='underlined' type="text" label="Producto" value={codigo} onChange={e=> setCodigo(e.target.value)} maxLength={4}/>
@@ -261,7 +262,7 @@ export default function RegistrarEntrada() {
         :
         ''
       }
-      <div className='flex'>
+      <div className='flex gap-2'>
 
       
       {
@@ -270,7 +271,7 @@ export default function RegistrarEntrada() {
         :
         ''
       }
-       <Button  size='md' color="primary" onClick={e => handleCancelar(e)}  disableRipple className={producto != '' ? 'w-full' : 'hidden'}>Cancelar</Button>
+       <Button  size='md' color="danger" onClick={e => handleCancelar(e)}  disableRipple className={producto != '' ? 'w-full' : 'hidden'}>Cancelar</Button>
        </div>
         </form>
       </div>

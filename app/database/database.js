@@ -59,6 +59,7 @@ const initializeTables = async () => {
     precioVenta REAL,
     precioCompra REAL ,
     FOREIGN KEY (categoriaId) REFERENCES categoria(id)
+    ON DELETE RESTRICT
   )`;
 
   const createWalletTable = `
