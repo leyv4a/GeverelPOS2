@@ -4,6 +4,7 @@ const UserController = require('../controller/userController');
 const CategoryController = require('../controller/categoryController');
 const ProductController = require('../controller/productController');
 const TransactionController = require('../controller/transactionsController');
+const PosController = require('../controller/posController');
 
 router.get('/users', UserController.getAllUsers);
 router.post('/users', UserController.createUser);
@@ -21,6 +22,8 @@ router.get('/product/:code', ProductController.getProductByCode);
 
 router.get('/transaction/entry', TransactionController.getAllEntryTransactions);
 router.post('/transaction/entry', TransactionController.createTransactionEntry);
+
+router.post('/pos/entry', PosController.CreateTransactionEntry);
 
 
 module.exports = router;

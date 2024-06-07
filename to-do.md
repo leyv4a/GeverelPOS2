@@ -16,5 +16,6 @@ NO FUNCIONA LAZY, SUSPENSE EN INVENTARIO.
 - 1. Hay que hacer un pos controller, ahi se hara primero una query a addEntry y otra a AddStock(productos)
 <!-- - 2. Al crear categoria agregar una letra para el codigo -->
 <!-- - 3. Que todo se agregue a la base de datos en minuscula, al pedir y usar en el front usar la clase 'capitalize' -->
-- 4. Agregar boton cancelar en Entradas
+<!-- - 4. Agregar boton cancelar en Entradas -->
 <!-- - 5. Agregar validacion a los inputs (solo texto, solo letras, maximo 3 caracteres, etc).  -->
+- 6. No poder borrar categoria si un producto la tiene.
