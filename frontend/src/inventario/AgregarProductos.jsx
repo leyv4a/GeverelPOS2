@@ -232,7 +232,7 @@ export default function AgregarProductos() {
           </div>
           <Input variant='underlined' value={descripcion} onChange={e =>{setDescripcion(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}} isRequired type="text" label="Descripcion" size='sm'/>
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-            <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={inicial+codigo} onChange={e =>{setCodigo(e.target.value.replace(/[^\d]/g, ''))}} isRequired type="text" label="Codigo" size='sm'  maxLength={4}/>
+            <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={inicial.toUpperCase()+codigo} onChange={e =>{setCodigo(e.target.value.replace(/[^\d]/g, ''))}} isRequired type="text" label="Codigo" size='sm'  maxLength={4}/>
             <Input variant='underlined' value={stockMin} onChange={e =>{setStockMin(e.target.value.replace(/[^\d]/g, ''))}} isRequired type="text" label="Stock Min." size='sm'/>
           </div>
             <RadioGroup

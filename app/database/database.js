@@ -54,7 +54,7 @@ const initializeTables = async () => {
     categoriaId INTEGER ,
     codigo TEXT UNIQUE,
     unidad TEXT NOT NULL,
-    stock REAL ,
+    stock REAL DEFAULT 0,
     stockMin REAL NOT NULL,
     precioVenta REAL,
     precioCompra REAL ,

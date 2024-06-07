@@ -6,6 +6,7 @@ import { FaMagnifyingGlass, FaKeyboard  } from "react-icons/fa6";
 import { RiWeightLine as FaWeightScale} from "react-icons/ri";
 export default function RegistrarEntrada() {
 
+
   //Guardara el nombre del producto resultante de la api
   const [producto, setProducto] = React.useState('');
   //Guardara el codigo del input para buscar en la api
@@ -14,6 +15,7 @@ export default function RegistrarEntrada() {
   const [unidad,setUnidad] = React.useState('');
   const [motivo, setMotivo] = React.useState('');
   const [cantidad, setCantidad] = React.useState('');
+  const [productoId, setProductoId] = React.useState('');
   //Guarda el precio de inversion para los calculos futuros
   const [inversion, setInversion] = React.useState('');
   //Guarda el margen en caso ser ingresado por el radiobutton
@@ -70,25 +72,33 @@ export default function RegistrarEntrada() {
     setIsManual(true);
     setIsButtonLoading(false);
     setIsButtonLoading2(false);
+    setProductoId('');
   }
 
   const addEntradas = async (e) => {
     e.preventDefault();
-    //  setPrecioVenta(calculatePrecioVenta());
+    setIsButtonLoading2(true);
     try {
+      console.log(cantidad)
       const calculatedPrecioVenta = await calculatePrecioVenta(); // Espera a que se resuelva la promesa
-      console.log(
-          `El nombre del producto es: ${producto}
-          El codigo del producto es: ${codigo}
-          La fecha es: ${fecha}
-          La unidad es: ${unidad}
-          El motivo es: ${motivo}
-          La cantidad es: ${cantidad}
-          El inversion es: ${inversion}
-          El precio de venta es: ${calculatedPrecioVenta}`
-        )
+            // productoId,tipo,motivo, cantidad, fecha , precioVenta, precioCompra
+      const response = await fetch('http://localhost:3001/api/pos/entry', {
+        method: 'POST',
+        mode : 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({productoId, tipo: 'entrada', motivo, cantidad, fecha, precioVenta : calculatedPrecioVenta , precioCompra: inversion})
+      });      
+      if(!response.ok) throw new Error('Error al registrar la entrada');
+      const result = await response.json();
+      resetFields();
+      getEntradas();
+      toast.success(result.message);  // Mostrar el mensaje recibido del servidor
     } catch (error) {
       toast.error(error.message);
+    }finally{
+      setIsButtonLoading2(false);
     }
   }
 
@@ -118,7 +128,7 @@ export default function RegistrarEntrada() {
     setIsButtonLoading(true)
     try {
       if(codigo === '' ) throw new Error('Todos los campos son necesarios');
-      const response = await fetch(`http://localhost:3001/api/product/${codigo}`,{
+      const response = await fetch(`http://localhost:3001/api/product/${codigo.toLowerCase()}`,{
         method: 'GET',
         mode: 'cors',
         headers: {
@@ -129,7 +139,9 @@ export default function RegistrarEntrada() {
       const result = await response.json();
       console.log(result)
       setProducto(result.nombre);
-      setUnidad(result.unidad)
+      setUnidad(result.unidad);
+      setProductoId(result.id);
+
     } catch (error) {
       console.log(error.message)
       resetFields();
