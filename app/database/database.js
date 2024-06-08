@@ -21,7 +21,7 @@ const db = new sqlite3.Database(dbDestinationPath, async (err) => {
     logToFile('Database connected at ' + dbDestinationPath);
 
     // Habilitar claves foráneas
-    await db.run('PRAGMA foreign_keys = ON');
+    // await db.run('PRAGMA foreign_keys = ON');
 
     // Inicializar tablas
     initializeTables();
@@ -61,8 +61,7 @@ const initializeTables = async () => {
     stockMin REAL NOT NULL,
     precioVenta REAL,
     precioCompra REAL ,
-    FOREIGN KEY (categoriaId) REFERENCES categoria(id) ON DELETE RESTRICT
-
+    FOREIGN KEY (categoriaId) REFERENCES categoria(id)
   )`;
 
   const createWalletTable = `

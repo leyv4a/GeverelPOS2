@@ -79,7 +79,6 @@ export default function RegistrarEntrada() {
     e.preventDefault();
     setIsButtonLoading2(true);
     try {
-      console.log(cantidad)
       const calculatedPrecioVenta = await calculatePrecioVenta(); // Espera a que se resuelva la promesa
             // productoId,tipo,motivo, cantidad, fecha , precioVenta, precioCompra
       const response = await fetch('http://localhost:3001/api/pos/entry', {
@@ -137,7 +136,6 @@ export default function RegistrarEntrada() {
       })
       if (!response.ok) throw new Error('Error al buscar el producto');
       const result = await response.json();
-      console.log(result)
       setProducto(result.nombre);
       setUnidad(result.unidad);
       setProductoId(result.id);
@@ -150,6 +148,26 @@ export default function RegistrarEntrada() {
       })
     }finally{
       setIsButtonLoading(false)
+    }
+  }
+
+  const deleteById = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/transaction/${id}`, {
+        method : 'DELETE',
+        mode: 'cors',
+        headers: {
+          'Content-Type' : 'application/json'
+        }
+      })
+      if (!response.ok) throw new Error('Error al eliminar la transaccion');
+      const result = await response.json();
+      toast.success(result.message);
+      getEntradas();
+    } catch (error) {
+      toast.error(error.message)
+      console.log(error)
+
     }
   }
 
@@ -276,7 +294,7 @@ export default function RegistrarEntrada() {
         </form>
       </div>
       <div className={isFullTable? 'w-[100%]': 'w-[50%]'}>
-        <GenericTable columns={columns} data={data} isFullTable={isFullTable} handleFullTable={handleFullTable}/>
+        <GenericTable columns={columns} data={data} isFullTable={isFullTable} handleFullTable={handleFullTable} onDelete={deleteById}/>
       </div>
       <div>
           <ToastContainer position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>

@@ -76,7 +76,7 @@ class ProductController {
     if (!id) {
       res
         .status(400)
-        .json({ error: "Algo salio mal al eliminar la categoria" });
+        .json({ error: "Algo salio mal al eliminar el producto" });
       logToFile(`Error deleting product ${req.params.id}`);
       return;
     }

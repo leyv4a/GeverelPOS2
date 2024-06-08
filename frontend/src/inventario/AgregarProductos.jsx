@@ -190,7 +190,7 @@ export default function AgregarProductos() {
   }
 
   const columns = [ 
-  { uid: 'id', nombre: 'Id', sortable: true },
+  // { uid: 'id', nombre: 'Id', sortable: true },
   { uid: 'nombre', nombre: 'Nombre', sortable: true },
   { uid: 'categoria', nombre: 'Categoria', sortable: true },
   { uid: 'descripcion', nombre: 'Descripcion', sortable: false },

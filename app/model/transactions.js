@@ -15,13 +15,18 @@ class TransactionModel {
             await db.run(sql, [productoId,tipo,motivo, cantidad, fecha]);
             return {success: true, message : 'Transaccion creada correctamente'};
         } catch (error) {
-            logToFile('Model ' +error.message);
             return { success: false, message: error.message };
         }
     }
     
     static async deleteById(id){
-        
+        const sql = "DELETE FROM transacciones WHERE id =?";
+        try {
+            await db.run(sql, [id]);
+            return {success :true, message: 'Transaccion eliminada correctamente'}; // Retorna true si la inserción es exitosa
+        } catch (error) {
+            return {success :false, message: error.message}
+        }
     }
 }
 

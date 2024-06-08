@@ -20,3 +20,4 @@ NO FUNCIONA LAZY, SUSPENSE EN INVENTARIO.
 <!-- - 5. Agregar validacion a los inputs (solo texto, solo letras, maximo 3 caracteres, etc).  -->
 - 6. No poder borrar categoria si un producto la tiene.
 - 7. Hacer onDelete y hadleEditing en RegistrarEntradas
+- 8. Que no se pueda borrar un producto si tiene una categoria

@@ -124,7 +124,7 @@ const handleFullTable = () => {
   }
   
   const columns = [
-    { uid: 'id', nombre: 'Id', sortable: true },
+    // { uid: 'id', nombre: 'Id', sortable: true },
     { uid: 'nombre', nombre: 'Nombre', sortable: true },
     { uid: 'inicial', nombre: 'Inicial', sortable: true },
     { uid: 'acciones', nombre: 'Acciones', sortable: false },
