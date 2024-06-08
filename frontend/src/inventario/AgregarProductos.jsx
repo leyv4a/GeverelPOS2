@@ -76,7 +76,7 @@ export default function AgregarProductos() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ id, nombre, descripcion, stockMin, codigo,  unidad ,categoriaId: category})
+        body: JSON.stringify({ id, nombre, descripcion, stockMin, codigo: inicial+codigo,  unidad ,categoriaId: category})
       });
 
       const result = await response.json();
@@ -137,6 +137,7 @@ export default function AgregarProductos() {
     e.preventDefault();
     setIsButtonLoading(true)
     try {
+      if (!codigo || !nombre ||!descripcion || !stockMin|| !unidad) throw new Error('Todos los campos son requeridos')
       const response = await fetch('http://localhost:3001/api/product', {
         method: 'POST',
         headers: {

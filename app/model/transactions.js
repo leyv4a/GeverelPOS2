@@ -19,6 +19,10 @@ class TransactionModel {
             return { success: false, message: error.message };
         }
     }
+    
+    static async deleteById(id){
+        
+    }
 }
 
 module.exports = TransactionModel;
