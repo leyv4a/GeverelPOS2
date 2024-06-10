@@ -34,6 +34,18 @@ class ProductModel {
         }
     }
 
+    static async getByCategory(cat){
+        const sql = `SELECT producto.codigo FROM producto WHERE producto.categoriaId = ?`
+        try {
+            const rows = await db.get(sql, [cat])
+            if (!rows || rows.length === 0) throw new Error('Producto no encontrado')
+            logToFile('product found')
+            return { success: true, rows: rows }
+        } catch (error) {
+            logToFile(error.message)
+            return {success: false, error : error.message};
+        }
+    }
     static async create(nombre, descripcion,stockMin,codigo,unidad, categoriaId){
         const sql = 'INSERT INTO producto ( nombre, descripcion, stockMin, codigo, unidad, categoriaId) VALUES (?,?,?,?,?,?)'
         try {

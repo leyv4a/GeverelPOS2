@@ -1,10 +1,11 @@
-const categoryModel = require("../model/category");
+const CategoryModel = require("../model/category");
+const ProductModel = require("../model/product");
 const logToFile = require("../utils/logger");
 
 class CategoryController {
   static async getAllCategories(req, res) {
     try {
-      const categories = await categoryModel.getAll();
+      const categories = await CategoryModel.getAll();
       res.status(200).json(categories);
     } catch (error) {
       logToFile(`Error getting categories ${error}`);
@@ -20,7 +21,7 @@ class CategoryController {
         res.status(400).json({ error: "Todos los campos son requeridos" });
         return;
       }
-      const result = await categoryModel.create(name.toLowerCase(), inicial.toLowerCase());
+      const result = await CategoryModel.create(name.toLowerCase(), inicial.toLowerCase());
       if (!result.success) {
         logToFile(`Error creating category ${result.message}`);
         return res.status(500).json({ error: result.message });
@@ -34,18 +35,26 @@ class CategoryController {
   }
 
   static async deleteCategoryById(req, res) {
-    const name = await categoryModel.deleteById(req.params.id);
-    if (!name) {
-      res
-        .status(404)
-        .json({ error: "Algo salio mal al eliminar la categoria" });
-      logToFile(`Error deleting category`);
-      return;
+    const id = req.params.id
+    try {
+      const isUsed = await ProductModel.getByCategory(id);
+      if(isUsed.success) return res.status(302).json({message :'No se puede borrar la categoria por que esta siendo usada.'})
+  
+      const isDeleted = await CategoryModel.deleteById(req.params.id);
+      if (!isDeleted) {
+        logToFile(`Error deleting category`);
+        return  res
+          .status(404)
+          .json({ error: "Algo salio mal al eliminar la categoria" });
+        ;
+      }
+      logToFile(`Category deleted`);
+      return res
+        .status(200)
+        .json({ message: `Categoria eliminada correctamente` });
+    } catch (error) {
+        return res.status(500).json(error.message);
     }
-    logToFile(`Category deleted`);
-    return res
-      .status(200)
-      .json({ message: `Categoria eliminada correctamente` });
   }
   static async updateCategoryById(req, res) {
     try {
@@ -54,7 +63,7 @@ class CategoryController {
         res.status(400).json({ error: "Todos los campos son requeridos" });
         return;
       }
-      const result = await categoryModel.updateById(id, name.toLowerCase(), inicial.toLowerCase());
+      const result = await CategoryModel.updateById(id, name.toLowerCase(), inicial.toLowerCase());
       if (!result.success) {
         logToFile("Error actualizando el producto: " + result.message);
         res.status(400).json({ error: result.message });

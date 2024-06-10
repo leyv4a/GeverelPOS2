@@ -80,17 +80,18 @@ const handleFullTable = () => {
         method: 'DELETE',
         mode: 'cors'
       });
+      const result = await response.json();
 
       if (!response.ok) {
-        throw new Error('Error al eliminar la categoria.');
+        throw new Error(result.error || result.message);
       }
        
-    const result = await response.json();
-    toast.success(result.message);  // Mostrar el mensaje recibido del servidor
+      toast.success(result.message);  // Mostrar el mensaje recibido del servidor
       getCategories();
     } catch (error) {
-      console.log(error);
-      toast.error(error);
+      getCategories();
+      console.log(error.message);
+      toast.error(error.message);
     }
   }
 

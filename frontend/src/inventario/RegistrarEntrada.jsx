@@ -167,6 +167,7 @@ export default function RegistrarEntrada() {
     } catch (error) {
       toast.error(error.message)
       console.log(error)
+      getEntradas();
 
     }
   }
