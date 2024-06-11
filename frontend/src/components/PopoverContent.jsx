@@ -2,9 +2,6 @@ import { Button, PopoverContent } from '@nextui-org/react'
 import React from 'react'
 
 export default function ContentPopOver({name, id, onDelete}) {
-
-
-  const identifier = id;
   return (
     <PopoverContent className="w-[240px] flex flex-col p-5 justify-center items-center gap-5">
         <p className='text-center'>

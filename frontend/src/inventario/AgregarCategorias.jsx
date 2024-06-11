@@ -5,6 +5,7 @@ import GenericTable from '../components/GenericTable'
 import { ToastContainer, toast } from 'react-toastify';
 function AgregarCategorias() {
 
+
   const [categories, setCategories] = React.useState([])
   const [name, setName] = React.useState('');
   const [inicial, setInicial] = React.useState('');
@@ -78,23 +79,21 @@ const handleFullTable = () => {
     try {
       const response = await fetch(`http://localhost:3001/api/category/${id}`, {
         method: 'DELETE',
-        mode: 'cors'
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
       const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || result.message);
-      }
-       
-      toast.success(result.message);  // Mostrar el mensaje recibido del servidor
-      getCategories();
+      if (!response.ok) throw new Error(result.error ||result.message );
+      
+      toast.success(result.message);
     } catch (error) {
-      getCategories();
-      console.log(error.message);
       toast.error(error.message);
+    }finally{
+      getCategories();
     }
   }
-
   const updateCategoryById = async (e) => {
     e.preventDefault();
     setIsButtonLoading(true);

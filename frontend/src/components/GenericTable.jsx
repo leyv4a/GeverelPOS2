@@ -114,7 +114,7 @@ const GenericTable = ({ columns, data, onDelete, isFullTable, handleFullTable, o
                     </Tooltip>
                     <Tooltip color="danger" content="Eliminar">
                         <div className="flex flex-wrap gap-4">
-                            <Popover
+                           <Popover
                             showArrow
                             offset={10}
                             placement="bottom"
