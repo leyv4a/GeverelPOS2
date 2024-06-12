@@ -21,3 +21,4 @@ NO FUNCIONA LAZY, SUSPENSE EN INVENTARIO.
 - 6. No poder borrar categoria si un producto la tiene.
 - 7. Hacer onDelete y hadleEditing en RegistrarEntradas
 - 8. Que no se pueda borrar un producto si tiene una categoria
+AÑADIR EN EL DEELTEBYID QUE SE CLICKEE ESC AL TERMINAR PARA QUE SE CIERRE EL MODAL.
