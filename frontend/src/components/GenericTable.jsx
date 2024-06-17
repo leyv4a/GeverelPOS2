@@ -24,9 +24,9 @@ import {
   User,
   Pagination,
   Tooltip,
-  Badge ,Modal, ModalContent, ModalHeader, ModalBody, ModalFooter,useDisclosure
+  useDisclosure
 } from "@nextui-org/react";
-import ContentPopOver from "./PopoverContent";
+import ContentPopOver from './PopoverContent';
 
 const GenericTable = ({
   columns,
@@ -100,6 +100,8 @@ const GenericTable = ({
 
  
   const {isOpen, onOpen, onOpenChange} = useDisclosure();  
+  const [nombre, setNombre] = React.useState('a');
+  const [id, setId] = React.useState('b')
 
   const renderCell = React.useCallback(
     (item, columnKey) => {
@@ -141,20 +143,15 @@ const GenericTable = ({
               </Tooltip>
               <Tooltip color="danger" content="Eliminar">
                 <div className="flex flex-wrap gap-4">
-                  {/* <Button
-                    isIconOnly
-                    variant="primary"
-                    onPress={()=>onOpen}
-                    // onClick={onOpen}
+                  <button
+                    // isIconOnly
+                    // variant="primary"
+                    onClick={()=> {setNombre(item.nombre || 'undefined'); setId(item.id || 'undefined');onOpen();}}
                     className="text-lg text-danger cursor-pointer active:opacity-50"
                   >
                     <FaTrash />
-                  </Button> */}
-                 
+                  </button>
                   {/* <ContentPopOver isOpen={isOpen} onOpenChange={onOpenChange} name={item.nombre} id={item.id} onDelete={onDelete}/> */}
-
-                  <Button onPress={onOpen}>Open Modal</Button>
-     
                 </div>
               </Tooltip>
             </div>
@@ -163,7 +160,8 @@ const GenericTable = ({
           return cellValue;
       }
     },
-    [onDelete, isOpen, onOpen, onOpenChange]
+    // [onDelete, isOpen, onOpen]
+    [onDetails, handleEditing , onOpen, isOpen, onDelete]
   );
 
   const onRowsPerPageChange = React.useCallback((e) => {
@@ -319,43 +317,7 @@ const GenericTable = ({
         )}
       </TableBody>
     </Table>
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
-              <ModalBody>
-                <p> 
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Magna exercitation reprehenderit magna aute tempor cupidatat consequat elit
-                  dolor adipisicing. Mollit dolor eiusmod sunt ex incididunt cillum quis. 
-                  Velit duis sit officia eiusmod Lorem aliqua enim laboris do dolor eiusmod. 
-                  Et mollit incididunt nisi consectetur esse laborum eiusmod pariatur 
-                  proident Lorem eiusmod et. Culpa deserunt nostrud ad veniam.
-                </p>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Action
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>  
-    
+     <ContentPopOver isOpen={isOpen} onOpenChange={onOpenChange} onDelete={onDelete} onClose={onOpenChange} name={nombre} id={id} />
     </>
   );
 };

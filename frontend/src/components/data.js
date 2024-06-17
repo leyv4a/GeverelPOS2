@@ -38,3 +38,4 @@ export const products = [
     { id: 17, nombre: 'Product 17', precio: '$90', categoria: 'Category 17' },
     // more product data...
 ];
+z
