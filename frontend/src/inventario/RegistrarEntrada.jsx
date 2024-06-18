@@ -199,7 +199,7 @@ export default function RegistrarEntrada() {
   }, [])
   React.useEffect(()=> {
     const date = new Date();
-    setFecha(date.getFullYear())
+    setFecha(date.getFullYear()+'/'+date.getMonth()+'/'+date.getDay()+' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds())
     if (producto == '') {
       setFecha('')
     }

@@ -35,6 +35,7 @@ const GenericTable = ({
   isFullTable,
   handleFullTable,
   onDetails,
+  onEdit,
   handleEditing,
 }) => {
   const [filterValue, setFilterValue] = React.useState("");
@@ -133,14 +134,17 @@ const GenericTable = ({
               ) : (
                 ""
               )}
-              <Tooltip color="primary" content="Editar">
-                <button
-                  onClick={() => handleEditing(item)}
-                  className="text-lg text-default-400 hover:text-foreground cursor-pointer active:opacity-50"
-                >
-                  <RiPencilFill />
-                </button>
-              </Tooltip>
+             {onEdit ? (
+               <Tooltip color="primary" content="Editar">
+               <button
+                 onClick={() => handleEditing(item)}
+                 className="text-lg text-default-400 hover:text-foreground cursor-pointer active:opacity-50"
+               >
+                 <RiPencilFill />
+               </button>
+             </Tooltip>
+             ) : ("")
+             }
               <Tooltip color="danger" content="Eliminar">
                 <div className="flex flex-wrap gap-4">
                   <button

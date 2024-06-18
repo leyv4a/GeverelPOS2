@@ -256,7 +256,7 @@ export default function AgregarProductos() {
           </form>
         </div>
         <div className={isFullTable? 'w-[100%]' : 'w-[50%]'}>
-          <GenericTable columns={columns} data={products} onDelete={deleteProductById} isFullTable={isFullTable} handleFullTable={handleFullTable} onDetails={true} handleEditing={handleEditing}/>
+          <GenericTable columns={columns} data={products} onDelete={deleteProductById} isFullTable={isFullTable} handleFullTable={handleFullTable} onEdit={true} onDetails={true} handleEditing={handleEditing}/>
         </div>
         <div>
           <ToastContainer position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>

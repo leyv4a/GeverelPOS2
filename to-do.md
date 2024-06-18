@@ -1,6 +1,7 @@
 ##TODO
 
 NO FUNCIONA LAZY, SUSPENSE EN INVENTARIO.
+AL EDITAR UN PRODUCTO SE AGREGA MAL EL CODIGO
 
 <!-- - 1. USAR PROPS PARA PASAR onDetails null para que no se muestre el ojo en tablas basicas -->
 
@@ -18,7 +19,7 @@ NO FUNCIONA LAZY, SUSPENSE EN INVENTARIO.
 <!-- - 3. Que todo se agregue a la base de datos en minuscula, al pedir y usar en el front usar la clase 'capitalize' -->
 <!-- - 4. Agregar boton cancelar en Entradas -->
 <!-- - 5. Agregar validacion a los inputs (solo texto, solo letras, maximo 3 caracteres, etc).  -->
-- 6. No poder borrar categoria si un producto la tiene.
-- 7. Hacer onDelete y hadleEditing en RegistrarEntradas
-- 8. Que no se pueda borrar un producto si tiene una categoria
-AÑADIR EN EL DEELTEBYID QUE SE CLICKEE ESC AL TERMINAR PARA QUE SE CIERRE EL MODAL.
+<!-- - 6. No poder borrar categoria si un producto la tiene. -->
+<!-- - 7. Hacer onDelete y hadleEditing en RegistrarEntradas -->
+<!-- - 8. Que no se pueda borrar un producto si tiene una categoria -->
+<!-- AÑADIR EN EL DEELTEBYID QUE SE CLICKEE ESC AL TERMINAR PARA QUE SE CIERRE EL MODAL. -->
