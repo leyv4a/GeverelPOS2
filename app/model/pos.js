@@ -23,7 +23,7 @@ class PosModel {
                 try {
                     await db.run('ROLLBACK');
                     logToFile('Transaccion cancelada');
-                    return { success: false, message: error.message };
+                    return { success: false, message: error.message};
                     } catch (error) {
                      logToFile(error.message);
                      return { success: false, message: error.message}

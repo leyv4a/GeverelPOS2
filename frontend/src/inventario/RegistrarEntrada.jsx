@@ -282,8 +282,6 @@ export default function RegistrarEntrada() {
         ''
       }
       <div className='flex gap-2'>
-
-      
       {
         margen != '' || margenManual != ''  ? 
         <Button isLoading={isButtonLoading2} size='md' color="primary" type='submit' disableRipple className='w-full'>Agregar</Button>
