@@ -41,7 +41,7 @@ class PosModel {
             await db.run(sqlProduct, [productoId,tipo,motivo, cantidad, fecha]);
             logToFile('Transaccion agregada');
             //Actualizar stock de productos
-            const sqlStock = "UPDATE producto SET stock = stock -?, precioVenta = ? WHERE id =?"
+            const sqlStock = "UPDATE producto SET stock = stock -? WHERE id =?"
             await db.run(sqlStock, [cantidad,precioVenta, productoId]);
             logToFile('Stock actualizado');
             await db.run('COMMIT');

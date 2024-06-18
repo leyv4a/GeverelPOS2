@@ -43,7 +43,7 @@ class TransactionController {
   }
   static async getAllExitTransactions(req, res) {
     try {
-      const salidas = await TransactionModel.getAllEntradas();
+      const salidas = await TransactionModel.getAllSalidas();
       res.status(200).json(salidas);
     } catch (error) {
       logToFile(error.message);

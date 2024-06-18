@@ -51,6 +51,71 @@ export default function RegistrarSalida() {
     }
   };
 
+  const addSalida = async (e) => {
+    e.preventDefault();
+    setIsButtonLoading2(true);
+    try {
+            // productoId,tipo,motivo, cantidad, fecha , precioVenta
+      const response = await fetch('http://localhost:3001/api/pos/exit', {
+        method: 'POST',
+        mode : 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({productoId, tipo: 'salida', motivo, cantidad, fecha})
+      });      
+      if(!response.ok) throw new Error('Error al registrar la entrada');
+      const result = await response.json();
+      resetFields();
+      getSalidas();
+      toast.success(result.message);  // Mostrar el mensaje recibido del servidor
+    } catch (error) {
+      toast.error(error.message);
+    }finally{
+      setIsButtonLoading2(false);
+    }
+  }
+
+  const deleteById = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/transaction/${id}`, {
+        method : 'DELETE',
+        mode: 'cors',
+        headers: {
+          'Content-Type' : 'application/json'
+        }
+      })
+      if (!response.ok) throw new Error('Error al eliminar la transaccion');
+      const result = await response.json();
+      toast.success(result.message);
+      getSalidas();
+    } catch (error) {
+      toast.error(error.message)
+      console.log(error)
+    }
+  }
+
+  const getSalidas = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/transaction/exit',{
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type' : 'application/json'
+        }
+      })
+      if (!response.ok) throw new Error('Error al cargar las entradas');
+      const data = await response.json();
+      setData(data);
+    } catch (error) {
+      console.log(error)
+      toast.error('Error en la comunicacion con la base de datos', {
+        bodyClassName : 'text-foreground'
+      })
+      
+    }
+  }
+
   const getProductByCode = async (e) => {
     e.preventDefault();
     setIsButtonLoading(true)
@@ -90,6 +155,9 @@ export default function RegistrarSalida() {
     { uid: 'acciones', nombre: 'Acciones', sortable: false },
   ];
 
+  React.useEffect(()=>{
+    getSalidas();
+  }, [])
   React.useEffect(()=> {
     const date = new Date();
     setFecha(date.getFullYear())
@@ -158,7 +226,7 @@ export default function RegistrarSalida() {
       </form>
       </div>
       <div className={isFullTable ? 'w-[100%]' : 'w-[50%]'}>
-        <GenericTable isFullTable={isFullTable} handleFullTable={handleFullTable} columns={columns} data={data}/>
+        <GenericTable isFullTable={isFullTable} handleFullTable={handleFullTable} columns={columns} data={data} onDelete={deleteById}/>
       </div>
       <div>
         <ToastContainer position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>
