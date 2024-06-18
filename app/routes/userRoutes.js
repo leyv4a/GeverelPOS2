@@ -21,10 +21,12 @@ router.put('/product', ProductController.updateProductById);
 router.get('/product/:code', ProductController.getProductByCode);
 
 router.get('/transaction/entry', TransactionController.getAllEntryTransactions);
-router.post('/transaction/entry', TransactionController.createTransactionEntry);
+router.get('/transaction/exit', TransactionController.getAllExitTransactions);
+// router.post('/transaction/entry', TransactionController.createTransactionEntry);
 router.delete('/transaction/:id', TransactionController.deleteTransactionById);
 
 router.post('/pos/entry', PosController.CreateTransactionEntry);
+router.post('/pos/exit', PosController.CreateTransactionExit);
 
 
 module.exports = router;

@@ -41,6 +41,15 @@ class TransactionController {
       res.status(500).json({ error: error.message });
     }
   }
+  static async getAllExitTransactions(req, res) {
+    try {
+      const salidas = await TransactionModel.getAllEntradas();
+      res.status(200).json(salidas);
+    } catch (error) {
+      logToFile(error.message);
+      res.status(500).json({ error: error.message });
+    }
+  }
 
   static async deleteTransactionById(req, res) {
     const { id } = req.params;

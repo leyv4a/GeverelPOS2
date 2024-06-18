@@ -8,6 +8,12 @@ class TransactionModel {
         const rows = await db.all(sql);
         return rows;
     }
+
+    static async getAllSalidas() {
+        const sql = "SELECT transacciones.id, producto.nombre, producto.codigo, transacciones.tipo, transacciones.motivo, transacciones.cantidad, transacciones.fecha FROM transacciones INNER JOIN producto ON transacciones.productoId = producto.id WHERE tipo = 'salida'"
+        const rows = await db.all(sql);
+        return rows;
+    }
     // productoId INTEGER NOT NULL, tipo TEXT NOT NULL, motivo TEXT NOT NULL,  catidad REAL NOT NULL, fecha TEXT 
     static async createEntrada(productoId,tipo,motivo, cantidad, fecha ){
         const sql = "INSERT INTO transacciones (productoId,tipo,motivo,cantidad,fecha) VALUES (?,?,?,?,?)"
