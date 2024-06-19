@@ -21,7 +21,7 @@ function App() {
           <Route path="/" element={<Tienda/>}/>
           <Route path="/panel" element={<Panel/>}/>
           <Route  path="/inventario/*" element={<Inventario/>}/>
-          <Route path="/monedero" element={<Monedero/>}/>
+          <Route path="/monedero/*" element={<Monedero/>}/>
         </Routes>
       </Suspense>
      </main>
