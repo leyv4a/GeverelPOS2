@@ -135,8 +135,8 @@ getCategories();
 },[])
   return (
     <>
-    <div className='flex gap-6 max-h-[100%] p-5'>
-      <div className={isFullTable? 'hidden':' w-[50%]' }>
+    <div className='flex gap-6 max-h-[100%] p-5 sm:flex-row  flex-col'>
+      <div className={isFullTable? 'hidden':' sm:w-[50%] w-[80%]' }>
         <form onSubmit={e => {editing ? updateCategoryById(e):createCategory(e)}} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
           <h2 className='text-2xl text-center'>Registrar nueva categoria</h2>
           <div className='flex gap-4'>
@@ -152,7 +152,7 @@ getCategories();
         }
         </form>
       </div>
-      <div className={isFullTable? 'w-[100%]' : 'w-[50%]'}>
+      <div className={isFullTable? 'w-[100%]' : 'sm:w-[50%] w-[80%]'}>
         <GenericTable isFullTable={isFullTable} handleFullTable={handleFullTable}  columns={columns} data={categories} onDelete={deleteCategoryById} onEdit={true} handleEditing={handleEditing}/>
       </div>
       <div>

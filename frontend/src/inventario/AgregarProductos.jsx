@@ -209,8 +209,8 @@ export default function AgregarProductos() {
 
   return (
     <>
-      <div className='flex gap-6 p-5 max-h-[100%]'>
-        <div className={isFullTable? 'hidden':' w-[50%]' }>
+      <div className='flex gap-6 p-5 max-h-[100%] sm:flex-row  flex-col'>
+        <div className={isFullTable? 'hidden':' sm:w-[50%] w-[80%]' }>
           <form onSubmit={e => { editing? updateProductById(e) : createProduct(e)}} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
           <h2 className='text-2xl text-center w-full'>Registrar nuevo producto</h2>
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
@@ -255,7 +255,7 @@ export default function AgregarProductos() {
           }
           </form>
         </div>
-        <div className={isFullTable? 'w-[100%]' : 'w-[50%]'}>
+        <div className={isFullTable? 'w-[100%]' : 'sm:w-[50%] w-[80%]'}>
           <GenericTable columns={columns} data={products} onDelete={deleteProductById} isFullTable={isFullTable} handleFullTable={handleFullTable} onEdit={true} onDetails={true} handleEditing={handleEditing}/>
         </div>
         <div>
