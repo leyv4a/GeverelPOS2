@@ -36,7 +36,7 @@ export default function AgregarProductos() {
     setUnidad(item.unidad);
     setInicial(item.inicial);
   }
-  // const [] = React.useState('');
+
   const resetFields = () => {
     setNombre('');
     setDescripcion('');
@@ -193,11 +193,11 @@ export default function AgregarProductos() {
   // { uid: 'id', nombre: 'Id', sortable: true },
   { uid: 'nombre', nombre: 'Nombre', sortable: true },
   { uid: 'categoria', nombre: 'Categoria', sortable: true },
-  { uid: 'descripcion', nombre: 'Descripcion', sortable: false },
-  { uid: 'codigo', nombre: 'Codigo', sortable: false },
-  { uid: 'unidad', nombre: 'Unidad', sortable: true },
   { uid: 'stock', nombre: 'Stock', sortable: true },
-  { uid: 'stockMin', nombre: 'Stock Min.', sortable: true },
+  { uid: 'codigo', nombre: 'Codigo', sortable: false },
+  { uid: 'descripcion', nombre: 'Descripcion', sortable: false },
+  { uid: 'unidad', nombre: 'Unidad', sortable: true },
+  // { uid: 'stockMin', nombre: 'Stock Min.', sortable: true },
   { uid: 'precioVenta', nombre: 'Precio', sortable: true },
   { uid: 'precioCompra', nombre: 'Precio (Compra)', sortable: true },
   { uid: 'acciones', nombre: 'Acciones', sortable: false },

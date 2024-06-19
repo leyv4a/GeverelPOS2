@@ -122,6 +122,12 @@ const GenericTable = ({
         //     <p className="text-bold text-tiny capitalize text-default-400">{item.team}</p>
         // </div>
         // );
+        case "stock" :
+          return (
+          <>
+          <p className={`font-bold ${item.stock < item.stockMin ? 'text-danger' : item.stock == item.stockMin ? 'text-warning' : 'text-success'}`}>{item.stock}</p>
+          </>
+          );
         case "acciones":
             return (
             <div className="relative flex items-center gap-2">
