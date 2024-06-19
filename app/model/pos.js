@@ -12,7 +12,7 @@ class PosModel {
             await db.run(sqlProduct, [productoId,tipo,motivo, cantidad, fecha]);
             logToFile('Transaccion agregada');
             //Actualizar stock de productos
-            const sqlStock = "UPDATE producto SET stock = stock +?, precioVenta = ?, precioCompra = ?  WHERE id =?"
+            const sqlStock = "UPDATE producto SET stock = stock + ?, precioVenta = ?, precioCompra = ?  WHERE id =?"
             await db.run(sqlStock, [cantidad,precioVenta, precioCompra, productoId]);
             logToFile('Stock actualizado');
             await db.run('COMMIT');
@@ -31,7 +31,7 @@ class PosModel {
             }
     }
 
-    static async newExit(productoId,tipo,motivo, cantidad, fecha , precioVenta) {
+    static async newExit(productoId,tipo,motivo, cantidad, fecha) {
         try {
             await db.run('BEGIN TRANSACTION');
             logToFile('Transaccion empezada');
@@ -41,8 +41,8 @@ class PosModel {
             await db.run(sqlProduct, [productoId,tipo,motivo, cantidad, fecha]);
             logToFile('Transaccion agregada');
             //Actualizar stock de productos
-            const sqlStock = "UPDATE producto SET stock = stock -? WHERE id =?"
-            await db.run(sqlStock, [cantidad,precioVenta, productoId]);
+            const sqlStock = "UPDATE producto SET stock = stock - ? WHERE id =?"
+            await db.run(sqlStock, [cantidad, productoId]);
             logToFile('Stock actualizado');
             await db.run('COMMIT');
             logToFile('Transaccion completada');

@@ -27,7 +27,7 @@ class PosController {
             if (!productoId || !tipo || !motivo || !cantidad || !fecha ) {
                 res.status(400).json({ error: 'Todos los campos son requeridos' });
             }
-            const response = await PosModel.newEntry(productoId,tipo.toLowerCase(),motivo.toLowerCase(), cantidad, fecha);
+            const response = await PosModel.newExit(productoId,tipo.toLowerCase(),motivo.toLowerCase(), cantidad, fecha);
             if (!response.success) {
                 logToFile(response.message);
                 return res.status(500).json({ error: response.message });

@@ -31,7 +31,7 @@ export default function AgregarProductos() {
     setNombre(item.nombre),
     setDescripcion(item.descripcion),
     setStockMin(item.stockMin),
-    setCodigo(item.codigo),
+    setCodigo(item.codigo.slice(1)),
     setCategory(item.categoriaId),
     setUnidad(item.unidad);
     setInicial(item.inicial);
