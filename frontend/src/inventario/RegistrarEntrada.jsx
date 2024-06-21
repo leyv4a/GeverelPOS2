@@ -199,7 +199,19 @@ export default function RegistrarEntrada() {
   }, [])
   React.useEffect(()=> {
     const date = new Date();
-    setFecha(date.getFullYear()+'/'+date.getMonth()+'/'+date.getDay()+' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds())
+    const formattedDate =
+    date.getFullYear() +
+    "/" +
+    String(date.getMonth() + 1).padStart(2, '0') +
+    "/" +
+    String(date.getDate()).padStart(2, '0') +
+    " " +
+    String(date.getHours()).padStart(2, '0') +
+    ":" +
+    String(date.getMinutes()).padStart(2, '0') +
+    ":" +
+    String(date.getSeconds()).padStart(2, '0');
+    setFecha(formattedDate)
     if (producto == '') {
       setFecha('')
     }
@@ -209,7 +221,7 @@ export default function RegistrarEntrada() {
       <div className={isFullTable? 'hidden': 'sm:w-[50%] w-[80%]'}>
         <form onSubmit={e=>addEntradas(e)} className="flex w-full flex-col flex-wrap md:flex-nowrap gap-4">
         <h2 className='text-2xl text-center w-full'>Registrar entradas</h2>
-        <div className="flex w-full gap-4">
+        <div  className="flex w-full flex-wrap md:flex-nowrap gap-4">
         <div className='flex'>
           <Input isRequired size='sm' variant='underlined' type="text" label="Producto" value={codigo} onChange={e=> setCodigo(e.target.value)} maxLength={4}/>
           <Button isIconOnly isLoading={isButtonLoading} size='lg' color="primary" radius='none' disableRipple onClick={e => getProductByCode(e)}><FaMagnifyingGlass/></Button>

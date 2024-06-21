@@ -122,6 +122,12 @@ const GenericTable = ({
         //     <p className="text-bold text-tiny capitalize text-default-400">{item.team}</p>
         // </div>
         // );
+          case "monto":
+            return (
+                <div className='flex flex-col'>
+                    ${item.monto}
+                </div>
+            );
         case "stock" :
           return (
           <>
