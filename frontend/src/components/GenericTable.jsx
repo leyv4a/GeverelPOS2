@@ -76,7 +76,7 @@ const GenericTable = ({
     let filteredData = [...data];
     if (hasSearchFilter) {
       filteredData = filteredData.filter((item) =>
-        item.nombre.toLowerCase().includes(filterValue.toLowerCase())
+        (item.nombre ?? item.descripcion).toLowerCase().includes(filterValue.toLowerCase())
       );
     }
     return filteredData;
@@ -200,7 +200,7 @@ const GenericTable = ({
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Buscar por nombre"
+            placeholder="Filtrar"
             variant="bordered"
             startContent={<HiMagnifyingGlass />}
             value={filterValue}

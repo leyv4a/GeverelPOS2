@@ -22,7 +22,8 @@ export default function NavigationBar({items, onSectionChange, currentSection}) 
   }, []);
   return (
     <Navbar 
-    isBordered>
+    isBordered
+    maxWidth='full'>
     <NavbarContent className="hidden sm:flex gap-4 " justify="start">
      {items.map((item, key) => (
          <NavbarItem key={key}>

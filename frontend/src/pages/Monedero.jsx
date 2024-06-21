@@ -14,11 +14,11 @@ export default function Monedero() {
   };
   const items = [
     {
-      name: 'Entradas',
+      name: 'Egresos',
       section: 'agregarEntrada'
     },
     {
-      name: 'Salidas',
+      name: 'Ingresos',
       section: 'agregarSalida'
     }
   ]

@@ -5,21 +5,21 @@ class WalletController {
 
     static async getTypeRecords(req,res){
         try {
-            const {tipo} = req.body
-            if (!tipo) res.status(400).json({ error: 'Debes proporcionar el tipo' }) 
+            const tipo = req.params.tipo;
+            if (!tipo) return res.status(400).json({ error: 'Debes proporcionar el tipo' }) 
             
             const response = await WalletModel.getAll(tipo)
             return res.status(200).json(response);    
         } catch (error) {
             logToFile(error.message);
-            res.status(500).json({ error: error.message });
+            return res.status(500).json({ error: error.message });
         }
     }
     static async createRecord(req, res) {
         try {
             const { tipo, descripcion, monto, fecha } = req.body;
             // Checar todos los campos
-            if (!tipo || !descripcion || monto == null || !fecha) {
+            if (!tipo || !descripcion || !monto  || !fecha) {
                 return res.status(400).json({ error: 'Debes ingresar todos los campos' });
             }
             //Llamar al metodo crear

@@ -21,7 +21,7 @@ router.delete('/product/:id', ProductController.deleteProductById);
 router.put('/product', ProductController.updateProductById);
 router.get('/product/:code', ProductController.getProductByCode);
 
-router.get('/wallet', WalletController.getTypeRecords);
+router.get('/wallet/:tipo', WalletController.getTypeRecords);
 router.post('/wallet', WalletController.createRecord);
 
 router.get('/transaction/entry', TransactionController.getAllEntryTransactions);
