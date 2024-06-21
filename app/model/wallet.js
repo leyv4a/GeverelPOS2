@@ -2,9 +2,8 @@ const db = require('../database/database'); // Importa la conexión a la base de
 const logToFile = require('../utils/logger')
 
 class WalletModel{
-
     static async getAll(tipo){
-        const sql = "SELECT * FROM wallet WHERE tipo =?"
+        const sql = "SELECT * FROM cartera WHERE tipo =?"
         const rows = await db.all(sql, [tipo]);
         return rows;
     }
@@ -13,10 +12,12 @@ class WalletModel{
       try {
         const sql = "INSERT INTO cartera (tipo,descripcion,monto, fecha) VALUES (?,?,?,?)"
         await db.run(sql, [tipo, descripcion, monto,fecha]);
-        logToFile(`Monedero actualizado :${tipo}`)
+        logToFile(`Monedero actualizado : ${tipo} : $ ${monto}` )
         return { success: true, message: 'Transacción registrada exitosamente' };
       } catch (error) {
         return { success: false, message: error.message };
       }
     }
 }
+
+module.exports = WalletModel;
