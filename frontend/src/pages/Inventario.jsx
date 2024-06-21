@@ -38,7 +38,7 @@ export default function Inventario() {
 
   
   return (
-    <div className='w-full h-full'>
+    <div className='w-full h-screen bg-slate-100'>
       <NavigationBar items={items} currentSection={section} onSectionChange={handleSectionChange} />
         <Routes>
           <Route path="/" element={<Navigate to="agregarProducto" replace />} />

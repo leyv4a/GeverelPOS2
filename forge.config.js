@@ -18,8 +18,7 @@ module.exports = {
        name : "Gevpoint"
       },
       iconUrl: path.resolve(__dirname, 'static', 'gevpoint.ico'), // Ruta del icono en formato .ico para Squirrel
-      // setupIcon: path.resolve(__dirname, 'static', 'gevpoint.ico'), // Ruta del icono del instalador
-      setupIcon: 'https://www.geverel.com/Geverel.png', // Ruta del icono del instalador
+      setupIcon: 'https://www.geverel.com/gevpoint.ico', // Ruta del icono del instalador
     },
     {
       name: '@electron-forge/maker-zip',
