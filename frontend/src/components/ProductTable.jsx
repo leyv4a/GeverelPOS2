@@ -1,51 +1,40 @@
 import React from 'react'
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@nextui-org/react";
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
 
-export default function ProductTable() {
+export default function ProductTable({data}) {
+  const columns = [
+    {
+      key: "cantidad",
+      label: "Cantidad",
+    },{
+      key: "nombre",
+      label: "Producto",
+    },
+    {
+      key: "unidad",
+      label: "Unidad",
+    },
+    {
+      key: "precioVenta",
+      label: "Precio",
+    }, {
+      key: "subtotal",
+      label: "Subtotal",
+    }
+  ];
+
   return (
     <Table 
     aria-label="POS TABLE">
-    <TableHeader>
-      <TableColumn>Cantidad</TableColumn>
-      <TableColumn>Producto</TableColumn>
-      <TableColumn>Unidad</TableColumn>
-      <TableColumn>Impuesto</TableColumn>
-      <TableColumn>Precio</TableColumn>
-      <TableColumn>Subtotal</TableColumn>
+    <TableHeader columns={columns}>
+    {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
     </TableHeader>
-    <TableBody>
-      <TableRow key="1">
-        <TableCell>Tony Reichert</TableCell>
-        <TableCell>CEO</TableCell>
-        <TableCell>Active</TableCell>
-        <TableCell>Active</TableCell>
-        <TableCell>Active</TableCell>
-        <TableCell>Active</TableCell>
-      </TableRow>
-      <TableRow key="2">
-        <TableCell>Zoey Lang</TableCell>
-        <TableCell>Technical Lead</TableCell>
-        <TableCell>Paused</TableCell>
-        <TableCell>Paused</TableCell>
-        <TableCell>Paused</TableCell>
-        <TableCell>Paused</TableCell>
-      </TableRow>
-      <TableRow key="3">
-        <TableCell>Jane Fisher</TableCell>
-        <TableCell>Senior Developer</TableCell>
-        <TableCell>Active</TableCell>
-        <TableCell>Active</TableCell>
-        <TableCell>Active</TableCell>
-        <TableCell>Active</TableCell>
-      </TableRow>
-      <TableRow key="4">
-        <TableCell>William Howard</TableCell>
-        <TableCell>Community Manager</TableCell>
-        <TableCell>Vacation</TableCell>
-        <TableCell>Vacation</TableCell>
-        <TableCell>Vacation</TableCell>
-        <TableCell>Vacation</TableCell>
-      </TableRow>
+    <TableBody emptyContent={"Aun no hay productos en el carrito"} items={data}>
+    {(item,key) => (
+          <TableRow key={key}>
+            {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+          </TableRow>
+        )}
     </TableBody>
   </Table>
   )

@@ -1,9 +1,12 @@
 import React from 'react'
 import {Button} from '@nextui-org/button'
+import {Input} from '@nextui-org/input'
 
-export default function TicketPreview() {
+export default function TicketPreview({total}) {
+const [cambio,setCambio] = React.useState('')
+
   return (
-  <div className='rounded-lg shadow-lg bg-white p-5 flex flex-col gap-2'>
+  <div className='rounded-lg border-2 border-slate-500/20 bg-white p-5 flex flex-col gap-2'>
     <div className='flex gap-10 justify-start'>
       <div className='flex flex-col gap-4'>  
         <span>
@@ -27,7 +30,7 @@ export default function TicketPreview() {
       </div>
       <div className='flex-col flex gap-4'>
         <span>
-          $1203
+          ${total ||0}
         </span>
         <span>
          $0
@@ -36,13 +39,14 @@ export default function TicketPreview() {
          $0
         </span>
         <span>
-         <input className='border' type='text'/>
+         <input className='border max-w-[70%] px-1' value={cambio} onChange={e => setCambio(e.target.value.replace(/[^0-9.]/g, ''))} type='text'/>
+         {/* <Input classNames="p-0 m-0" isRequired size='sm' variant='underlined' value={cambio} onChange={e => setCambio(e.target.value.replace(/[^0-9.]/g, ''))} type="text" className='max-w-[70%]'/> */}
         </span>
         <span>
-         <strong>$1203</strong>
+         <strong> ${total ||0}</strong>
         </span>
         <span>
-          <strong>$50</strong>
+          <strong>${total-cambio}</strong>
         </span>
       </div>
     </div>

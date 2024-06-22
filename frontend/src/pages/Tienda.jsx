@@ -10,21 +10,51 @@ import ProductTable from '../components/ProductTable';
 export default function Tienda() {
   const headingClasses = "flex w-full sticky top-1 z-20 py-1.5 px-2 bg-default-100 shadow-small rounded-small";
 
+  //Modal state
   const {isOpen, onOpen, onOpenChange} = useDisclosure(); 
 
-  const [preCarrito, setPreCarrito] = React.useState({})
   const [carritoItems, addCarritoItems] = React.useState([])
 
-  const handleCarritoAdd = (item) => {
-    addCarritoItems([...carritoItems, item])
-    setPreCarrito({})
+  //items individuales
+  const [cantidad, setCantidad] = React.useState('')
+  const [producto, setProducto] = React.useState('')
+  const [unidad, setUnidad] = React.useState('')
+  const [precioVenta, setPrecioVenta] = React.useState('');
+  const [productoId, setProductoId] = React.useState('')
+  const [subTotal, setSubtotal] = React.useState('');
+  const [total, setTotal] = React.useState('');
+
+  const handleCarritoAdd = () => {
+    // addCarritoItems([...carritoItems, {id: productoId, cantidad: cantidad, nombre: producto, unidad: unidad, precioVenta: precioVenta, subtotal: subTotal}])
+    // setTotal(carritoItems.reduce((total, item) => total + item.subtotal, 0))
+    const nuevosItems = [...carritoItems, { id: productoId, cantidad: cantidad, nombre: producto, unidad: unidad, precioVenta: precioVenta, subtotal: subTotal }];
+    addCarritoItems(nuevosItems);
+    setTotal(sumarSubtotales(nuevosItems))
+  
+    resetFields()
+  }
+
+  const sumarSubtotales = (carritoItems) => {
+    return carritoItems.reduce((total, item) => total + item.subtotal, 0);
+  };
+  const resetFields = () => {
+    setCantidad('');
+    setProducto('');
+    setUnidad('');
+    setPrecioVenta('');
+    setProductoId('');
     setCodigo('')
+    setSelectedKeys(new Set([]));
+  }
+
+  const handlePesar = (value) => {
+    setCantidad(value);
+    setSubtotal(value*precioVenta);
   }
 
   const handleSearch = async (e) => {
     e.preventDefault();
     await getProductByCode();
-    onOpen();
   }
   
   const getProductByCode = async () => {
@@ -39,16 +69,15 @@ export default function Tienda() {
       })
       if (!response.ok) throw new Error('Error al buscar el producto');
       const result = await response.json();
-      // setProducto(result.nombre);
-      // setUnidad(result.unidad);
-      // setProductoId(result.id);
-      // addCarritoItems([...carritoItems, result])
-       setPreCarrito(result)
-      
-
+      setProducto(result.nombre);
+      setUnidad(result.unidad);
+      setProductoId(result.id);
+      setPrecioVenta(result.precioVenta);
+      console.log(result)
+      onOpen();
     } catch (error) {
       console.log(error.message)
-      // resetFields();
+      resetFields();
       toast.error(error.message || 'Error en la comunicacion con la base de datos', {
         bodyClassName : 'text-foreground'
       })
@@ -136,18 +165,18 @@ export default function Tienda() {
       </div>
        <div className="flex gap-6 max-h-[100%] sm:flex-row  flex-col">
         <div className='w-[70%]'>
-          <ProductTable/>
+          <ProductTable data={carritoItems}/>
         </div>
         <div className='w-[30%]'>
-          <TicketPreview />
+          <TicketPreview total={total} />
           <div className='flex items-center h-[50%]'>
-          <img width={'100%'} src='https://geverel.com/Geverel-Software.webp'/>
+          <img width={'90%'} src='https://geverel.com/Geverel-Software.webp'/>
           </div>
         </div>
        </div>
        <div>
           <ToastContainer position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>
-            <PasarelaPOS onOpenChange={onOpenChange} isOpen={isOpen} item={preCarrito} handleCarritoAdd={handleCarritoAdd}/>
+            <PasarelaPOS onOpenChange={onOpenChange} isOpen={isOpen} handlePesar={handlePesar} unidad={unidad} handleCarritoAdd={handleCarritoAdd}/>
       </div>
     </div>
   )
