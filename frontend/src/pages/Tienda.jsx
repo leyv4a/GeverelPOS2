@@ -25,13 +25,27 @@ export default function Tienda() {
   const [total, setTotal] = React.useState('');
 
   const handleCarritoAdd = () => {
-    // addCarritoItems([...carritoItems, {id: productoId, cantidad: cantidad, nombre: producto, unidad: unidad, precioVenta: precioVenta, subtotal: subTotal}])
-    // setTotal(carritoItems.reduce((total, item) => total + item.subtotal, 0))
-    const nuevosItems = [...carritoItems, { id: productoId, cantidad: cantidad, nombre: producto, unidad: unidad, precioVenta: precioVenta, subtotal: subTotal }];
-    addCarritoItems(nuevosItems);
-    setTotal(sumarSubtotales(nuevosItems))
-  
-    resetFields()
+    const itemExists = carritoItems.some(item => item.id === productoId);
+
+    if (itemExists) {
+      toast.error('El producto ya está en el carrito', {
+        bodyClassName: 'text-foreground'
+      });
+    } else {
+      const nuevosItems = [...carritoItems, { id: productoId, cantidad: cantidad, nombre: producto, unidad: unidad, precioVenta: precioVenta, subtotal: subTotal }];
+      addCarritoItems(nuevosItems);
+      setTotal(sumarSubtotales(nuevosItems));
+      resetFields();
+    }
+  }
+
+  const handleProcesar = () => {
+
+  }
+  const handleCancelar = () => {
+    resetFields();
+    addCarritoItems([]);
+    setTotal(0);
   }
 
   const sumarSubtotales = (carritoItems) => {
@@ -168,7 +182,7 @@ export default function Tienda() {
           <ProductTable data={carritoItems}/>
         </div>
         <div className='w-[30%]'>
-          <TicketPreview total={total} />
+          <TicketPreview total={total} handleCancelar={handleCancelar} handleProcesar={handleProcesar} />
           <div className='flex items-center h-[50%]'>
           <img width={'90%'} src='https://geverel.com/Geverel-Software.webp'/>
           </div>
