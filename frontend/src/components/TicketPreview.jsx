@@ -3,7 +3,7 @@ import {Button} from '@nextui-org/button'
 
 export default function TicketPreview() {
   return (
-  <div className='rounded bg-white p-5 flex flex-col gap-2'>
+  <div className='rounded-lg shadow-lg bg-white p-5 flex flex-col gap-2'>
     <div className='flex gap-10 justify-start'>
       <div className='flex flex-col gap-4'>  
         <span>

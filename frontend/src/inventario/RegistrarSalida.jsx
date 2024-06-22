@@ -223,6 +223,7 @@ export default function RegistrarSalida() {
       >
         <Radio value="obsequio" onKeyDown={e=> handleRadioKeyDown(e, 'obsequio')} tabIndex="0">Obsequio</Radio>
         <Radio value="otro" onKeyDown={e=> handleRadioKeyDown(e, 'otro')} tabIndex="0">Otro</Radio>
+        <Radio value="merma" onKeyDown={e=> handleRadioKeyDown(e, 'merma')} tabIndex="0">Merma</Radio>
       </RadioGroup>
       :''
       }
