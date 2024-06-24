@@ -30,8 +30,8 @@ export default function ProductTable({data, handleEditarCantidad,handleRemove}) 
     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
     </TableHeader>
     <TableBody emptyContent={"Aun no hay productos en el carrito"} items={data}>
-    {(item,key) => (
-          <TableRow key={key}>
+    {(item) => (
+          <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell>
                 {columnKey === 'acciones' ? (
@@ -42,9 +42,13 @@ export default function ProductTable({data, handleEditarCantidad,handleRemove}) 
                   <>
                   <Input type="number" value={item.cantidad} onChange={(e) => handleEditarCantidad(item.id, e.target.value)} />
                   </>
+                ): columnKey === 'precioVenta' || 'subtotal' ? (
+                  <>
+                  ${getKeyValue(item, columnKey)}
+                  </>
                 ):
                  (
-                  getKeyValue(item, columnKey)
+                 <p className='capitalize'>{getKeyValue(item, columnKey)}</p>
                 )}
               </TableCell>
             )}

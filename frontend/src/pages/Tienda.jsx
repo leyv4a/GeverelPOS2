@@ -50,18 +50,48 @@ export default function Tienda() {
     });
   }
 
+  // const handleEditarCantidad = (id, nuevaCantidad) => {
+  //   const nuevosItems = carritoItems.map(item => {
+  //     if (item.id === id) {
+  //       const nuevoSubtotal = item.precioVenta * nuevaCantidad;
+  //       return {...item, cantidad: nuevaCantidad, subtotal: nuevoSubtotal};
+  //     }
+  //     return item;
+  //   });
+  //   addCarritoItems(nuevosItems);
+  //   setTotal(sumarSubtotales(nuevosItems));
+  //   // const nuevosItems = carritoItems.map(item => {
+  //   //   if (item.id === id) {
+  //   //     const nuevoSubtotal = item.precioVenta * nuevaCantidad;
+  //   //     return {...item, cantidad: nuevaCantidad, subtotal: nuevoSubtotal};
+  //   //   }
+  //   //   return item;
+  //   // });
+  //   // addCarritoItems(nuevosItems);
+  //   // setTotal(sumarSubtotales(nuevosItems));
+  // }
   const handleEditarCantidad = (id, nuevaCantidad) => {
+    nuevaCantidad = Number(nuevaCantidad); // Asegúrate de que sea un número
+    if (isNaN(nuevaCantidad) || nuevaCantidad <= 0) {
+      toast.error('La cantidad debe ser un número positivo', {
+        bodyClassName: 'text-foreground'
+      });
+      return;
+    }
     const nuevosItems = carritoItems.map(item => {
       if (item.id === id) {
         const nuevoSubtotal = item.precioVenta * nuevaCantidad;
-        return {...item, cantidad: nuevaCantidad, subtotal: nuevoSubtotal};
+        return { ...item, cantidad: nuevaCantidad, subtotal: nuevoSubtotal };
       }
       return item;
     });
     addCarritoItems(nuevosItems);
     setTotal(sumarSubtotales(nuevosItems));
   }
-
+  React.useEffect(() => {
+    console.log('Carrito actualizado:', carritoItems);
+  }, [carritoItems]);
+ 
   const handleProcesar = async () => {
     console.log(carritoItems)
     try {
@@ -129,7 +159,7 @@ export default function Tienda() {
       })
       if (!response.ok) throw new Error('Error al buscar el producto');
       const result = await response.json();
-      handleCarritoAdd(result.id, 1, result.nombre, result.precioVenta, 1*result.precioVenta);
+      handleCarritoAdd( result.id, 1, result.nombre, result.precioVenta, 1*result.precioVenta);
     } catch (error) {
       console.log(error.message)
       resetFields();
