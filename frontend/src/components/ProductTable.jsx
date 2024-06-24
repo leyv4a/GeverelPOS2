@@ -42,11 +42,16 @@ export default function ProductTable({data, handleEditarCantidad,handleRemove}) 
                   <>
                   <Input type="number" value={item.cantidad} onChange={(e) => handleEditarCantidad(item.id, e.target.value)} />
                   </>
-                ): columnKey === 'precioVenta' || 'subtotal' ? (
+                ): columnKey === 'precioVenta'  ? (
+                  <>
+                  ${getKeyValue(item, columnKey)}
+                  </>
+                ): columnKey === 'subtotal' ? (
                   <>
                   ${getKeyValue(item, columnKey)}
                   </>
                 ):
+
                  (
                  <p className='capitalize'>{getKeyValue(item, columnKey)}</p>
                 )}

@@ -1,5 +1,6 @@
 const db = require('../database/database'); // Importa la conexión a la base de datos SQLite
 const logToFile = require('../utils/logger')
+const sumarSubtotales = require('../utils/maths')
 
 class PosModel {
     static async newEntry(productoId,tipo,motivo, cantidad, fecha , precioVenta, precioCompra) {
@@ -60,7 +61,8 @@ class PosModel {
             }
     }
     static async PosSale(cart, tipo, motivo, fecha) {
-        try {
+      try {
+          const total = sumarSubtotales(cart)
           await db.run('BEGIN TRANSACTION');
           logToFile('Transacción empezada');
       
@@ -77,7 +79,9 @@ class PosModel {
             await db.run(sqlStock, [cantidad, id]);
             logToFile(`Stock actualizado para producto ${id}`);
           }
-      
+          const sqlWallet = 'INSERT INTO cartera (tipo,descripcion,monto, fecha) VALUES (?,?,?,?)'
+          await db.run(sqlWallet, ['ingreso', 'venta', total, fecha]);
+          logToFile('Cartera actualizada');
           await db.run('COMMIT');
           logToFile('Transacción completada');
           return { success: true, message: 'Transacción registrada exitosamente' };
@@ -93,6 +97,9 @@ class PosModel {
           }
         }
       }
+
+    
 }
+
 
 module.exports = PosModel;

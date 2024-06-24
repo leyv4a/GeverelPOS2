@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Children } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import { FaCashRegister, FaPlus } from "react-icons/fa";
 import TicketPreview from '../components/TicketPreview';
@@ -16,7 +16,7 @@ export default function Tienda() {
 
   const [total, setTotal] = React.useState('');
 
-  const handleCarritoAdd = async (id, cantidad, nombre, precioVenta, subTotal) => {
+  const handleCarritoAdd = async (id, cantidad, nombre, precioVenta, subTotal,unidad) => {
     const itemExists = carritoItems.some(item => item.id === id);
 
     if (itemExists) {
@@ -34,7 +34,7 @@ export default function Tienda() {
         return;
       }
 
-      const nuevosItems = [...carritoItems, { id: id, cantidad: cantidad, nombre: nombre,  precioVenta: precioVenta, subtotal: subTotal }];
+      const nuevosItems = [...carritoItems, { id: id, cantidad: cantidad, nombre: nombre,  precioVenta: precioVenta, subtotal: subTotal,unidad: unidad }];
       addCarritoItems(nuevosItems);
       setTotal(sumarSubtotales(nuevosItems));
       resetFields();
@@ -42,11 +42,13 @@ export default function Tienda() {
   }
 
   const handleRemove = (id) => {
-    const nuevosItems = carritoItems.filter(item => item.id !== id);
-    addCarritoItems(nuevosItems);
-    setTotal(sumarSubtotales(nuevosItems));
-    toast.success('Producto eliminado del carrito', {
-      bodyClassName: 'text-foreground'
+    addCarritoItems(prevItems => {
+      const nuevosItems = prevItems.filter(item => item.id !== id);
+      setTotal(sumarSubtotales(nuevosItems));
+      toast.success('Producto eliminado del carrito', {
+        bodyClassName: 'text-foreground'
+      });
+      return nuevosItems;
     });
   }
 
@@ -78,19 +80,19 @@ export default function Tienda() {
       });
       return;
     }
-    const nuevosItems = carritoItems.map(item => {
-      if (item.id === id) {
-        const nuevoSubtotal = item.precioVenta * nuevaCantidad;
-        return { ...item, cantidad: nuevaCantidad, subtotal: nuevoSubtotal };
-      }
-      return item;
+    addCarritoItems(prevItems => {
+      const nuevosItems = prevItems.map(item => {
+        if (item.id === id) {
+          const nuevoSubtotal = item.precioVenta * nuevaCantidad;
+          return { ...item, cantidad: nuevaCantidad, subtotal: nuevoSubtotal };
+        }
+        return item;
+      });
+      setTotal(sumarSubtotales(nuevosItems));
+      return nuevosItems;
     });
-    addCarritoItems(nuevosItems);
-    setTotal(sumarSubtotales(nuevosItems));
   }
-  React.useEffect(() => {
-    console.log('Carrito actualizado:', carritoItems);
-  }, [carritoItems]);
+
  
   const handleProcesar = async () => {
     console.log(carritoItems)
@@ -107,7 +109,6 @@ export default function Tienda() {
       if (!response.ok) throw new Error('Error al procesar la venta');
 
       const result = await response.json();
-       console.log(result)
       toast.success('Venta procesada exitosamente', {
         bodyClassName: 'text-foreground'
       });
@@ -159,7 +160,7 @@ export default function Tienda() {
       })
       if (!response.ok) throw new Error('Error al buscar el producto');
       const result = await response.json();
-      handleCarritoAdd( result.id, 1, result.nombre, result.precioVenta, 1*result.precioVenta);
+      handleCarritoAdd( result.id, 1, result.nombre, result.precioVenta, 1*result.precioVenta, result.unidad);
     } catch (error) {
       console.log(error.message)
       resetFields();
