@@ -10,37 +10,84 @@ import ProductTable from '../components/ProductTable';
 export default function Tienda() {
   const headingClasses = "flex w-full sticky top-1 z-20 py-1.5 px-2 bg-default-100 shadow-small rounded-small";
 
-  //Modal state
-  const {isOpen, onOpen, onOpenChange} = useDisclosure(); 
+  const [fecha,setFecha] = React.useState('')
 
   const [carritoItems, addCarritoItems] = React.useState([])
 
-  //items individuales
-  const [cantidad, setCantidad] = React.useState('')
-  const [producto, setProducto] = React.useState('')
-  const [unidad, setUnidad] = React.useState('')
-  const [precioVenta, setPrecioVenta] = React.useState('');
-  const [productoId, setProductoId] = React.useState('')
-  const [subTotal, setSubtotal] = React.useState('');
   const [total, setTotal] = React.useState('');
 
-  const handleCarritoAdd = () => {
-    const itemExists = carritoItems.some(item => item.id === productoId);
+  const handleCarritoAdd = async (id, cantidad, nombre, precioVenta, subTotal) => {
+    const itemExists = carritoItems.some(item => item.id === id);
 
     if (itemExists) {
       toast.error('El producto ya está en el carrito', {
         bodyClassName: 'text-foreground'
       });
-    } else {
-      const nuevosItems = [...carritoItems, { id: productoId, cantidad: cantidad, nombre: producto, unidad: unidad, precioVenta: precioVenta, subtotal: subTotal }];
+      setCodigo('')
+    }  else {
+      // Asegúrate de que productoId tenga un valor válido
+      if (!id) {
+        toast.error('No se ha encontrado el producto', {
+          bodyClassName: 'text-foreground'
+        });
+        setCodigo('');
+        return;
+      }
+
+      const nuevosItems = [...carritoItems, { id: id, cantidad: cantidad, nombre: nombre,  precioVenta: precioVenta, subtotal: subTotal }];
       addCarritoItems(nuevosItems);
       setTotal(sumarSubtotales(nuevosItems));
       resetFields();
     }
   }
 
-  const handleProcesar = () => {
+  const handleRemove = (id) => {
+    const nuevosItems = carritoItems.filter(item => item.id !== id);
+    addCarritoItems(nuevosItems);
+    setTotal(sumarSubtotales(nuevosItems));
+    toast.success('Producto eliminado del carrito', {
+      bodyClassName: 'text-foreground'
+    });
+  }
 
+  const handleEditarCantidad = (id, nuevaCantidad) => {
+    const nuevosItems = carritoItems.map(item => {
+      if (item.id === id) {
+        const nuevoSubtotal = item.precioVenta * nuevaCantidad;
+        return {...item, cantidad: nuevaCantidad, subtotal: nuevoSubtotal};
+      }
+      return item;
+    });
+    addCarritoItems(nuevosItems);
+    setTotal(sumarSubtotales(nuevosItems));
+  }
+
+  const handleProcesar = async () => {
+    console.log(carritoItems)
+    try {
+      const response = await fetch('http://localhost:3001/api/pos/sale', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ productos: carritoItems, tipo: 'salida', motivo: 'venta', fecha: fecha })
+      });
+
+      if (!response.ok) throw new Error('Error al procesar la venta');
+
+      const result = await response.json();
+       console.log(result)
+      toast.success('Venta procesada exitosamente', {
+        bodyClassName: 'text-foreground'
+      });
+      handleCancelar(); // Limpiar el carrito después de procesar la venta
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message || 'Error al procesar la venta', {
+        bodyClassName: 'text-foreground'
+      });
+    }
   }
   const handleCancelar = () => {
     resetFields();
@@ -52,23 +99,22 @@ export default function Tienda() {
     return carritoItems.reduce((total, item) => total + item.subtotal, 0);
   };
   const resetFields = () => {
-    setCantidad('');
-    setProducto('');
-    setUnidad('');
-    setPrecioVenta('');
-    setProductoId('');
+    setFecha('')
     setCodigo('')
     setSelectedKeys(new Set([]));
   }
 
-  const handlePesar = (value) => {
-    setCantidad(value);
-    setSubtotal(value*precioVenta);
-  }
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    await getProductByCode();
+    try {
+      await getProductByCode(); // Espera a que getProductByCode termine
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message || 'Error en la comunicacion con la base de datos', {
+        bodyClassName: 'text-foreground'
+      });
+    }
   }
   
   const getProductByCode = async () => {
@@ -83,18 +129,11 @@ export default function Tienda() {
       })
       if (!response.ok) throw new Error('Error al buscar el producto');
       const result = await response.json();
-      setProducto(result.nombre);
-      setUnidad(result.unidad);
-      setProductoId(result.id);
-      setPrecioVenta(result.precioVenta);
-      console.log(result)
-      onOpen();
+      handleCarritoAdd(result.id, 1, result.nombre, result.precioVenta, 1*result.precioVenta);
     } catch (error) {
       console.log(error.message)
       resetFields();
-      toast.error(error.message || 'Error en la comunicacion con la base de datos', {
-        bodyClassName : 'text-foreground'
-      })
+      throw error; 
     }
   }
 
@@ -140,6 +179,23 @@ export default function Tienda() {
     return acc;
   }, {});
 
+  React.useEffect(()=> {
+    const date = new Date();
+    const formattedDate =
+    date.getFullYear() +
+    "/" +
+    String(date.getMonth() + 1).padStart(2, '0') +
+    "/" +
+    String(date.getDate()).padStart(2, '0') +
+    " " +
+    String(date.getHours()).padStart(2, '0') +
+    ":" +
+    String(date.getMinutes()).padStart(2, '0') +
+    ":" +
+    String(date.getSeconds()).padStart(2, '0');
+    setFecha(formattedDate)
+  
+  }, [codigo])
   return (
     <div className='w-full h-screen p-5 bg-slate-100'>
       <h2 className='text-4xl flex gap-2 mb-5'>
@@ -147,7 +203,7 @@ export default function Tienda() {
       </h2>
       <div className='flex w-[50%] mb-2 gap-2'>
         <div className='flex '>
-          <Input type="text" label="Codigo" color='default' value={codigo} radius='none' size='sm' variant='borderer' />
+          <Input type="text" label="Codigo" color='default' onChange={e=>setCodigo(e.target.value)} value={codigo} radius='none' size='sm' variant='borderer' />
           <Button onClick={e=> handleSearch(e)} size='lg' color='primary' radius='none' isIconOnly className='text-3xl'><FaPlus/></Button>
         </div>
         <Select
@@ -179,7 +235,7 @@ export default function Tienda() {
       </div>
        <div className="flex gap-6 max-h-[100%] sm:flex-row  flex-col">
         <div className='w-[70%]'>
-          <ProductTable data={carritoItems}/>
+          <ProductTable data={carritoItems} handleRemove={handleRemove} handleEditarCantidad={handleEditarCantidad}/>
         </div>
         <div className='w-[30%]'>
           <TicketPreview total={total} handleCancelar={handleCancelar} handleProcesar={handleProcesar} />
@@ -190,7 +246,7 @@ export default function Tienda() {
        </div>
        <div>
           <ToastContainer position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>
-            <PasarelaPOS onOpenChange={onOpenChange} isOpen={isOpen} handlePesar={handlePesar} unidad={unidad} handleCarritoAdd={handleCarritoAdd}/>
+            {/* <PasarelaPOS onOpenChange={onOpenChange} isOpen={isOpen} handlePesar={handlePesar} handleCarritoAdd={handleCarritoAdd}/> */}
       </div>
     </div>
   )

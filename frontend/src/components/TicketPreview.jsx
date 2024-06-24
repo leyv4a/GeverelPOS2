@@ -46,11 +46,11 @@ const [cambio,setCambio] = React.useState('')
          <strong> ${total ||0}</strong>
         </span>
         <span>
-          <strong>${total-cambio}</strong>
+          <strong>${!cambio? '0' : cambio-total}</strong>
         </span>
       </div>
     </div>
-     <Button className='font-bold ' variant='flat' radius='sm' color='success'>
+     <Button className='font-bold ' onPress={e=> {handleProcesar()}} variant='flat' radius='sm' color='success'>
      Procesar
    </Button>
    <Button onPress={e => {handleCancelar()}} className='font-bold' radius='sm' variant='flat' color='danger'>

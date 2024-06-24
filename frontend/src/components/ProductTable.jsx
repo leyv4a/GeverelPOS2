@@ -1,7 +1,7 @@
 import React from 'react'
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Button, Input} from "@nextui-org/react";
 
-export default function ProductTable({data}) {
+export default function ProductTable({data, handleEditarCantidad,handleRemove}) {
   const columns = [
     {
       key: "cantidad",
@@ -11,15 +11,15 @@ export default function ProductTable({data}) {
       label: "Producto",
     },
     {
-      key: "unidad",
-      label: "Unidad",
-    },
-    {
       key: "precioVenta",
       label: "Precio",
     }, {
       key: "subtotal",
       label: "Subtotal",
+    }
+    , {
+      key: "acciones",
+      label: "Acciones",
     }
   ];
 
@@ -32,7 +32,22 @@ export default function ProductTable({data}) {
     <TableBody emptyContent={"Aun no hay productos en el carrito"} items={data}>
     {(item,key) => (
           <TableRow key={key}>
-            {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+            {(columnKey) => (
+              <TableCell>
+                {columnKey === 'acciones' ? (
+                  <Button size="sm" color="error" onClick={() => handleRemove(item.id)}>
+                    Eliminar
+                  </Button>
+                ) : columnKey === 'cantidad' ? (
+                  <>
+                  <Input type="number" value={item.cantidad} onChange={(e) => handleEditarCantidad(item.id, e.target.value)} />
+                  </>
+                ):
+                 (
+                  getKeyValue(item, columnKey)
+                )}
+              </TableCell>
+            )}
           </TableRow>
         )}
     </TableBody>

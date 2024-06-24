@@ -31,6 +31,7 @@ router.delete('/transaction/:id', TransactionController.deleteTransactionById);
 
 router.post('/pos/entry', PosController.CreateTransactionEntry);
 router.post('/pos/exit', PosController.CreateTransactionExit);
+router.post('/pos/sale', PosController.CreatePosSale)
 
 
 module.exports = router;

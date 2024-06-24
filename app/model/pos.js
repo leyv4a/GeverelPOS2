@@ -59,6 +59,40 @@ class PosModel {
                 }
             }
     }
+    static async PosSale(cart, tipo, motivo, fecha) {
+        try {
+          await db.run('BEGIN TRANSACTION');
+          logToFile('Transacción empezada');
+      
+          for (const item of cart) {
+            const { id, cantidad } = item;
+      
+            // Registrar la transacción
+            const sqlProduct = "INSERT INTO transacciones (productoId, tipo, motivo, cantidad, fecha) VALUES (?, ?, ?, ?, ?)";
+            await db.run(sqlProduct, [id, tipo, motivo, cantidad, fecha]);
+            logToFile(`Transacción agregada para producto ${id}`);
+      
+            // Actualizar stock de productos
+            const sqlStock = "UPDATE producto SET stock = stock - ? WHERE id = ?";
+            await db.run(sqlStock, [cantidad, id]);
+            logToFile(`Stock actualizado para producto ${id}`);
+          }
+      
+          await db.run('COMMIT');
+          logToFile('Transacción completada');
+          return { success: true, message: 'Transacción registrada exitosamente' };
+        } catch (error) {
+          logToFile(error.message);
+          try {
+            await db.run('ROLLBACK');
+            logToFile('Transacción cancelada');
+            return { success: false, message: error.message };
+          } catch (rollbackError) {
+            logToFile(rollbackError.message);
+            return { success: false, message: rollbackError.message };
+          }
+        }
+      }
 }
 
 module.exports = PosModel;
