@@ -24,6 +24,8 @@ export default function ProductTable({data, handleEditarCantidad,handleRemove}) 
     }
   ];
 
+
+
   return (
     <Table 
     aria-label="POS TABLE">
@@ -34,7 +36,7 @@ export default function ProductTable({data, handleEditarCantidad,handleRemove}) 
       :
       <TableColumn className='' key={column.key}>{column.label}</TableColumn>)}
     </TableHeader>
-    <TableBody emptyContent={"Aun no hay productos en el carrito"} items={data}>
+    {/* <TableBody emptyContent={"Aun no hay productos en el carrito"} items={data}>
     {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
@@ -64,7 +66,28 @@ export default function ProductTable({data, handleEditarCantidad,handleRemove}) 
             )}
           </TableRow>
         )}
-    </TableBody>
+    </TableBody> */}
+    <TableBody emptyContent={"Aun no hay productos en el carrito"} items={data}>
+  {data.map(item => (
+    <TableRow key={item.id}>
+      {columns.map(column => (
+        <TableCell key={column.key}>
+          {column.key === 'acciones' ? (
+            <Button size="sm" color="error" isIconOnly className="text-xl text-danger" onClick={() => handleRemove(item.id)}>
+              <FaTrash/>
+            </Button>
+          ) : column.key === 'cantidad' ? (
+            <Input size='sm' className='max-w-[130px]' variant='underlined' type="number" value={item.cantidad} onChange={(e) => handleEditarCantidad(item.id, e.target.value)} />
+          ) : column.key === 'precioVenta' || column.key === 'subtotal' ? (
+            `$${getKeyValue(item, column.key)}`
+          ) : (
+            <p className='capitalize'>{getKeyValue(item, column.key)}</p>
+          )}
+        </TableCell>
+      ))}
+    </TableRow>
+  ))}
+</TableBody>
   </Table>
   )
 }

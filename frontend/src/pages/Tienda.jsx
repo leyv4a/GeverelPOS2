@@ -3,8 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { FaCashRegister, FaPlus } from "react-icons/fa";
 import TicketPreview from '../components/TicketPreview';
 import {Input,Button} from "@nextui-org/react";
-import {Select, SelectItem, SelectSection, useDisclosure} from "@nextui-org/react";
-import PasarelaPOS from '../components/PasarelaPOS';
+import {Select, SelectItem, SelectSection} from "@nextui-org/react";
 import ProductTable from '../components/ProductTable';
 
 export default function Tienda() {
@@ -16,16 +15,25 @@ export default function Tienda() {
 
   const [total, setTotal] = React.useState('');
 
-  const handleCarritoAdd = async (id, cantidad, nombre, precioVenta, subTotal,unidad) => {
-    const itemExists = carritoItems.some(item => item.id === id);
-
-    if (itemExists) {
-      toast.error('El producto ya está en el carrito', {
-        bodyClassName: 'text-foreground'
-      });
-      setCodigo('')
-    }  else {
-      // Asegúrate de que productoId tenga un valor válido
+  const handleCarritoAdd = async (id, cantidad, nombre, precioVenta, subTotal, unidad) => {
+    const itemIndex = carritoItems.findIndex(item => item.id === id);
+  
+    if (itemIndex !== -1) {
+      const nuevosItems = [...carritoItems];
+      nuevosItems[itemIndex].cantidad += cantidad;
+      nuevosItems[itemIndex].subtotal = nuevosItems[itemIndex].cantidad * precioVenta;
+  
+      try {
+        addCarritoItems([...nuevosItems]); // Cambiado a [...nuevosItems]
+        setTotal(sumarSubtotales(nuevosItems));
+        resetFields();
+      } catch (error) {
+        console.error('Error al actualizar el carrito:', error);
+        toast.error('Error al actualizar el carrito', {
+          bodyClassName: 'text-foreground'
+        });
+      }
+    } else {
       if (!id) {
         toast.error('No se ha encontrado el producto', {
           bodyClassName: 'text-foreground'
@@ -33,13 +41,40 @@ export default function Tienda() {
         setCodigo('');
         return;
       }
-
-      const nuevosItems = [...carritoItems, { id: id, cantidad: cantidad, nombre: nombre,  precioVenta: precioVenta, subtotal: subTotal,unidad: unidad }];
-      addCarritoItems(nuevosItems);
-      setTotal(sumarSubtotales(nuevosItems));
-      resetFields();
+  
+      if (cantidad <= 0) {
+        toast.error('La cantidad debe ser un número mayor que cero', {
+          bodyClassName: 'text-foreground'
+        });
+        return;
+      }
+  
+      const nuevoItem = {
+        id,
+        cantidad,
+        nombre,
+        precioVenta,
+        subtotal: cantidad * precioVenta,
+        unidad
+      };
+  
+      try {
+        const nuevosItems = [...carritoItems, nuevoItem];
+        addCarritoItems([...nuevosItems]); // Cambiado a [...nuevosItems]
+        setTotal(sumarSubtotales(nuevosItems));
+        resetFields();
+      } catch (error) {
+        console.error('Error al agregar al carrito:', error);
+        toast.error('Error al agregar al carrito', {
+          bodyClassName: 'text-foreground'
+        });
+      }
     }
-  }
+  };
+
+React.useEffect(()=> {
+  console.log(carritoItems)
+}, [carritoItems])
 
   const handleRemove = (id) => {
     addCarritoItems(prevItems => {
@@ -52,26 +87,6 @@ export default function Tienda() {
     });
   }
 
-  // const handleEditarCantidad = (id, nuevaCantidad) => {
-  //   const nuevosItems = carritoItems.map(item => {
-  //     if (item.id === id) {
-  //       const nuevoSubtotal = item.precioVenta * nuevaCantidad;
-  //       return {...item, cantidad: nuevaCantidad, subtotal: nuevoSubtotal};
-  //     }
-  //     return item;
-  //   });
-  //   addCarritoItems(nuevosItems);
-  //   setTotal(sumarSubtotales(nuevosItems));
-  //   // const nuevosItems = carritoItems.map(item => {
-  //   //   if (item.id === id) {
-  //   //     const nuevoSubtotal = item.precioVenta * nuevaCantidad;
-  //   //     return {...item, cantidad: nuevaCantidad, subtotal: nuevoSubtotal};
-  //   //   }
-  //   //   return item;
-  //   // });
-  //   // addCarritoItems(nuevosItems);
-  //   // setTotal(sumarSubtotales(nuevosItems));
-  // }
   const handleEditarCantidad = (id, nuevaCantidad) => {
     nuevaCantidad = Number(nuevaCantidad); // Asegúrate de que sea un número
     if (isNaN(nuevaCantidad) || nuevaCantidad <= 0) {
@@ -94,8 +109,9 @@ export default function Tienda() {
   }
 
  
-  const handleProcesar = async () => {
+  const handleProcesar = async (e) => {
     console.log(carritoItems)
+    e.preventDefault();
     try {
       const response = await fetch('http://localhost:3001/api/pos/sale', {
         method: 'POST',
@@ -210,6 +226,14 @@ export default function Tienda() {
     return acc;
   }, {});
 
+  const inputRef = React.useRef(null);
+
+  React.useEffect(() => {
+    inputRef.current.focus();
+  }, [carritoItems],[]);
+
+
+
   React.useEffect(()=> {
     const date = new Date();
     const formattedDate =
@@ -233,10 +257,10 @@ export default function Tienda() {
        <FaCashRegister/> PUNTO DE VENTA
       </h2>
       <div className='flex w-[50%] mb-2 gap-2'>
-        <div className='flex '>
-          <Input type="text" label="Codigo" color='default' onChange={e=>setCodigo(e.target.value)} value={codigo} radius='none' size='sm' variant='borderer' />
-          <Button onClick={e=> handleSearch(e)} size='lg' color='primary' radius='none' isIconOnly className='text-3xl'><FaPlus/></Button>
-        </div>
+          <form className='flex' onSubmit={e=>handleSearch(e)}>
+          <Input ref={inputRef} type="text" label="Codigo" color='default' onChange={e=>setCodigo(e.target.value)} value={codigo} radius='none' size='sm' variant='borderer' />
+          <Button type='submit' size='lg' color='primary' radius='none' isIconOnly className='text-3xl'><FaPlus/></Button>
+          </form>
         <Select
         label="Selecciona un producto"
         className="max-w-xs"
@@ -277,7 +301,6 @@ export default function Tienda() {
        </div>
        <div>
           <ToastContainer position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>
-            {/* <PasarelaPOS onOpenChange={onOpenChange} isOpen={isOpen} handlePesar={handlePesar} handleCarritoAdd={handleCarritoAdd}/> */}
       </div>
     </div>
   )

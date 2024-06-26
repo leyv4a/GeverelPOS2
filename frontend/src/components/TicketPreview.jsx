@@ -50,7 +50,7 @@ const [cambio,setCambio] = React.useState('')
         </span>
       </div>
     </div>
-     <Button className='font-bold ' onPress={e=> {handleProcesar()}} variant='flat' radius='sm' color='success'>
+     <Button className='font-bold ' onPress={e=> {handleProcesar(e)}} variant='flat' radius='sm' color='success'>
      Procesar
    </Button>
    <Button onPress={e => {handleCancelar()}} className='font-bold' radius='sm' variant='flat' color='danger'>
