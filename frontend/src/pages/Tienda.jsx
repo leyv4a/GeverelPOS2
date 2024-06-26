@@ -72,10 +72,6 @@ export default function Tienda() {
     }
   };
 
-React.useEffect(()=> {
-  console.log(carritoItems)
-}, [carritoItems])
-
   const handleRemove = (id) => {
     addCarritoItems(prevItems => {
       const nuevosItems = prevItems.filter(item => item.id !== id);
@@ -109,9 +105,8 @@ React.useEffect(()=> {
   }
 
  
-  const handleProcesar = async (e) => {
+  const handleProcesar = async () => {
     console.log(carritoItems)
-    e.preventDefault();
     try {
       const response = await fetch('http://localhost:3001/api/pos/sale', {
         method: 'POST',
@@ -295,7 +290,7 @@ React.useEffect(()=> {
         <div className='w-[30%]'>
           <TicketPreview total={total} handleCancelar={handleCancelar} handleProcesar={handleProcesar} />
           <div className='flex items-center h-[50%]'>
-          <img width={'90%'} src='https://geverel.com/Geverel-Software.webp'/>
+          {/* <img width={'90%'} src='https://geverel.com/Geverel-Software.webp'/> */}
           </div>
         </div>
        </div>

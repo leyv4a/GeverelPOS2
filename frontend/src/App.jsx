@@ -14,7 +14,7 @@ function App() {
   return (
     <>
    <HashRouter>
-     <main className='flex max-w-screen max-h-screen'>
+     <main className='flex max-w-screen max-h-screen overflow-hidden'>
       <CompleteSidebar/>
       <Suspense fallback={<Loader/>}>
         <Routes>
