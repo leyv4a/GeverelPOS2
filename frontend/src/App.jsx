@@ -1,5 +1,5 @@
 
-import React, {Suspense, lazy} from 'react';
+import {Suspense, lazy} from 'react';
 import CompleteSidebar from './components/CompleteSidebar';
 import {HashRouter, Route, Routes} from 'react-router-dom';
 

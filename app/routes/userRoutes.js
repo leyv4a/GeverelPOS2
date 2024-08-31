@@ -20,6 +20,7 @@ router.post('/product', ProductController.createProduct);
 router.delete('/product/:id', ProductController.deleteProductById);
 router.put('/product', ProductController.updateProductById);
 router.get('/product/:code', ProductController.getProductByCode);
+router.get('/weight', ProductController.getWeight);
 
 router.get('/wallet/:tipo', WalletController.getTypeRecords);
 router.post('/wallet', WalletController.createRecord);

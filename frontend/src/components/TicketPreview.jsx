@@ -39,7 +39,7 @@ const [cambio,setCambio] = React.useState('')
          $0
         </span>
         <span>
-         <input className='border max-w-[70%] px-1' value={cambio} onChange={e => setCambio(e.target.value.replace(/[^0-9.]/g, ''))} type='text'/>
+         <input className='border w-full max-w-[70%] px-1' value={cambio} onChange={e => setCambio(e.target.value.replace(/[^0-9.]/g, ''))} type='text'/>
          {/* <Input classNames="p-0 m-0" isRequired size='sm' variant='underlined' value={cambio} onChange={e => setCambio(e.target.value.replace(/[^0-9.]/g, ''))} type="text" className='max-w-[70%]'/> */}
         </span>
         <span>

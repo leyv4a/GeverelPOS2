@@ -126,6 +126,20 @@ class ProductController {
       res.status(500).json({ error: "Error en el servidor" });
     }
   }
+
+  static async getWeight(req,res){
+    try {
+      const result = await ProductModel.getWeight();
+      if (!result.success) {
+        logToFile(result.message);
+        return res.status(500).json({ error: result.message });
+      }
+      return res.status(200).json({ weight: result.weight });
+    } catch (error) {
+      logToFile(`Error en el servidor: ${error.message}`);
+      res.status(500).json({ error: "Error en el servidor" });
+    }
+  }
 }
 
 module.exports = ProductController;

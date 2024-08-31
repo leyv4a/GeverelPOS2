@@ -5,9 +5,10 @@ import TicketPreview from '../components/TicketPreview';
 import {Input,Button} from "@nextui-org/react";
 import {Select, SelectItem, SelectSection} from "@nextui-org/react";
 import ProductTable from '../components/ProductTable';
+import { ImPriceTag } from "react-icons/im";
 
 export default function Tienda() {
-  const headingClasses = "flex w-full sticky top-1 z-20 py-1.5 px-2 bg-default-100 shadow-small rounded-small";
+  const headingClasses = "flex w-full sticky top-1 z-20 py-1.5 px-2 bg-default-100 shadow-small rounded-small capitalize";
 
   const [fecha,setFecha] = React.useState('')
 
@@ -158,6 +159,30 @@ export default function Tienda() {
       });
     }
   }
+
+  const CheckPrice = async (e) => {
+    e.preventDefault();
+    try {
+      if(codigo === '' ) throw new Error('Todos los campos son necesarios');
+      const response = await fetch(`http://localhost:3001/api/product/${codigo.toLowerCase()}`,{
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type' : 'application/json'
+        }
+      })
+      if (!response.ok) throw new Error('Error al buscar el producto');
+      const result = await response.json();
+      console.log(result)
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message || 'Error en la comunicacion con la base de datos', {
+        bodyClassName: 'text-foreground'
+      });
+    }finally{
+      resetFields();
+    }
+  }
   
   const getProductByCode = async () => {
     try {
@@ -273,15 +298,19 @@ export default function Tienda() {
           key={category}
           title={category}
           classNames={{
-            heading: headingClasses,
+            heading: headingClasses
           }}
         >
           {categorizedProducts[category].map(product => (
-            <SelectItem key={product.codigo}>{product.nombre}</SelectItem>
+            <SelectItem key={product.codigo} className='capitalize'>{product.nombre}</SelectItem>
           ))}
         </SelectSection>
       ))}
        </Select>
+       <form className='flex' onSubmit={(e)=>{CheckPrice(e)}}> 
+       <Input ref={inputRef} type="text" label="Codigo" color='default' onChange={e=>setCodigo(e.target.value)} value={codigo} radius='none' size='sm' variant='borderer' />
+       <Button type='submit' size='lg' color='primary' radius='none' isIconOnly className='text-3xl'><ImPriceTag/></Button>
+       </form>
       </div>
        <div className="flex gap-6 max-h-[100%] sm:flex-row  flex-col">
         <div className='w-[70%]'>
