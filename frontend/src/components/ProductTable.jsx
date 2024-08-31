@@ -77,7 +77,9 @@ export default function ProductTable({data, handleEditarCantidad,handleRemove}) 
               <FaTrash/>
             </Button>
           ) : column.key === 'cantidad' ? (
-            <Input size='sm' className='max-w-[130px]' variant='underlined' type="number" value={item.cantidad} onChange={(e) => handleEditarCantidad(item.id, e.target.value)} />
+            <Input size='sm' className='max-w-[130px]' type='number' variant='underlined' value={item.cantidad}
+             onChange={(e) => handleEditarCantidad(item.id, e.target.value)} 
+             />
           ) : column.key === 'precioVenta' || column.key === 'subtotal' ? (
             `$${getKeyValue(item, column.key)}`
           ) : (

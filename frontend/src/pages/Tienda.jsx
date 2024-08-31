@@ -6,6 +6,7 @@ import {Input,Button} from "@nextui-org/react";
 import {Select, SelectItem, SelectSection} from "@nextui-org/react";
 import ProductTable from '../components/ProductTable';
 import { ImPriceTag } from "react-icons/im";
+import debounce from 'lodash.debounce';
 
 export default function Tienda() {
   const headingClasses = "flex w-full sticky top-1 z-20 py-1.5 px-2 bg-default-100 shadow-small rounded-small capitalize";
@@ -19,36 +20,51 @@ export default function Tienda() {
   const handleCarritoAdd = async (id, cantidad, nombre, precioVenta, subTotal, unidad) => {
     const itemIndex = carritoItems.findIndex(item => item.id === id);
   
+    const cantidadkg = await fetch('http://localhost:3001/api/weight').then(response => response.json());
+  
+    
+
+    if (unidad === 'kg') {
+      cantidad = parseFloat(cantidadkg.weight.trim().replace(" kg", ""));
+
+      // cantidad = 1; // Asigna un valor aleatorio
+    }
+
     if (itemIndex !== -1) {
       const nuevosItems = [...carritoItems];
-      nuevosItems[itemIndex].cantidad += cantidad;
+      // Si la unidad es "kg", se sobrescribe la cantidad
+      if (unidad === 'kg') {
+        nuevosItems[itemIndex].cantidad = cantidad;
+      } else {
+        nuevosItems[itemIndex].cantidad += cantidad;
+      }
       nuevosItems[itemIndex].subtotal = nuevosItems[itemIndex].cantidad * precioVenta;
-  
+
       try {
-        addCarritoItems([...nuevosItems]); // Cambiado a [...nuevosItems]
+        addCarritoItems([...nuevosItems]);
         setTotal(sumarSubtotales(nuevosItems));
         resetFields();
       } catch (error) {
         console.error('Error al actualizar el carrito:', error);
         toast.error('Error al actualizar el carrito', {
-          bodyClassName: 'text-foreground'
+          bodyClassName: 'text-foreground',
         });
       }
     } else {
       if (!id) {
         toast.error('No se ha encontrado el producto', {
-          bodyClassName: 'text-foreground'
+          bodyClassName: 'text-foreground',
         });
-        setCodigo('');
         return;
       }
-  
+
       if (cantidad <= 0) {
         toast.error('La cantidad debe ser un número mayor que cero', {
-          bodyClassName: 'text-foreground'
+          bodyClassName: 'text-foreground',
         });
         return;
       }
+
   
       const nuevoItem = {
         id,
@@ -104,6 +120,30 @@ export default function Tienda() {
       return nuevosItems;
     });
   }
+
+  const handleEditarCantidadDebounced = debounce((id, nuevaCantidad) => {
+    nuevaCantidad = Number(nuevaCantidad);
+    if (isNaN(nuevaCantidad) || nuevaCantidad <= 0) {
+      toast.error('La cantidad debe ser un número positivo', {
+        bodyClassName: 'text-foreground',
+      });
+      return;
+    }
+
+    addCarritoItems(prevItems => {
+      const nuevosItems = prevItems.map(item => {
+        if (item.id === id) {
+          const nuevoSubtotal = item.precioVenta * nuevaCantidad;
+          return { ...item, cantidad: nuevaCantidad, subtotal: nuevoSubtotal };
+        }
+        return item;
+      });
+
+      setTotal(sumarSubtotales(nuevosItems));
+      return nuevosItems;
+    });
+  }, 500);
+  
 
  
   const handleProcesar = async () => {
@@ -196,7 +236,8 @@ export default function Tienda() {
       })
       if (!response.ok) throw new Error('Error al buscar el producto');
       const result = await response.json();
-      handleCarritoAdd( result.id, 1, result.nombre, result.precioVenta, 1*result.precioVenta, result.unidad);
+      console.log(result)
+      handleCarritoAdd( result.id, 3, result.nombre, result.precioVenta, 1*result.precioVenta, result.unidad);
     } catch (error) {
       console.log(error.message)
       resetFields();
@@ -250,7 +291,7 @@ export default function Tienda() {
 
   React.useEffect(() => {
     inputRef.current.focus();
-  }, [carritoItems],[]);
+  }, [carritoItems.length],[]);
 
 
 
@@ -281,18 +322,18 @@ export default function Tienda() {
           <Input ref={inputRef} type="text" label="Codigo" color='default' onChange={e=>setCodigo(e.target.value)} value={codigo} radius='none' size='sm' variant='borderer' />
           <Button type='submit' size='lg' color='primary' radius='none' isIconOnly className='text-3xl'><FaPlus/></Button>
           </form>
-        <Select
-        label="Selecciona un producto"
-        className="max-w-xs"
-        radius='none'
-        color='white'
-        size='sm'
-        selectedKeys={selectedKeys}
-        onSelectionChange={handleSelectionChange}
-        scrollShadowProps={{
-          isEnabled: false,
-        }}
-      >
+          <Select
+          label="Selecciona un producto"
+          className="max-w-xs"
+          radius='none'
+          color='white'
+          size='sm'
+          selectedKeys={selectedKeys}
+          onSelectionChange={handleSelectionChange}
+          scrollShadowProps={{
+            isEnabled: false,
+          }}
+        >
          {Object.keys(categorizedProducts).map(category => (
         <SelectSection 
           key={category}
@@ -308,7 +349,7 @@ export default function Tienda() {
       ))}
        </Select>
        <form className='flex' onSubmit={(e)=>{CheckPrice(e)}}> 
-       <Input ref={inputRef} type="text" label="Codigo" color='default' onChange={e=>setCodigo(e.target.value)} value={codigo} radius='none' size='sm' variant='borderer' />
+       <Input type="text" label="Codigo" color='default' onChange={e=>setCodigo(e.target.value)} value={codigo} radius='none' size='sm' variant='borderer' />
        <Button type='submit' size='lg' color='primary' radius='none' isIconOnly className='text-3xl'><ImPriceTag/></Button>
        </form>
       </div>
