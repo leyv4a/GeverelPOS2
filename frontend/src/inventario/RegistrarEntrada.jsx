@@ -32,6 +32,20 @@ export default function RegistrarEntrada() {
   const [data, setData] = React.useState([]);
   const [isFullTable, setIsFullTable] = React.useState(false);
 
+  const getWeight = async () => {
+    try {
+      let cantidadKg = await fetch("http://localhost:3001/api/weight").then(
+        (response) => response.json());
+        if (cantidadKg.error.trim() != '') {
+          toast.error('No hay ninguna bascula disponible');
+        }else{
+          setCantidad(parseFloat(cantidad.weight.trim().replace(" kg", "")))
+        }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
   const handleFullTable = () => {
     setIsFullTable(!isFullTable);
   }
@@ -239,7 +253,7 @@ export default function RegistrarEntrada() {
         <div className='flex w-full gap-4'>
         <div className='flex'>
           <Input isRequired size='sm' variant='underlined' value={cantidad} onChange={e=> setCantidad(e.target.value.replace(/[^0-9.]/g, ''))} isDisabled={isManual} label="Cantidad" />
-          <Button isIconOnly size='lg' color="primary" radius='none' disableRipple><FaWeightScale/></Button>
+          <Button isIconOnly size='lg' color="primary" radius='none' disableRipple onClick={e=>getWeight()}><FaWeightScale/></Button>
           <Button isIconOnly size='lg' color="foreground" onClick={e => setIsManual(!isManual)} className="border border-primary" radius='none' disableRipple><FaKeyboard /></Button>
         </div>
         <Input isRequired size='sm' variant='underlined' value={inversion} onChange={e => setInversion(e.target.value.replace(/[^0-9.]/g, ''))} type="text" label="Costo por kilo" className='max-w-[40%]'/>
