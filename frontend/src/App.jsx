@@ -7,6 +7,7 @@ const Tienda = lazy(() => import('./pages/Tienda'));
 const Panel = lazy(()=> import('./pages/Panel'));
 const Inventario = lazy(()=> import('./pages/Inventario'));
 const Monedero = lazy(()=> import('./pages/Monedero'));
+const Settings = lazy(()=> import('./pages/Settings'));
 
 import Loader from './components/Loader';
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path="/panel" element={<Panel/>}/>
           <Route  path="/inventario/*" element={<Inventario/>}/>
           <Route path="/monedero/*" element={<Monedero/>}/>
+          <Route path="/settings/*" element={<Settings/>}/>
         </Routes>
       </Suspense>
      </main>

@@ -11,6 +11,7 @@ export default function () {
     const panelRef = useRef(null);
     const inventarioRef = useRef(null);
     const monederoRef = useRef(null);
+    const settingsRef = useRef(null);
 
   return (
     <>
@@ -22,7 +23,7 @@ export default function () {
         <SidebarItem text={"Inventario"} icon={<FaTag size={23}/>} buttonRef={inventarioRef} functionKey ={'F3'} to={'/inventario'}/>  
         <SidebarItem text={"Monedero"} icon={<TbCoinFilled size={25}/>} buttonRef={monederoRef} functionKey ={'F4'} to={'/monedero'} active={false}/>  
       </div>
-      <SidebarItem text={"Configuracion"} icon={<IoIosSettings  size={25}/>} functionKey={'F5'} />
+      <SidebarItem text={"Configuracion"} icon={<IoIosSettings buttonRef={settingsRef} size={25}/>} functionKey={'F5'} to={"/settings"} />
     </div>
   
     </Sidebar>
