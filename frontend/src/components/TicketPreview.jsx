@@ -46,7 +46,7 @@ const [cambio,setCambio] = React.useState('')
          <strong> ${total ||0}</strong>
         </span>
         <span>
-          <strong>${!cambio? '0' : cambio-total}</strong>
+          <strong>${!cambio? '0' : (cambio-total).toFixed(2)}</strong>
         </span>
       </div>
     </div>

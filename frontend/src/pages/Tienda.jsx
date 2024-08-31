@@ -26,8 +26,8 @@ export default function Tienda() {
 
     if (unidad === 'kg') {
       cantidad = parseFloat(cantidadkg.weight.trim().replace(" kg", ""));
-
-      // cantidad = 1; // Asigna un valor aleatorio
+    }else{
+      cantidad = 1;
     }
 
     if (itemIndex !== -1) {
@@ -100,9 +100,12 @@ export default function Tienda() {
     });
   }
 
-  const handleEditarCantidad = (id, nuevaCantidad) => {
+  const handleEditarCantidad = (id, nuevaCantidad, unidad) => {
+   if(unidad == 'kg'){
+    return
+   }else{
     nuevaCantidad = Number(nuevaCantidad); // Asegúrate de que sea un número
-    if (isNaN(nuevaCantidad) || nuevaCantidad <= 0) {
+    if (isNaN(nuevaCantidad)) {
       toast.error('La cantidad debe ser un número positivo', {
         bodyClassName: 'text-foreground'
       });
@@ -119,30 +122,31 @@ export default function Tienda() {
       setTotal(sumarSubtotales(nuevosItems));
       return nuevosItems;
     });
+   }
   }
 
-  const handleEditarCantidadDebounced = debounce((id, nuevaCantidad) => {
-    nuevaCantidad = Number(nuevaCantidad);
-    if (isNaN(nuevaCantidad) || nuevaCantidad <= 0) {
-      toast.error('La cantidad debe ser un número positivo', {
-        bodyClassName: 'text-foreground',
-      });
-      return;
-    }
+  // const handleEditarCantidadDebounced = debounce((id, nuevaCantidad) => {
+  //   nuevaCantidad = Number(nuevaCantidad);
+  //   if (isNaN(nuevaCantidad) || nuevaCantidad <= 0) {
+  //     toast.error('La cantidad debe ser un número positivo', {
+  //       bodyClassName: 'text-foreground',
+  //     });
+  //     return;
+  //   }
 
-    addCarritoItems(prevItems => {
-      const nuevosItems = prevItems.map(item => {
-        if (item.id === id) {
-          const nuevoSubtotal = item.precioVenta * nuevaCantidad;
-          return { ...item, cantidad: nuevaCantidad, subtotal: nuevoSubtotal };
-        }
-        return item;
-      });
+  //   addCarritoItems(prevItems => {
+  //     const nuevosItems = prevItems.map(item => {
+  //       if (item.id === id) {
+  //         const nuevoSubtotal = item.precioVenta * nuevaCantidad;
+  //         return { ...item, cantidad: nuevaCantidad, subtotal: nuevoSubtotal };
+  //       }
+  //       return item;
+  //     });
 
-      setTotal(sumarSubtotales(nuevosItems));
-      return nuevosItems;
-    });
-  }, 500);
+  //     setTotal(sumarSubtotales(nuevosItems));
+  //     return nuevosItems;
+  //   });
+  // }, 500);
   
 
  
@@ -179,7 +183,7 @@ export default function Tienda() {
   }
 
   const sumarSubtotales = (carritoItems) => {
-    return carritoItems.reduce((total, item) => total + item.subtotal, 0);
+    return (carritoItems.reduce((total, item) => total + item.subtotal, 0)).toFixed(2);
   };
   const resetFields = () => {
     setFecha('')
@@ -213,7 +217,14 @@ export default function Tienda() {
       })
       if (!response.ok) throw new Error('Error al buscar el producto');
       const result = await response.json();
-      console.log(result)
+      if(result.unidad == 'kg'){
+        let cantidad = await fetch('http://localhost:3001/api/weight').then(response => response.json());
+        cantidad = parseFloat(cantidad.weight.trim().replace(" kg", ""));
+        toast.success('El precio es de : $' + (cantidad * result.precioVenta).toFixed(2));
+        return;
+      }
+      toast.success('El precio es de : $' + (1* result.precioVenta).toFixed(1));
+      console.log(result);
     } catch (error) {
       console.error(error);
       toast.error(error.message || 'Error en la comunicacion con la base de datos', {
@@ -318,9 +329,10 @@ export default function Tienda() {
        <FaCashRegister/> PUNTO DE VENTA
       </h2>
       <div className='flex w-[50%] mb-2 gap-2'>
-          <form className='flex' onSubmit={e=>handleSearch(e)}>
+          <form autoComplete='off' className='flex' onSubmit={e=>handleSearch(e)}>
           <Input ref={inputRef} type="text" label="Codigo" color='default' onChange={e=>setCodigo(e.target.value)} value={codigo} radius='none' size='sm' variant='borderer' />
           <Button type='submit' size='lg' color='primary' radius='none' isIconOnly className='text-3xl'><FaPlus/></Button>
+          <Button  onClick={(e)=>{CheckPrice(e)}} size='lg' color='primary' radius='none' isIconOnly className='text-3xl'><ImPriceTag/></Button>
           </form>
           <Select
           label="Selecciona un producto"
@@ -348,10 +360,6 @@ export default function Tienda() {
         </SelectSection>
       ))}
        </Select>
-       <form className='flex' onSubmit={(e)=>{CheckPrice(e)}}> 
-       <Input type="text" label="Codigo" color='default' onChange={e=>setCodigo(e.target.value)} value={codigo} radius='none' size='sm' variant='borderer' />
-       <Button type='submit' size='lg' color='primary' radius='none' isIconOnly className='text-3xl'><ImPriceTag/></Button>
-       </form>
       </div>
        <div className="flex gap-6 max-h-[100%] sm:flex-row  flex-col">
         <div className='w-[70%]'>
