@@ -19,6 +19,7 @@ export default function AgregarProductos() {
   const [descripcion, setDescripcion] = React.useState('');
   //Este se debe agregar al registrar entrada nueva
   const [stockMin, setStockMin] = React.useState('');
+  const [precioVenta, setPrecioVenta] = React.useState("");
   const [codigo, setCodigo] = React.useState('');
   const [unidad, setUnidad] = React.useState('');
   const [inicial, setInicial] = React.useState('');
@@ -35,6 +36,7 @@ export default function AgregarProductos() {
     setCategory(item.categoriaId),
     setUnidad(item.unidad);
     setInicial(item.inicial);
+    setPrecioVenta(item.precioVenta);
   }
 
   const resetFields = () => {
@@ -45,6 +47,7 @@ export default function AgregarProductos() {
     setCategory(0)
     setUnidad('')
     setInicial('')
+    setPrecioVenta('')
   }
 
   const handleCategoryChange = (value) => {
@@ -236,7 +239,8 @@ export default function AgregarProductos() {
             <Input errorMessage="Por favor rellene este campo." variant='underlined'  value={inicial.toUpperCase()+codigo} onChange={e =>{setCodigo(e.target.value.replace(/[^\d]/g, ''))}} isRequired type="text" label="Codigo" size='sm'  maxLength={4}/>
             <Input variant='underlined' value={stockMin} onChange={e =>{setStockMin(e.target.value.replace(/[^\d]/g, ''))}} isRequired type="text" label="Stock Min." size='sm'/>
           </div>
-            <RadioGroup
+          <div className="flex w-full justify-between flex-wrap md:flex-nowrap gap-4">
+          <RadioGroup
               label="Selecciona la unidad de medida"
               value={unidad}
               onValueChange={setUnidad}
@@ -246,6 +250,8 @@ export default function AgregarProductos() {
               <Radio value="kg"  onKeyDown={(e) => handleRadioKeyDown(e, 'kg')} tabIndex="0">Kilogramos</Radio>
               <Radio value="unidad"  onKeyDown={(e) => handleRadioKeyDown(e, 'unidad')} tabIndex="0">Unidad</Radio>
             </RadioGroup>
+                {/* {editing? <Input className='w-1/2' variant='underlined' value={precioVenta} onChange={e =>{setPrecioVenta(e.target.value.replace(/[^\d]/g, ''))}} isRequired type="text" label="Precio" size='sm'/> : ""} */}
+          </div>
                 {editing?  
           <div className='flex gap-2'>
             <Button radius="sm" isLoading={isButtonLoading} color='primary' type='submit'  className=" my-auto w-full" >Editar</Button>

@@ -201,7 +201,12 @@ export default function RegistrarSalida() {
         <div className="flex w-full gap-4">
          <div className='flex'>
           <Input isRequired size='sm' variant='underlined' type="text" label="Producto" value={codigo} onChange={e=> setCodigo(e.target.value)} maxLength={4}/>
-          <Button isIconOnly isLoading={isButtonLoading} size='lg' color="primary" radius='none' disableRipple onClick={e => getProductByCode(e)}><FaMagnifyingGlass/></Button>
+          <Button onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    getProductByCode(e);
+                  }
+                }} isIconOnly isLoading={isButtonLoading} size='lg' color="primary" radius='none' disableRipple onClick={e => getProductByCode(e)}><FaMagnifyingGlass/></Button>
         </div>
          <Input size='sm' variant='underlined' isReadOnly disabled value={fecha} label="Fecha" className='max-w-[40%]'/>
       </div>  
