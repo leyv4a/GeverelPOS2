@@ -403,7 +403,6 @@ export default function Tienda() {
           </Button>
           {/* <Button  onClick={(e)=>{CheckPrice(e)}} size='lg' color='primary' radius='none' isIconOnly className='text-3xl'><ImPriceTag/></Button> */}
           <ModalPrecio
-            CheckPrice={CheckPrice}
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             openModal={openModal}
@@ -489,14 +488,27 @@ const ModalPrecio = ({
           {(onClose) => (
             <>
               {/* id, cantidad, nombre, precioVenta, subTotal, unidad */}
-              <ModalHeader className="flex flex-col gap-1 capitalize">
+              <ModalHeader className="flex flex-col gap-1 capitalize text-center">
                 {PriceData[0].nombre}
               </ModalHeader>
-              <ModalBody>
-                Cantidad : {PriceData[0].cantidad || 1} <br />
+              <ModalBody className="flex flex-row  w-full ">
+                <div className="text-start ">
+                    <ul className="font-bold">
+                      <li>Cantidad</li>
+                      <li>P.U</li>
+                      <li>Total</li>
+                    </ul>
+                </div>
+                <div className="">
+                  <ul>
+                    <li>{": "}{PriceData[0].cantidad || 1}</li>
+                    <li>{": "}${PriceData[0].precioVenta || 0}</li>
+                    <li className="font-bold">{": "}${(PriceData[0].cantidad || 1) * (PriceData[0].precioVenta)}</li>
+                  </ul>
+                </div>
+                {/* Cantidad : {PriceData[0].cantidad || 1} <br />
                 Precio unitario : {PriceData[0].precioVenta} <br />
-                Total : {(PriceData[0].cantidad || 1) * (PriceData[0].precioVenta)}
-                <br />
+                Total : {(PriceData[0].cantidad || 1) * (PriceData[0].precioVenta)} */}
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>

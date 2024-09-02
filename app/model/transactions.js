@@ -4,13 +4,13 @@ const logToFile = require('../utils/logger');
 class TransactionModel {
 
     static async getAllEntradas() {
-        const sql = "SELECT transacciones.id, producto.nombre, producto.codigo, transacciones.tipo, transacciones.motivo, transacciones.cantidad, transacciones.fecha FROM transacciones INNER JOIN producto ON transacciones.productoId = producto.id WHERE tipo = 'entrada'"
+        const sql = "SELECT transacciones.id, producto.nombre, producto.codigo, transacciones.tipo, transacciones.motivo, transacciones.cantidad, transacciones.fecha FROM transacciones INNER JOIN producto ON transacciones.productoId = producto.id WHERE tipo = 'entrada' ORDER BY transacciones.id DESC"
         const rows = await db.all(sql);
         return rows;
     }
 
     static async getAllSalidas() {
-        const sql = "SELECT transacciones.id, producto.nombre, producto.codigo, transacciones.tipo, transacciones.motivo, transacciones.cantidad, transacciones.fecha FROM transacciones INNER JOIN producto ON transacciones.productoId = producto.id WHERE tipo = 'salida'"
+        const sql = "SELECT transacciones.id, producto.nombre, producto.codigo, transacciones.tipo, transacciones.motivo, transacciones.cantidad, transacciones.fecha FROM transacciones INNER JOIN producto ON transacciones.productoId = producto.id WHERE tipo = 'salida' ORDER BY transacciones.id DESC"
         const rows = await db.all(sql);
         return rows;
     }
