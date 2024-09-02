@@ -1,6 +1,6 @@
 const db = require('../database/database'); // Importa la conexión a la base de datos SQLite
-const logToFile = require('../utils/logger')
-const sumarSubtotales = require('../utils/maths')
+const logToFile = require('../utils/logger');
+const sumarSubtotales = require('../utils/maths');
 
 class PosModel {
     static async newEntry(productoId,tipo,motivo, cantidad, fecha , precioVenta, precioCompra) {
@@ -31,7 +31,6 @@ class PosModel {
                 }
             }
     }
-
     static async newExit(productoId,tipo,motivo, cantidad, fecha) {
         try {
             await db.run('BEGIN TRANSACTION');
@@ -78,6 +77,10 @@ class PosModel {
             const sqlStock = "UPDATE producto SET stock = stock - ? WHERE id = ?";
             await db.run(sqlStock, [cantidad, id]);
             logToFile(`Stock actualizado para producto ${id}`);
+            
+            const sqlSales = "INSERT INTO ventas (fecha, monto, usuarioId) VALUES (?,?,?)";
+            await db.run(sqlSales, [fecha, total, 1]);
+            logToFile(`Venta registrada para producto ${id}`);
           }
           const sqlWallet = 'INSERT INTO cartera (tipo,descripcion,monto, fecha) VALUES (?,?,?,?)'
           await db.run(sqlWallet, ['ingreso', 'venta', total, fecha]);
@@ -97,8 +100,6 @@ class PosModel {
           }
         }
       }
-
-    
 }
 
 

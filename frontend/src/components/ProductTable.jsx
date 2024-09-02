@@ -80,7 +80,7 @@ export default function ProductTable({data, handleEditarCantidad,handleRemove}) 
             <Input size='sm' className='max-w-[130px]' type='number' variant='underlined' value={item.cantidad}
              onChange={(e) => handleEditarCantidad(item.id, e.target.value, item.unidad)} 
              />
-          ) : column.key === 'precioVenta' || column.key === 'subtotal' ? (
+          ) : column.key === 'precioVenta' || column.key === 'subtotal'  ? (
             `$${(getKeyValue(item, column.key)).toFixed(2)}`
           ) : (
             <p className='capitalize'>{getKeyValue(item, column.key)}</p>

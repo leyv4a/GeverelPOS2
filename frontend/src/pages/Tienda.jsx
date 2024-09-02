@@ -24,7 +24,7 @@ export default function Tienda() {
     cantidad,
     nombre,
     precioVenta,
-    subTotal,
+    // subTotal,
     unidad
   ) => {
     try {
@@ -66,6 +66,13 @@ export default function Tienda() {
           return;
         }
 
+        if(precioVenta == undefined || precioVenta == null){
+          toast.error("El producto no tiene entradas", {
+            bodyClassName: "text-foreground",
+          });
+          return;
+        }
+
         const nuevoItem = {
           id,
           cantidad,
@@ -98,7 +105,7 @@ export default function Tienda() {
     addCarritoItems((prevItems) => {
       const nuevosItems = prevItems.filter((item) => item.id !== id);
       setTotal(sumarSubtotales(nuevosItems));
-      toast.success("Producto eliminado del carrito", {
+      toast.info("Producto eliminado del carrito", {
         bodyClassName: "text-foreground",
       });
       return nuevosItems;
@@ -279,7 +286,7 @@ export default function Tienda() {
         cantidad,
         result.nombre,
         result.precioVenta,
-        cantidad * result.precioVenta,
+        // cantidad * result.precioVenta,
         result.unidad
       );
     } catch (error) {
@@ -404,38 +411,11 @@ export default function Tienda() {
             CarritoAdd={handleCarritoAdd}
           />
         </form>
-        {/* <Select
-          label="Selecciona un producto"
-          className="max-w-xs"
-          radius="none"
-          color="white"
-          size="sm"
-          selectedKeys={selectedKeys}
-          onSelectionChange={handleSelectionChange}
-          scrollShadowProps={{
-            isEnabled: false,
-          }}
-        >
-          {Object.keys(categorizedProducts).map((category) => (
-            <SelectSection
-              key={category}
-              title={category}
-              classNames={{
-                heading: headingClasses,
-              }}
-            >
-              {categorizedProducts[category].map((product) => (
-                <SelectItem key={product.codigo} className="capitalize">
-                  {product.nombre}
-                </SelectItem>
-              ))}
-            </SelectSection>
-          ))}
-        </Select> */}
         <Autocomplete
           defaultItems={products}
           selectedKey={selectedKeys}
           onSelectionChange={handleSelectionChange}
+          allowsEmptyCollection={false}
           className="max-w-xs"
           radius="none"
           label="Selecciona un producto"
@@ -515,8 +495,7 @@ const ModalPrecio = ({
               <ModalBody>
                 Cantidad : {PriceData[0].cantidad || 1} <br />
                 Precio unitario : {PriceData[0].precioVenta} <br />
-                Total : {PriceData.cantidad ||
-                  1 * PriceData[0].precioVenta}{" "}
+                Total : {(PriceData[0].cantidad || 1) * (PriceData[0].precioVenta)}
                 <br />
               </ModalBody>
               <ModalFooter>

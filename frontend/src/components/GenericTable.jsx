@@ -128,6 +128,18 @@ const GenericTable = ({
                     ${item.monto}
                 </div>
             );
+            case "precioVenta":
+            return (
+                <div className='flex flex-col'>
+                    ${item.precioVenta ||0}
+                </div>
+            );
+            case "precioCompra":
+              return (
+                  <div className='flex flex-col'>
+                      ${item.precioCompra || 0}
+                  </div>
+              );
         case "stock" :
           return (
           <>
