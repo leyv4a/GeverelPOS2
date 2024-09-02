@@ -4,6 +4,7 @@ import { FaCashRegister, FaPlus } from "react-icons/fa";
 import TicketPreview from "../components/TicketPreview";
 import { Input, Button } from "@nextui-org/react";
 import { Select, SelectItem, SelectSection } from "@nextui-org/react";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import ProductTable from "../components/ProductTable";
 import { ImPriceTag } from "react-icons/im";
 import debounce from "lodash.debounce";
@@ -26,69 +27,71 @@ export default function Tienda() {
     subTotal,
     unidad
   ) => {
-   try {
-    const itemIndex = carritoItems.findIndex((item) => item.id === id);
+    try {
+      const itemIndex = carritoItems.findIndex((item) => item.id === id);
+      cantidad = 1;
+      if (itemIndex !== -1) {
+        const nuevosItems = [...carritoItems];
+        // Si la unidad es "kg", se sobrescribe la cantidad
+        if (unidad === "kg") {
+          nuevosItems[itemIndex].cantidad = cantidad;
+        } else {
+          nuevosItems[itemIndex].cantidad += cantidad;
+        }
+        nuevosItems[itemIndex].subtotal =
+          nuevosItems[itemIndex].cantidad * precioVenta;
 
-    if (itemIndex !== -1) {
-      const nuevosItems = [...carritoItems];
-      // Si la unidad es "kg", se sobrescribe la cantidad
-      if (unidad === "kg") {
-        nuevosItems[itemIndex].cantidad = cantidad;
+        try {
+          addCarritoItems([...nuevosItems]);
+          setTotal(sumarSubtotales(nuevosItems));
+          resetFields();
+        } catch (error) {
+          console.error("Error al actualizar el carrito:", error);
+          toast.error("Error al actualizar el carrito", {
+            bodyClassName: "text-foreground",
+          });
+        }
       } else {
-        nuevosItems[itemIndex].cantidad += cantidad;
-      }
-      nuevosItems[itemIndex].subtotal =
-        nuevosItems[itemIndex].cantidad * precioVenta;
+        if (!id) {
+          toast.error("No se ha encontrado el producto", {
+            bodyClassName: "text-foreground",
+          });
+          return;
+        }
 
-      try {
-        addCarritoItems([...nuevosItems]);
-        setTotal(sumarSubtotales(nuevosItems));
-        resetFields();
-      } catch (error) {
-        console.error("Error al actualizar el carrito:", error);
-        toast.error("Error al actualizar el carrito", {
-          bodyClassName: "text-foreground",
-        });
-      }
-    } else {
-      if (!id) {
-        toast.error("No se ha encontrado el producto", {
-          bodyClassName: "text-foreground",
-        });
-        return;
-      }
+        if (cantidad <= 0) {
+          toast.error("La cantidad debe ser un número mayor que cero", {
+            bodyClassName: "text-foreground",
+          });
+          return;
+        }
 
-      if (cantidad <= 0) {
-        toast.error("La cantidad debe ser un número mayor que cero", {
-          bodyClassName: "text-foreground",
-        });
-        return;
-      }
+        const nuevoItem = {
+          id,
+          cantidad,
+          nombre,
+          precioVenta,
+          subtotal: cantidad * precioVenta,
+          unidad,
+        };
 
-      const nuevoItem = {
-        id,
-        cantidad,
-        nombre,
-        precioVenta,
-        subtotal: cantidad * precioVenta,
-        unidad,
-      };
-
-      try {
-        const nuevosItems = [...carritoItems, nuevoItem];
-        addCarritoItems([...nuevosItems]); // Cambiado a [...nuevosItems]
-        setTotal(sumarSubtotales(nuevosItems));
-        resetFields();
-      } catch (error) {
-        console.error("Error al agregar al carrito:", error);
-        toast.error("Error al agregar al carrito", {
-          bodyClassName: "text-foreground",
-        });
+        try {
+          const nuevosItems = [...carritoItems, nuevoItem];
+          addCarritoItems([...nuevosItems]); // Cambiado a [...nuevosItems]
+          setTotal(sumarSubtotales(nuevosItems));
+        } catch (error) {
+          console.error("Error al agregar al carrito:", error);
+          toast.error("Error al agregar al carrito", {
+            bodyClassName: "text-foreground",
+          });
+        }
       }
+    } catch (error) {
+      console.log(error);
+    }finally{
+      setSelectedKeys("");
+      resetFields();
     }
-   } catch (error) {
-    console.log(error)
-   }
   };
 
   const handleRemove = (id) => {
@@ -215,16 +218,16 @@ export default function Tienda() {
         let cantidad = await fetch("http://localhost:3001/api/weight").then(
           (response) => response.json()
         );
-        if (cantidad?.weight != '') {
+        if (cantidad?.weight != "") {
           cantidad = parseFloat(cantidad.weight.trim().replace(" kg", ""));
-        }else{
+        } else {
           cantidad = 1;
         }
         setPriceData([{ ...result, cantidad }]);
-        return { error : false};
+        return { error: false };
       }
-      setPriceData([{...result, cantidad : 1}]);
-      return { error : false};
+      setPriceData([{ ...result, cantidad: 1 }]);
+      return { error: false };
     } catch (error) {
       console.error(error);
       toast.error(
@@ -233,7 +236,7 @@ export default function Tienda() {
           bodyClassName: "text-foreground",
         }
       );
-      return {error : true}
+      return { error: true };
     } finally {
       resetFields();
     }
@@ -255,26 +258,22 @@ export default function Tienda() {
       if (!response.ok) throw new Error("Error al buscar el producto");
       const result = await response.json();
       console.log(result);
-      
+
       let cantidad;
-      if (result.unidad == 'kg') {
-         cantidad = await fetch("http://localhost:3001/api/weight").then(
-          (response) => response.json());
-          // if (cantidad.error.trim() != '') {
-          //   cantidad = 1;
-          // }else{
-          //   cantidad = parseFloat(cantidad.weight.trim().replace(" kg", ""));
-          // }
-          console.log(cantidad.weight)
-          if (cantidad?.weight != '') {
-            let cantidad2 = cantidad.weight.replace(" kg", "")
-            cantidad = (parseFloat(cantidad2))
-            console.log(cantidad)
-          }else{
-            cantidad = 1;
-          }
+      if (result.unidad == "kg") {
+        cantidad = await fetch("http://localhost:3001/api/weight").then(
+          (response) => response.json()
+        );
+        console.log(cantidad.weight);
+        if (cantidad?.weight != "") {
+          let cantidad2 = cantidad.weight.replace(" kg", "");
+          cantidad = parseFloat(cantidad2);
+          console.log(cantidad);
+        } else {
+          cantidad = 1;
+        }
       }
-   
+
       handleCarritoAdd(
         result.id,
         cantidad,
@@ -287,18 +286,9 @@ export default function Tienda() {
       console.log(error.message);
       resetFields();
       throw error;
+    }finally{
     }
   };
-
-  const [codigo, setCodigo] = React.useState("");
-  //Guarda y maneja el cambio del Select para ponerlo en el codigowh
-  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
-  const handleSelectionChange = (keys) => {
-    const selectedArray = Array.from(keys);
-    setCodigo(selectedArray[0]);
-    setSelectedKeys(keys);
-  };
-
   //Guarda los productos para mostrarlos en el Select
   const [products, setProducts] = React.useState([]);
   const getProducts = async () => {
@@ -319,18 +309,18 @@ export default function Tienda() {
     }
   };
 
+  const [codigo, setCodigo] = React.useState("");
+  //Guarda y maneja el cambio del Select para ponerlo en el codigowh
+  const [selectedKeys, setSelectedKeys] = React.useState("");
+  const handleSelectionChange = (keys) => {
+    setSelectedKeys(keys);
+    setCodigo(keys);
+  };
+
   React.useEffect(() => {
     getProducts();
   }, []);
 
-  // Agrupar los productos por categoría
-  const categorizedProducts = products.reduce((acc, product) => {
-    if (!acc[product.categoria]) {
-      acc[product.categoria] = [];
-    }
-    acc[product.categoria].push(product);
-    return acc;
-  }, {});
 
   const inputRef = React.useRef(null);
 
@@ -343,20 +333,18 @@ export default function Tienda() {
   );
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
- 
+
   const openModal = async () => {
     const data = await CheckPrice(); // Espera a que CheckPrice termine
-   if (data.error) {
-    return;
-   }else{
-    if (priceData.length) { // Verifica si hay datos en priceData
-      onOpen();
+    if (data.error) {
+      return;
+    } else {
+      if (priceData.length) {
+        // Verifica si hay datos en priceData
+        onOpen();
+      }
     }
-   }
   };
-    
-
-
 
   React.useEffect(() => {
     const date = new Date();
@@ -416,7 +404,7 @@ export default function Tienda() {
             CarritoAdd={handleCarritoAdd}
           />
         </form>
-        <Select
+        {/* <Select
           label="Selecciona un producto"
           className="max-w-xs"
           radius="none"
@@ -443,7 +431,20 @@ export default function Tienda() {
               ))}
             </SelectSection>
           ))}
-        </Select>
+        </Select> */}
+        <Autocomplete
+          defaultItems={products}
+          selectedKey={selectedKeys}
+          onSelectionChange={handleSelectionChange}
+          className="max-w-xs"
+          radius="none"
+          label="Selecciona un producto"
+          size="sm"
+        >
+          {(product) => (
+            <AutocompleteItem key={product.codigo} className="capitalize">{product.nombre +" "+product.codigo}</AutocompleteItem>
+          )}
+        </Autocomplete>
       </div>
       <div className="flex gap-6 max-h-[100%] sm:flex-row  flex-col">
         <div className="w-[70%]">
@@ -489,15 +490,12 @@ const ModalPrecio = ({
   isOpen,
   onOpenChange,
   PriceData,
-  CarritoAdd
+  CarritoAdd,
 }) => {
-  
   return (
     <>
       <Button
-        onPress={
-          openModal
-        }
+        onPress={openModal}
         size="lg"
         color="primary"
         radius="none"
@@ -507,7 +505,7 @@ const ModalPrecio = ({
         <ImPriceTag />
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-      <ModalContent>
+        <ModalContent>
           {(onClose) => (
             <>
               {/* id, cantidad, nombre, precioVenta, subTotal, unidad */}
@@ -519,7 +517,6 @@ const ModalPrecio = ({
                 Precio unitario : {PriceData[0].precioVenta} <br />
                 Total : {PriceData.cantidad ||
                   1 * PriceData[0].precioVenta}{" "}
-               
                 <br />
               </ModalBody>
               <ModalFooter>
@@ -547,5 +544,5 @@ const ModalPrecio = ({
         </ModalContent>
       </Modal>
     </>
-  )
+  );
 };
