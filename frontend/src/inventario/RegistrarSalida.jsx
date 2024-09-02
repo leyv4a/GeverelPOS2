@@ -30,10 +30,11 @@ export default function RegistrarSalida() {
     try {
       let cantidadKg = await fetch("http://localhost:3001/api/weight").then(
         (response) => response.json());
-        if (cantidadKg.error.trim() != '') {
-          toast.error('No hay ninguna bascula disponible');
+        if (cantidadKg?.weight != '') {
+          let cantidad2 = cantidadKg.weight.replace(" kg", "")
+          setCantidad(parseFloat(cantidad2))
         }else{
-          setCantidad(parseFloat(cantidad.weight.trim().replace(" kg", "")))
+          toast.error('No hay ninguna bascula disponible');
         }
     } catch (error) {
       toast.error(error.message);

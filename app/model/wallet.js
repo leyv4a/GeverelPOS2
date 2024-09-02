@@ -3,7 +3,7 @@ const logToFile = require('../utils/logger')
 
 class WalletModel{
     static async getAll(tipo){
-        const sql = "SELECT * FROM cartera WHERE tipo =?  ORDER BY id DESC LIMIT 1"
+        const sql = "SELECT * FROM cartera WHERE tipo =?  ORDER BY id DESC"
         const rows = await db.all(sql, [tipo]);
         return rows;
     }

@@ -26,6 +26,7 @@ export default function Tienda() {
     subTotal,
     unidad
   ) => {
+   try {
     const itemIndex = carritoItems.findIndex((item) => item.id === id);
 
     if (itemIndex !== -1) {
@@ -85,6 +86,9 @@ export default function Tienda() {
         });
       }
     }
+   } catch (error) {
+    console.log(error)
+   }
   };
 
   const handleRemove = (id) => {
@@ -211,10 +215,10 @@ export default function Tienda() {
         let cantidad = await fetch("http://localhost:3001/api/weight").then(
           (response) => response.json()
         );
-        if (cantidad.error.trim() != '') {
-          cantidad = 1;
-        }else{
+        if (cantidad?.weight != '') {
           cantidad = parseFloat(cantidad.weight.trim().replace(" kg", ""));
+        }else{
+          cantidad = 1;
         }
         setPriceData([{ ...result, cantidad }]);
         return { error : false};
@@ -256,14 +260,20 @@ export default function Tienda() {
       if (result.unidad == 'kg') {
          cantidad = await fetch("http://localhost:3001/api/weight").then(
           (response) => response.json());
-          if (cantidad.error.trim() != '') {
-            cantidad = 1;
+          // if (cantidad.error.trim() != '') {
+          //   cantidad = 1;
+          // }else{
+          //   cantidad = parseFloat(cantidad.weight.trim().replace(" kg", ""));
+          // }
+          console.log(cantidad.weight)
+          if (cantidad?.weight != '') {
+            let cantidad2 = cantidad.weight.replace(" kg", "")
+            cantidad = (parseFloat(cantidad2))
+            console.log(cantidad)
           }else{
-            cantidad = parseFloat(cantidad.weight.trim().replace(" kg", ""));
+            cantidad = 1;
           }
       }
-      cantidad = 1;
-
    
       handleCarritoAdd(
         result.id,
