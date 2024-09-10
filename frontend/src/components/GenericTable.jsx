@@ -36,6 +36,7 @@ const GenericTable = ({
   handleFullTable,
   onDetails,
   onEdit,
+  canDelete,
   handleEditing,
 }) => {
   const [filterValue, setFilterValue] = React.useState("");
@@ -125,9 +126,15 @@ const GenericTable = ({
           case "monto":
             return (
                 <div className='flex flex-col'>
-                    ${item.monto}
+                    ${parseFloat(item.monto).toFixed(2)}
                 </div>
             );
+            // case "cantidad":
+            //   return (
+            //       <div className='flex flex-col'>
+            //           ${parseFloat(item.cantidad).toFixed(2)}
+            //       </div>
+            //   );
             case "precioVenta":
             return (
                 <div className='flex flex-col'>
@@ -143,7 +150,7 @@ const GenericTable = ({
         case "stock" :
           return (
           <>
-          <p className={`font-bold ${item.stock < item.stockMin ? 'text-danger' : item.stock == item.stockMin ? 'text-warning' : 'text-success'}`}>{item.stock}</p>
+          <p className={`font-bold ${item.stock < item.stockMin ? 'text-danger' : item.stock == item.stockMin ? 'text-warning' : 'text-success'}`}>{(parseFloat(item.stock)).toFixed(2)}</p>
           </>
           );
         case "acciones":
@@ -169,7 +176,9 @@ const GenericTable = ({
              </Tooltip>
              ) : ("")
              }
-              <Tooltip color="danger" content="Eliminar">
+             {
+              canDelete ?
+              (<Tooltip color="danger" content="Eliminar">
                 <div className="flex flex-wrap gap-4">
                   <button
                     // isIconOnly
@@ -181,7 +190,9 @@ const GenericTable = ({
                   </button>
                   {/* <ContentPopOver isOpen={isOpen} onOpenChange={onOpenChange} name={item.nombre} id={item.id} onDelete={onDelete}/> */}
                 </div>
-              </Tooltip>
+              </Tooltip>) : ""
+             }
+              
             </div>
           );
         default:

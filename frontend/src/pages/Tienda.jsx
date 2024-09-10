@@ -29,7 +29,6 @@ export default function Tienda() {
   ) => {
     try {
       const itemIndex = carritoItems.findIndex((item) => item.id === id);
-      cantidad = 1;
       if (itemIndex !== -1) {
         const nuevosItems = [...carritoItems];
         // Si la unidad es "kg", se sobrescribe la cantidad
@@ -271,14 +270,13 @@ export default function Tienda() {
         cantidad = await fetch("http://localhost:3001/api/weight").then(
           (response) => response.json()
         );
-        console.log(cantidad.weight);
         if (cantidad?.weight != "") {
           let cantidad2 = cantidad.weight.replace(" kg", "");
           cantidad = parseFloat(cantidad2);
           console.log(cantidad);
-        } else {
-          cantidad = 1;
-        }
+        } 
+      }else {
+        cantidad = 1;
       }
 
       handleCarritoAdd(

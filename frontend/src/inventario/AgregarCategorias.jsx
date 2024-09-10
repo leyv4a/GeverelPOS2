@@ -153,7 +153,7 @@ getCategories();
         </form>
       </div>
       <div className={isFullTable? 'w-[100%]' : 'sm:w-[50%] w-[80%]'}>
-        <GenericTable isFullTable={isFullTable} handleFullTable={handleFullTable}  columns={columns} data={categories} onDelete={deleteCategoryById} onEdit={true} handleEditing={handleEditing}/>
+        <GenericTable isFullTable={isFullTable} handleFullTable={handleFullTable}  columns={columns} data={categories} onDelete={deleteCategoryById} onEdit={true} handleEditing={handleEditing} canDelete={true}/>
       </div>
       <div>
         <ToastContainer  position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>
