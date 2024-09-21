@@ -21,7 +21,6 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  User,
   Pagination,
   Tooltip,
   useDisclosure
