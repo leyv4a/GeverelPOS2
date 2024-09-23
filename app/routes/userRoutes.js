@@ -6,6 +6,13 @@ const ProductController = require('../controller/productController');
 const TransactionController = require('../controller/transactionsController');
 const PosController = require('../controller/posController');
 const WalletController = require('../controller/walletController');
+const DashboardController = require('../controller/dashboardController');
+
+router.get('/dashboard/ventadiaria', DashboardController.getVentaDiaria);
+router.get('/dashboard/totales', DashboardController.getTotales);
+router.get('/dashboard/topcinco', DashboardController.getTopCinco);	
+router.get('/dashboard/ventasemanal', DashboardController.getVentaSemanal);
+router.get('/dashboard/ventasmensuales', DashboardController.getVentasMensuales);
 
 router.get('/users', UserController.getAllUsers);
 router.post('/users', UserController.createUser);
