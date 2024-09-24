@@ -142,6 +142,8 @@ export class PieCharts extends PureComponent {
 }
 const obtenerDia = (numero) =>{
   switch(numero){
+      case 0:
+          return "Domingo";
       case 1:
           return "Lunes";
       case 2:
@@ -153,9 +155,7 @@ const obtenerDia = (numero) =>{
       case 5:
           return "Viernes";
       case 6:
-          return "Sabado";
-      case 7:
-          return "Domingo";
+          return "Sabádo";
   }
 }
 
