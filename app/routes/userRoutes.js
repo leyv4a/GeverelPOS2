@@ -7,6 +7,10 @@ const TransactionController = require('../controller/transactionsController');
 const PosController = require('../controller/posController');
 const WalletController = require('../controller/walletController');
 const DashboardController = require('../controller/dashboardController');
+const TestController = require('../controller/testController');
+
+router.post('/dotest', TestController.doTest);
+router.get('/gettest', TestController.getTest);
 
 router.get('/dashboard/ventadiaria', DashboardController.getVentaDiaria);
 router.get('/dashboard/totales', DashboardController.getTotales);
