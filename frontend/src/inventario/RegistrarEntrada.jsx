@@ -232,6 +232,8 @@ export default function RegistrarEntrada() {
     { uid: "acciones", nombre: "Acciones", sortable: false },
   ];
 
+  const searcProfuctRef = React.useRef(null);
+
   React.useEffect(() => {
     getEntradas();
   }, []);
@@ -271,16 +273,18 @@ export default function RegistrarEntrada() {
                 type="text"
                 label="Producto"
                 value={codigo}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    searcProfuctRef.current.click();
+                    // getProductByCode();
+                  }
+                }}
                 onChange={(e) => setCodigo(e.target.value)}
                 maxLength={4}
               />
               <Button
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    getProductByCode(e);
-                  }
-                }}
+                ref={searcProfuctRef}
                 onClick={(e) => getProductByCode(e)}
                 isIconOnly
                 isLoading={isButtonLoading}
@@ -331,7 +335,7 @@ export default function RegistrarEntrada() {
                   color="primary"
                   radius="none"
                   disableRipple
-                  onClick={(e) => getWeight()}
+                  onClick={() => getWeight()}
                 >
                   <FaWeightScale />
                 </Button>
@@ -339,7 +343,7 @@ export default function RegistrarEntrada() {
                   isIconOnly
                   size="lg"
                   color="foreground"
-                  onClick={(e) => setIsManual(!isManual)}
+                  onClick={() => setIsManual(!isManual)}
                   className="border border-primary"
                   radius="none"
                   disableRipple

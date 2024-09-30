@@ -159,6 +159,7 @@ export default function RegistrarSalida() {
     }
   }
 
+  const searchButtonRef = React.useRef(null);
   const columns = [
     // { uid: 'id', nombre: 'Id', sortable: true },
     { uid: 'nombre', nombre: 'Nombre', sortable: true },
@@ -200,13 +201,16 @@ export default function RegistrarSalida() {
         <h2 className='text-2xl text-center w-full'>Registrar salidas</h2>
         <div className="flex w-full gap-4">
          <div className='flex'>
-          <Input isRequired size='sm' variant='underlined' type="text" label="Producto" value={codigo} onChange={e=> setCodigo(e.target.value)} maxLength={4}/>
-          <Button onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    getProductByCode(e);
-                  }
-                }} isIconOnly isLoading={isButtonLoading} size='lg' color="primary" radius='none' disableRipple onClick={e => getProductByCode(e)}><FaMagnifyingGlass/></Button>
+          <Input isRequired size='sm' variant='underlined' type="text" label="Producto" value={codigo} onChange={e=> setCodigo(e.target.value)} maxLength={4}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              searchButtonRef.current.click();
+            }
+          }}/>
+          <Button 
+                ref={searchButtonRef}
+                isIconOnly isLoading={isButtonLoading} size='lg' color="primary" radius='none' disableRipple onClick={e => getProductByCode(e)}><FaMagnifyingGlass/></Button>
         </div>
          <Input size='sm' variant='underlined' isReadOnly disabled value={fecha} label="Fecha" className='max-w-[40%]'/>
       </div>  

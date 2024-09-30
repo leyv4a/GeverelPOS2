@@ -1,4 +1,4 @@
-import React, { Children } from "react";
+import React from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { FaCashRegister, FaPlus } from "react-icons/fa";
 import TicketPreview from "../components/TicketPreview";
@@ -8,8 +8,6 @@ import ProductTable from "../components/ProductTable";
 import {CheckPrice as ChecarPrecioComponente} from "../components/CheckPrice";
 
 export default function Tienda() {
-  const headingClasses =
-    "flex w-full sticky top-1 z-20 py-1.5 px-2 bg-default-100 shadow-small rounded-small capitalize";
 
   const [fecha, setFecha] = React.useState("");
 
