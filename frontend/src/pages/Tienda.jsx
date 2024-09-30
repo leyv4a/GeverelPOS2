@@ -140,6 +140,33 @@ export default function Tienda() {
     }
   };
 
+  const handleCancelSale = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/api/pos/cancel", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fecha: fecha,
+          total: total,
+        }),
+      })
+      if (!response.ok) throw new Error("Error al cancelar la venta");
+      const result = await response.json();
+      toast.info(result.message, {
+        bodyClassName: "text-foreground",
+      });
+      handleCancelar(); // Limpiar el carrito después de procesar la venta
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message || "Error al procesar la venta", {
+        bodyClassName: "text-foreground",
+      });
+    }
+  }
+
   const handleProcesar = async () => {
     console.log(carritoItems);
     try {
@@ -160,7 +187,7 @@ export default function Tienda() {
       if (!response.ok) throw new Error("Error al procesar la venta");
 
       const result = await response.json();
-      toast.success("Venta procesada exitosamente", {
+      toast.success(result.message, {
         bodyClassName: "text-foreground",
       });
       handleCancelar(); // Limpiar el carrito después de procesar la venta
@@ -435,6 +462,7 @@ export default function Tienda() {
           <TicketPreview
             total={total}
             handleCancelar={handleCancelar}
+            handleCancelarSale={handleCancelSale}
             handleProcesar={handleProcesar}
           />
           <div className="flex items-center h-[50%]">

@@ -2,7 +2,7 @@ import React from 'react'
 import {Button} from '@nextui-org/button'
 import {Input} from '@nextui-org/input'
 
-export default function TicketPreview({total, handleProcesar, handleCancelar}) {
+export default function TicketPreview({total, handleProcesar, handleCancelar,handleCancelarSale}) {
 const [cambio,setCambio] = React.useState('')
 
   return (
@@ -53,7 +53,7 @@ const [cambio,setCambio] = React.useState('')
      <Button className='font-bold ' onPress={e=> {handleProcesar(); setCambio('')}} variant='flat' radius='sm' color='success'>
      Procesar
    </Button>
-   <Button onPress={e => {handleCancelar(); setCambio(``)}} className='font-bold' radius='sm' variant='flat' color='danger'>
+   <Button onPress={e => {handleCancelarSale(); setCambio(``)}} className='font-bold' radius='sm' variant='flat' color='danger'>
      Cancelar
    </Button>
    </div>

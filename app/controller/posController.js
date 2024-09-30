@@ -58,6 +58,24 @@ class PosController {
             res.status(500).json({ error: "Error en el servidor" });
         }
     }
+    static async CancelPosSale(req, res){
+        try {
+            const {fecha, total, motivoCancelacion} = req.body;
+            if (!fecha || !total || !motivoCancelacion) {
+                return res.status(400).json({ error: 'Todos los campos son requeridos' });
+            }
+            const response = await PosModel.PosCancelSale(fecha, total, motivoCancelacion);
+            if (!response.success) {
+                logToFile(response.message);
+                return res.status(500).json({ error: response.message });
+            }
+            logToFile('Venta cancelada');
+            res.status(201).json({ message: response.message });
+        } catch (error) {
+            logToFile(error.message);
+            res.status(500).json({ error: "Error en el servidor" });
+        }
+    }
 }
 
 module.exports = PosController;
