@@ -3,11 +3,9 @@ import { ToastContainer, toast } from "react-toastify";
 import { FaCashRegister, FaPlus } from "react-icons/fa";
 import TicketPreview from "../components/TicketPreview";
 import { Input, Button } from "@nextui-org/react";
-import { Select, SelectItem, SelectSection } from "@nextui-org/react";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import ProductTable from "../components/ProductTable";
-import { ImPriceTag } from "react-icons/im";
-import debounce from "lodash.debounce";
+import {CheckPrice as ChecarPrecioComponente} from "../components/CheckPrice";
 
 export default function Tienda() {
   const headingClasses =
@@ -231,50 +229,50 @@ export default function Tienda() {
     }
   };
 
-  const [priceData, setPriceData] = React.useState([]);
-  const CheckPrice = async () => {
-    try {
-      if (codigo === "") throw new Error("Todos los campos son necesarios");
-      const response = await fetch(
-        `http://localhost:3001/api/product/${codigo.toLowerCase()}`,
-        {
-          method: "GET",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (!response.ok) throw new Error("Error al buscar el producto");
-      const result = await response.json();
-      if (result.unidad == "kg") {
-        // cantidad = parseFloat(cantidad.weight.trim().replace(" kg", ""));
-        let cantidad = await fetch("http://localhost:3001/api/weight").then(
-          (response) => response.json()
-        );
-        if (cantidad?.weight != "") {
-          cantidad = parseFloat(cantidad.weight.trim().replace(" kg", ""));
-        } else {
-          cantidad = 1;
-        }
-        setPriceData([{ ...result, cantidad }]);
-        return { error: false };
-      }
-      setPriceData([{ ...result, cantidad: 1 }]);
-      return { error: false };
-    } catch (error) {
-      console.error(error);
-      toast.error(
-        error.message || "Error en la comunicacion con la base de datos",
-        {
-          bodyClassName: "text-foreground",
-        }
-      );
-      return { error: true };
-    } finally {
-      resetFields();
-    }
-  };
+  // const [priceData, setPriceData] = React.useState([]);
+  // const CheckPrice = async () => {
+  //   try {
+  //     if (codigo === "") throw new Error("Todos los campos son necesarios");
+  //     const response = await fetch(
+  //       `http://localhost:3001/api/product/${codigo.toLowerCase()}`,
+  //       {
+  //         method: "GET",
+  //         mode: "cors",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+  //     if (!response.ok) throw new Error("Error al buscar el producto");
+  //     const result = await response.json();
+  //     if (result.unidad == "kg") {
+  //       // cantidad = parseFloat(cantidad.weight.trim().replace(" kg", ""));
+  //       let cantidad = await fetch("http://localhost:3001/api/weight").then(
+  //         (response) => response.json()
+  //       );
+  //       if (cantidad?.weight != "") {
+  //         cantidad = parseFloat(cantidad.weight.trim().replace(" kg", ""));
+  //       } else {
+  //         cantidad = 1;
+  //       }
+  //       setPriceData([{ ...result, cantidad }]);
+  //       return { error: false };
+  //     }
+  //     setPriceData([{ ...result, cantidad: 1 }]);
+  //     return { error: false };
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error(
+  //       error.message || "Error en la comunicacion con la base de datos",
+  //       {
+  //         bodyClassName: "text-foreground",
+  //       }
+  //     );
+  //     return { error: true };
+  //   } finally {
+  //     resetFields();
+  //   }
+  // };
 
   const getProductByCode = async () => {
     try {
@@ -365,20 +363,6 @@ export default function Tienda() {
     []
   );
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-  const openModal = async () => {
-    const data = await CheckPrice(); // Espera a que CheckPrice termine
-    if (data.error) {
-      return;
-    } else {
-      if (priceData.length) {
-        // Verifica si hay datos en priceData
-        onOpen();
-      }
-    }
-  };
-
   React.useEffect(() => {
     const date = new Date();
     const formattedDate =
@@ -427,14 +411,7 @@ export default function Tienda() {
           >
             <FaPlus />
           </Button>
-          {/* <Button  onClick={(e)=>{CheckPrice(e)}} size='lg' color='primary' radius='none' isIconOnly className='text-3xl'><ImPriceTag/></Button> */}
-          <ModalPrecio
-            isOpen={isOpen}
-            onOpenChange={onOpenChange}
-            openModal={openModal}
-            PriceData={priceData}
-            CarritoAdd={handleCarritoAdd}
-          />
+          <ChecarPrecioComponente CarritoAdd={handleCarritoAdd} resetFields={resetFields} codigo={codigo}/>
         </form>
         <Autocomplete
           defaultItems={products}
@@ -482,85 +459,3 @@ export default function Tienda() {
     </div>
   );
 }
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-} from "@nextui-org/modal";
-
-const ModalPrecio = ({
-  openModal,
-  isOpen,
-  onOpenChange,
-  PriceData,
-  CarritoAdd,
-}) => {
-  return (
-    <>
-      <Button
-        onPress={openModal}
-        size="lg"
-        color="primary"
-        radius="none"
-        isIconOnly
-        className="text-3xl"
-      >
-        <ImPriceTag />
-      </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              {/* id, cantidad, nombre, precioVenta, subTotal, unidad */}
-              <ModalHeader className="flex flex-col gap-1 capitalize text-center">
-                {PriceData[0].nombre}
-              </ModalHeader>
-              <ModalBody className="flex flex-row  w-full ">
-                <div className="text-start ">
-                    <ul className="font-bold">
-                      <li>Cantidad</li>
-                      <li>P.U</li>
-                      <li>Total</li>
-                    </ul>
-                </div>
-                <div className="">
-                  <ul>
-                    <li>{": "}{PriceData[0].cantidad || 1}</li>
-                    <li>{": "}${PriceData[0].precioVenta || 0}</li>
-                    <li className="font-bold">{": "}${(PriceData[0].cantidad || 1) * (PriceData[0].precioVenta)}</li>
-                  </ul>
-                </div>
-                {/* Cantidad : {PriceData[0].cantidad || 1} <br />
-                Precio unitario : {PriceData[0].precioVenta} <br />
-                Total : {(PriceData[0].cantidad || 1) * (PriceData[0].precioVenta)} */}
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Cancelar
-                </Button>
-                <Button
-                  color="primary"
-                  onClick={() => {
-                    CarritoAdd(
-                      PriceData[0].id,
-                      PriceData[0].cantidad,
-                      PriceData[0].nombre,
-                      PriceData[0].precioVenta,
-                      PriceData[0].unidad
-                    );
-                    onClose(); // Cierra el modal después de agregar al carrito
-                  }}
-                >
-                  Agregar
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
-  );
-};

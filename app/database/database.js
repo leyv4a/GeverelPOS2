@@ -1,14 +1,14 @@
 // Importa las bibliotecas necesarias
-const sqlite3 = require('sqlite3').verbose(); // Biblioteca para interactuar con SQLite
-const { app } = require('electron'); // Módulo de Electron para acceder a propiedades de la aplicación
-const { promisify } = require('util'); // Modulo de Node para promisificar
-const path = require('path'); // Módulo para manejar y transformar rutas de archivos
-const logToFile = require('../utils/logger') //modulo para el Logger
+const sqlite3 = require("sqlite3").verbose(); // Biblioteca para interactuar con SQLite
+const { app } = require("electron"); // Módulo de Electron para acceder a propiedades de la aplicación
+const { promisify } = require("util"); // Modulo de Node para promisificar
+const path = require("path"); // Módulo para manejar y transformar rutas de archivos
+const logToFile = require("../utils/logger"); //modulo para el Logger
 // Obtiene la ruta del directorio de datos del usuario para la aplicación
-const userDataPath = app.getPath('userData');
+const userDataPath = app.getPath("userData");
 
 // Nombre del archivo de la base de datos
-const dbFileName = 'database.db';
+const dbFileName = "database.db";
 
 // Ruta completa del archivo de la base de datos dentro del directorio de datos del usuario
 const dbDestinationPath = path.join(userDataPath, dbFileName);
@@ -16,9 +16,9 @@ const dbDestinationPath = path.join(userDataPath, dbFileName);
 // Conectar a la base de datos
 const db = new sqlite3.Database(dbDestinationPath, async (err) => {
   if (err) {
-    logToFile('Error opening database: ' + err);
+    logToFile("Error opening database: " + err);
   } else {
-    logToFile('Database connected at ' + dbDestinationPath);
+    logToFile("Database connected at " + dbDestinationPath);
 
     // Habilitar claves foráneas
     // await db.run('PRAGMA foreign_keys = ON');
@@ -98,28 +98,32 @@ const initializeTables = async () => {
   //   id INTEGER PRIMARY KEY AUTOINCREMENT,
   // )`;
 
-  const addStatusToSalesTable = `ALTER TABLE ventas ADD COLUMN status TEXT NOT NULL DEFAULT 'success';`
-  const addMotivoToSalesTable = `ALTER TABLE ventas ADD COLUMN motivoCancelacion TEXT DEFAULT NULL;`
- 
+  const addStatusToSalesTable = `ALTER TABLE ventas ADD COLUMN status TEXT NOT NULL DEFAULT 'success';`;
+  const addMotivoToSalesTable = `ALTER TABLE ventas ADD COLUMN motivoCancelacion TEXT DEFAULT NULL;`;
+
   try {
     await db.run(createUsersTable);
-    logToFile('Users table created or already exists');
+    logToFile("Users table created or already exists");
     await db.run(createCategoryTable);
-    logToFile('Category table created or already exists');
+    logToFile("Category table created or already exists");
     await db.run(createProductTable);
-    logToFile('Product table created or already exists');
+    logToFile("Product table created or already exists");
     await db.run(createWalletTable);
-    logToFile('Wallet table created or already exists');
+    logToFile("Wallet table created or already exists");
     await db.run(createSalesTable);
-    logToFile('Sales table created or already exists');
+    logToFile("Sales table created or already exists");
     await db.run(createTransactionsTable);
-    logToFile('Transactions table created or already exists');
-    // await db.run(addStatusToSalesTable);
-    // logToFile('Sales table status column added or already exists');
-    // await db.run(addMotivoToSalesTable);
-    // logToFile('Sales table motivo column added or already exists');
+    logToFile("Transactions table created or already exists");
+    try {
+      await db.run(addStatusToSalesTable);
+      logToFile("Sales table status column added or already exists");
+    } catch (error) {}
+    try {
+      await db.run(addMotivoToSalesTable);
+      logToFile("Sales table motivo column added or already exists");
+    } catch (error) {}
   } catch (err) {
-    logToFile('Error initializing tables: ' + err.message);
+    logToFile("Error initializing tables: " + err.message);
     console.log(err);
   }
 };
