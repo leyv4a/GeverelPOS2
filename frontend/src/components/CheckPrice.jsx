@@ -1,6 +1,6 @@
 import React from 'react'
 import { ImPriceTag } from "react-icons/im";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 import {
     Modal,
@@ -121,7 +121,7 @@ const handleCheckPrice = async () => {
                             PriceData[0].precioVenta,
                             PriceData[0].unidad
                           );
-                          onClose(); // Cierra el modal después de agregar al carrito
+                          onClose(); 
                         }}
                       >
                         Agregar

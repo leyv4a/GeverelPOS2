@@ -229,50 +229,6 @@ export default function Tienda() {
     }
   };
 
-  // const [priceData, setPriceData] = React.useState([]);
-  // const CheckPrice = async () => {
-  //   try {
-  //     if (codigo === "") throw new Error("Todos los campos son necesarios");
-  //     const response = await fetch(
-  //       `http://localhost:3001/api/product/${codigo.toLowerCase()}`,
-  //       {
-  //         method: "GET",
-  //         mode: "cors",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-  //     if (!response.ok) throw new Error("Error al buscar el producto");
-  //     const result = await response.json();
-  //     if (result.unidad == "kg") {
-  //       // cantidad = parseFloat(cantidad.weight.trim().replace(" kg", ""));
-  //       let cantidad = await fetch("http://localhost:3001/api/weight").then(
-  //         (response) => response.json()
-  //       );
-  //       if (cantidad?.weight != "") {
-  //         cantidad = parseFloat(cantidad.weight.trim().replace(" kg", ""));
-  //       } else {
-  //         cantidad = 1;
-  //       }
-  //       setPriceData([{ ...result, cantidad }]);
-  //       return { error: false };
-  //     }
-  //     setPriceData([{ ...result, cantidad: 1 }]);
-  //     return { error: false };
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error(
-  //       error.message || "Error en la comunicacion con la base de datos",
-  //       {
-  //         bodyClassName: "text-foreground",
-  //       }
-  //     );
-  //     return { error: true };
-  //   } finally {
-  //     resetFields();
-  //   }
-  // };
 
   const getProductByCode = async () => {
     try {
@@ -297,7 +253,12 @@ export default function Tienda() {
           (response) => response.json()
         );
         if (cantidad?.weight != "") {
-          let cantidad2 = cantidad.weight.replace(" kg", "");
+          let cantidad2;
+          try {
+            cantidad2 = cantidad.weight.replace(" kg", "");
+          } catch (error) {
+            throw new Error("Error en la comunicacion con la bascula");
+          }
           cantidad = parseFloat(cantidad2);
           console.log(cantidad);
         } 
@@ -314,10 +275,9 @@ export default function Tienda() {
         result.unidad
       );
     } catch (error) {
-      console.log(error.message);
+      // console.log(error.message);
       resetFields();
       throw error;
-    }finally{
     }
   };
   //Guarda los productos para mostrarlos en el Select
