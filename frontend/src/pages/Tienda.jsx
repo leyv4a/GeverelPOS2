@@ -397,7 +397,6 @@ export default function Tienda() {
         <div className="w-[30%]">
           <TicketPreview
             total={total}
-            handleCancelar={handleCancelar}
             handleCancelarSale={handleCancelSale}
             handleProcesar={handleProcesar}
           />
