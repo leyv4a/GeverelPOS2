@@ -114,10 +114,10 @@ const initializeTables = async () => {
     logToFile('Sales table created or already exists');
     await db.run(createTransactionsTable);
     logToFile('Transactions table created or already exists');
-    await db.run(addStatusToSalesTable);
-    logToFile('Sales table status column added or already exists');
-    await db.run(addMotivoToSalesTable);
-    logToFile('Sales table motivo column added or already exists');
+    // await db.run(addStatusToSalesTable);
+    // logToFile('Sales table status column added or already exists');
+    // await db.run(addMotivoToSalesTable);
+    // logToFile('Sales table motivo column added or already exists');
   } catch (err) {
     logToFile('Error initializing tables: ' + err.message);
     console.log(err);

@@ -151,6 +151,7 @@ export default function Tienda() {
         body: JSON.stringify({
           fecha: fecha,
           total: total,
+          motivoCancelacion: "Venta cancelada por el usuario"
         }),
       })
       if (!response.ok) throw new Error("Error al cancelar la venta");
@@ -161,7 +162,7 @@ export default function Tienda() {
       handleCancelar(); // Limpiar el carrito después de procesar la venta
     } catch (error) {
       console.log(error.message);
-      toast.error(error.message || "Error al procesar la venta", {
+      toast.error(error.message || "Error al cancelar la venta", {
         bodyClassName: "text-foreground",
       });
     }

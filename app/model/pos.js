@@ -103,7 +103,7 @@ class PosModel {
 
      static async PosCancelSale(fecha, total,motivoCancelacion){
       try {
-        const sqlSales = "INSERT INTO ventas (fecha, monto, usuarioId,status,motivoCancelacion) VALUES (?,?,?,?,?)";
+        const sqlSales = "INSERT INTO ventas (fecha, monto, usuarioId,status, motivoCancelacion) VALUES (?,?,?,?,?)";
         await db.run(sqlSales, [fecha, total, 1, 'cancelled', motivoCancelacion]);
         logToFile(`Venta cancelada por usuario :${1}`);
         return { success: true, message: 'Venta cancelada correctamente' };
