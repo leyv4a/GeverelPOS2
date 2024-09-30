@@ -98,6 +98,7 @@ const initializeTables = async () => {
   //   id INTEGER PRIMARY KEY AUTOINCREMENT,
   // )`;
 
+  const addStatusToSalesTable = `ALTER TABLE ventas ADD COLUMN status TEXT NOT NULL DEFAULT 'success';` 
  
   try {
     await db.run(createUsersTable);
@@ -112,6 +113,8 @@ const initializeTables = async () => {
     logToFile('Sales table created or already exists');
     await db.run(createTransactionsTable);
     logToFile('Transactions table created or already exists');
+    await db.run(addStatusToSalesTable);
+    logToFile('Sales table status column added or already exists');
   } catch (err) {
     logToFile('Error initializing tables: ' + err.message);
     console.log(err);

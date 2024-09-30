@@ -149,7 +149,7 @@ const GenericTable = ({
         case "stock" :
           return (
           <>
-          <p className={`font-bold ${item.stock < item.stockMin ? 'text-danger' : item.stock == item.stockMin ? 'text-warning' : 'text-success'}`}>{(parseFloat(item.stock)).toFixed(2)}</p>
+          <p className={`font-bold ${item.stock < item.stockMin ? 'text-danger' : item.stock == item.stockMin ? 'text-warning' : 'text-success'}`}>{(parseFloat(item.stock)).toFixed(2)+(item.unidad == 'kg' ? ' kg' : ' u')}</p>
           </>
           );
         case "acciones":

@@ -78,8 +78,8 @@ class PosModel {
             await db.run(sqlStock, [cantidad, id]);
             logToFile(`Stock actualizado para producto ${id}`);
             
-            const sqlSales = "INSERT INTO ventas (fecha, monto, usuarioId) VALUES (?,?,?)";
-            await db.run(sqlSales, [fecha, total, 1]);
+            const sqlSales = "INSERT INTO ventas (fecha, monto, usuarioId,status) VALUES (?,?,?,?)";
+            await db.run(sqlSales, [fecha, total, 1, 'success']);
             logToFile(`Venta registrada para producto ${id}`);
           }
           const sqlWallet = 'INSERT INTO cartera (tipo,descripcion,monto, fecha) VALUES (?,?,?,?)'
@@ -100,6 +100,18 @@ class PosModel {
           }
         }
       }
+
+     static async PosCancelSale(fecha, total){
+      try {
+        const sqlSales = "INSERT INTO ventas (fecha, monto, usuarioId,status) VALUES (?,?,?,?)";
+        await db.run(sqlSales, [fecha, total, 1, 'cancelled']);
+        logToFile(`Venta cancelada por usuario :${1}`);
+        return { success: true, message: 'Venta cancelada con exito' };
+      } catch (error) {
+        logToFile(error.message);
+        return { success: false, message: error.message };
+      }
+     } 
 }
 
 
