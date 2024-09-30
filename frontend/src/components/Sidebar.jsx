@@ -2,7 +2,8 @@ import { useContext, createContext, useState, useEffect } from "react"
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa6";
 import { FiMoreVertical } from "react-icons/fi";
 import { Link as LinkRouter } from 'react-router-dom';
-
+import {Avatar} from "@nextui-org/react";
+import { FaUser } from "react-icons/fa";
 
 const SidebarContext = createContext()
 
@@ -35,12 +36,14 @@ export default function Sidebar({ children }) {
           <ul className="flex-1 px-3">{children}</ul>
         </SidebarContext.Provider>
 
-        <div className="border-t flex p-3">
-          <img
+        {/* USUARIO */}
+        <div className="border-t flex justify-between p-3">
+          {/* <img
             src="https://ui-avatars.com/api/?name=Gabriel+Leyva&background=c13ffe&color=ffffff&bold=true"
             alt=""
             className="w-10 h-10 rounded-md"
-          />
+          /> */}
+            <Avatar name="Gabriel" radius="md" className="bg-[#c13ffe] text-white" fallback={<FaUser size={20}/>}/>
           <div
             className={`
               flex justify-between items-center
@@ -51,8 +54,9 @@ export default function Sidebar({ children }) {
               <h4 className="font-semibold">Gabriel Leyva</h4>
               <span className="text-xs text-gray-600">gleyvaesquivel@gmail.com</span>
             </div>
-            <FiMoreVertical  />
           </div>
+            
+            <UserSettings/>
         </div>
       </nav>
     </aside> 
@@ -62,16 +66,16 @@ export default function Sidebar({ children }) {
 export function SidebarItem({ icon, text, active, alert, buttonRef, functionKey, to }) {
   const { expanded } = useContext(SidebarContext)
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-        if (event.key === functionKey ) {
-          event.preventDefault(); // Previene la acción por defecto del F1
-          if (buttonRef.current) {
-            buttonRef.current.click();
-          }
-        }
-      };
+  const handleKeyDown = (event) => {
+    if (event.key === functionKey ) {
+      event.preventDefault(); // Previene la acción por defecto del F1
+      if (buttonRef.current) {
+        buttonRef.current.click();
+      }
+    }
+  };
 
+  useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
     return () => {
     document.removeEventListener('keydown', handleKeyDown);
@@ -124,4 +128,31 @@ export function SidebarItem({ icon, text, active, alert, buttonRef, functionKey,
       )}
     </LinkRouter>
   )
+}
+
+import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@nextui-org/react";
+
+ function UserSettings() {
+  return (
+    <Dropdown>
+      <DropdownTrigger>
+        <Button 
+          variant="borderedasad" 
+          size="sm"
+          className="my-auto"
+          isIconOnly
+          disableRipple
+        >
+         <FiMoreVertical className="my-auto cursor-pointer"  />
+        </Button>
+      </DropdownTrigger>
+      <DropdownMenu aria-label="Static Actions">
+        <DropdownItem key="new">Perfil</DropdownItem>
+        <DropdownItem key="copy">Cerrar turno</DropdownItem>
+        <DropdownItem key="delete" className="text-danger" color="danger">
+          Cerrar Sesion
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
+  );
 }

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import NavigationBar from '../components/NavigationBar';
  import AgregarProductos from '../inventario/AgregarProductos';
  import AgregarCategorias from '../inventario/AgregarCategorias';

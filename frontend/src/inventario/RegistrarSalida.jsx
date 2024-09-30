@@ -225,8 +225,8 @@ export default function RegistrarSalida() {
         <div className='flex w-full gap-4'>
         <div className='flex'>
           <Input isRequired size='sm' variant='underlined' value={cantidad} onChange={e=> setCantidad(e.target.value.replace(/[^0-9.]/g, ''))} isDisabled={isManual} label="Cantidad" />
-          <Button isIconOnly size='lg' color="primary" radius='none' disableRipple onClick={e => getWeight()}><FaWeightScale/></Button>
-          <Button isIconOnly size='lg' color="foreground" onClick={e => setIsManual(!isManual)} className="border border-primary" radius='none' disableRipple><FaKeyboard /></Button>
+          <Button isIconOnly size='lg' color="primary" radius='none' disableRipple onClick={() => getWeight()}><FaWeightScale/></Button>
+          <Button isIconOnly size='lg' color="foreground" onClick={() => setIsManual(!isManual)} className="border border-primary" radius='none' disableRipple><FaKeyboard /></Button>
         </div>
         {/* <Input isRequired size='sm' variant='underlined' value={inversion} onChange={e => setInversion(e.target.value.replace(/[^0-9.]/g, ''))} type="text" label="Costo por kilo" className='max-w-[40%]'/> */}
        </div>

@@ -54,15 +54,15 @@ LIMIT 5;`;
 // ORDER BY 
 //     mes ASC;`;
 const sql = `WITH meses AS (
-    SELECT 1 AS mes, 'ene' AS nombre UNION ALL
-    SELECT 2, 'feb' UNION ALL
-    SELECT 3, 'mar' UNION ALL
-    SELECT 4, 'abr' UNION ALL
-    SELECT 5, 'may' UNION ALL
-    SELECT 6, 'jun' UNION ALL
-    SELECT 7, 'jul' UNION ALL
-    SELECT 8, 'ago' UNION ALL
-    SELECT 9, 'sep' UNION ALL
+    SELECT 01 AS mes, 'ene' AS nombre UNION ALL
+    SELECT 02, 'feb' UNION ALL
+    SELECT 03, 'mar' UNION ALL
+    SELECT 04, 'abr' UNION ALL
+    SELECT 05, 'may' UNION ALL
+    SELECT 06, 'jun' UNION ALL
+    SELECT 07, 'jul' UNION ALL
+    SELECT 08, 'ago' UNION ALL
+    SELECT 09, 'sep' UNION ALL
     SELECT 10, 'oct' UNION ALL
     SELECT 11, 'nov' UNION ALL
     SELECT 12, 'dic'
