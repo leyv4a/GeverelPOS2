@@ -1,6 +1,6 @@
 import React from 'react'
 import GenericTable from '../components/GenericTable';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import {Input} from '@nextui-org/input'
 import {Button} from '@nextui-org/button'
 
@@ -142,7 +142,12 @@ export default function Entradas() {
         <GenericTable data={data} columns={columns} isFullTable={isFullTable} handleFullTable={handleFullTable}/>
       </div>
       <div>
-        <ToastContainer position='bottom-right' autoClose='2000' bodyClassName={() => "text-foreground"} draggable/>
+      <ToastContainer
+          position="bottom-right"
+          autoClose="2000"
+          bodyClassName={() => "text-foreground"}
+          draggable
+        />
       </div>
     </div>
   )

@@ -2,6 +2,8 @@
 import {Suspense, lazy} from 'react';
 import CompleteSidebar from './components/CompleteSidebar';
 import {HashRouter, Route, Routes} from 'react-router-dom';
+import { ToastContainer} from "react-toastify";
+
 
 const Tienda = lazy(() => import('./pages/Tienda'));
 const Panel = lazy(()=> import('./pages/Panel'));
@@ -26,6 +28,12 @@ function App() {
           <Route path="/settings/*" element={<Settings/>}/>
         </Routes>
       </Suspense>
+      <ToastContainer
+          position="bottom-right"
+          autoClose="2000"
+          bodyClassName={() => "text-foreground"}
+          draggable
+        />
      </main>
    </HashRouter>
     </>

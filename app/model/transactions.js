@@ -34,6 +34,20 @@ class TransactionModel {
             return {success :false, message: error.message}
         }
     }
+
+    static async getTotalVentas(fechaInicio, fechaFin) {
+        const sql = `SELECT SUM(cantidad) as totalVendido 
+                     FROM transacciones 
+                     WHERE motivo = 'venta' 
+                     AND fecha BETWEEN strftime('%Y-%m-%d %H:%M:%S', ?) AND strftime('%Y-%m-%d %H:%M:%S', ?)`;
+        try {
+            const row = await db.get(sql, [fechaInicio, fechaFin]);
+            return row ? row.totalVendido || 0 : 0; // Devuelve 0 si no hay ventas
+        } catch (error) {
+            logToFile(`Error fetching total ventas: ${error.message}`);
+            return 0;
+        }
+    }
 }
 
 module.exports = TransactionModel;

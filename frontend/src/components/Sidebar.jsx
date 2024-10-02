@@ -131,19 +131,72 @@ export function SidebarItem({ icon, text, active, alert, buttonRef, functionKey,
 }
 
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@nextui-org/react";
-
+import { toast } from "react-toastify";
  function UserSettings() {
 
   const [shift, setShift] = useState(false);
+  // const [date, setDate] = useState();
 
-  const startShift = () => {
-    localStorage.setItem("shift", true);
-    setShift(true);
+  const getDate = ()=>{
+    const datetest = new Date();
+    const formattedDate =
+    datetest.getFullYear() +
+    "-" +
+    String(datetest.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(datetest.getDate()).padStart(2, "0") +
+    " " +
+    String(datetest.getHours()).padStart(2, "0") +
+    ":" +
+    String(datetest.getMinutes()).padStart(2, "0") +
+    ":" +
+    String(datetest.getSeconds()).padStart(2, "0");
+    return formattedDate;
   }
 
-  const finishShift = () => {
+  const startShift = async () => {
+    let dat = getDate();
+   try {
+    localStorage.setItem("shift", true);
+    setShift(true);
+    const response = await fetch('http://localhost:3001/api/shift/start', {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ usuarioId: 1, inicio: dat })
+    }).then(response => response.json());
+    if (!response.success) {
+     throw new Error(response.error ||response.message)
+    }
+    toast.success(response.message);
+   } catch (error) {
+    toast.error(error.message);
+   }
+  }
+
+  const finishShift =async () => {
+    let dat = getDate();
+   try {
     localStorage.setItem("shift", false);
     setShift(false);
+    const response = await fetch('http://localhost:3001/api/shift/end', {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ usuarioId: 1, cierre: dat })
+    }).then(response => response.json());
+    console.log(response)
+    if (!response.success) {
+      throw new Error(response.error ||response.message)
+    }
+    toast.success(response.message);
+   } catch (error) {
+    toast.error(error.message)
+   }
   }
 
   useEffect(()=>{
@@ -152,6 +205,7 @@ import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@ne
       setShift(true);
     }
     localStorage.removeItem("session");
+    
   },[])
 
   return (
@@ -168,7 +222,7 @@ import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@ne
         </Button>
       </DropdownTrigger>
       <DropdownMenu  aria-label="Static Actions">
-        <DropdownItem key="new">Perfil</DropdownItem>
+        <DropdownItem  key="new">Perfil</DropdownItem>
         {/* {
           session ? 
           <DropdownItem onClick={finishSession} key="copy">Cerrar turno</DropdownItem> :

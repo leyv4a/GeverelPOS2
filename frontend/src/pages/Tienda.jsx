@@ -406,7 +406,7 @@ export default function Tienda() {
         </div>
       </div>
       <div>
-        <ToastContainer
+      <ToastContainer
           position="bottom-right"
           autoClose="2000"
           bodyClassName={() => "text-foreground"}

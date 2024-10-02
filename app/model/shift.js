@@ -14,25 +14,10 @@ class Shift {
         }
     }
 
-
-    // const date = new Date();
-    // const formattedDate =
-    //   date.getFullYear() +
-    //   "-" +
-    //   String(date.getMonth() + 1).padStart(2, "0") +
-    //   "-" +
-    //   String(date.getDate()).padStart(2, "0") +
-    //   " " +
-    //   String(date.getHours()).padStart(2, "0") +
-    //   ":" +
-    //   String(date.getMinutes()).padStart(2, "0") +
-    //   ":" +
-    //   String(date.getSeconds()).padStart(2, "0");
-    
-    static async EndShift(){
+    static async EndShift(shiftId, cierre, totalVendido, gastos){
         const sql = `UPDATE turnos SET cierre = ?, totalVendido = ?, gastos = ? WHERE id = ?`;
         try {
-          await db.run(sql, [cierre, totalVendido, gastos, id]);
+          await db.run(sql, [cierre, totalVendido, gastos, shiftId]);
           return { success: true, message: 'Turno cerrado correctamente' };
         } catch (error) {
           logToFile(`Error closing shift: ${error.message}`);
