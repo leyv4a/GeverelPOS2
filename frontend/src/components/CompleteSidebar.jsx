@@ -1,4 +1,4 @@
-import React,{useRef} from 'react'
+import {useRef} from 'react'
 import Sidebar, { SidebarItem } from './Sidebar';
 import { IoStorefront } from "react-icons/io5";
 import { AiFillDashboard } from "react-icons/ai";

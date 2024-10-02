@@ -133,8 +133,29 @@ export function SidebarItem({ icon, text, active, alert, buttonRef, functionKey,
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@nextui-org/react";
 
  function UserSettings() {
+
+  const [shift, setShift] = useState(false);
+
+  const startShift = () => {
+    localStorage.setItem("shift", true);
+    setShift(true);
+  }
+
+  const finishShift = () => {
+    localStorage.setItem("shift", false);
+    setShift(false);
+  }
+
+  useEffect(()=>{
+    let preshift = localStorage.getItem("shift");
+    if(preshift == 'true'){
+      setShift(true);
+    }
+    localStorage.removeItem("session");
+  },[])
+
   return (
-    <Dropdown>
+    <Dropdown className="rounded-md mb-3 ms-3">
       <DropdownTrigger>
         <Button 
           variant="borderedasad" 
@@ -146,10 +167,15 @@ import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@ne
          <FiMoreVertical className="my-auto cursor-pointer"  />
         </Button>
       </DropdownTrigger>
-      <DropdownMenu aria-label="Static Actions">
+      <DropdownMenu  aria-label="Static Actions">
         <DropdownItem key="new">Perfil</DropdownItem>
-        <DropdownItem key="copy">Cerrar turno</DropdownItem>
-        <DropdownItem key="delete" className="text-danger" color="danger">
+        {/* {
+          session ? 
+          <DropdownItem onClick={finishSession} key="copy">Cerrar turno</DropdownItem> :
+          <DropdownItem onClick={startSession} key="copy">Iniciar turno</DropdownItem>
+        } */}
+        <DropdownItem onClick={shift ? finishShift : startShift} key="shift">{shift ? "Cerrar turno" : "Iniciar turno"}</DropdownItem>
+        <DropdownItem key="session" className="text-danger" color="danger">
           Cerrar Sesion
         </DropdownItem>
       </DropdownMenu>

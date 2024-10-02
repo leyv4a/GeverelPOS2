@@ -98,6 +98,18 @@ const initializeTables = async () => {
   //   id INTEGER PRIMARY KEY AUTOINCREMENT,
   // )`;
 
+  const createShiftsTable = `
+  CREATE TABLE IF NOT EXISTS turnos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuarioId INTEGER NOT NULL,
+    inicio TEXT NOT NULL,
+    cierre TEXT,
+    totalVendido REAL DEFAULT 0,
+    gastos REAL DEFAULT 0,
+    FOREIGN KEY (usuarioId) REFERENCES usuario(id)
+  )
+`;
+
   const addStatusToSalesTable = `ALTER TABLE ventas ADD COLUMN status TEXT NOT NULL DEFAULT 'success';`;
   const addMotivoToSalesTable = `ALTER TABLE ventas ADD COLUMN motivoCancelacion TEXT DEFAULT NULL;`;
 
@@ -114,6 +126,8 @@ const initializeTables = async () => {
     logToFile("Sales table created or already exists");
     await db.run(createTransactionsTable);
     logToFile("Transactions table created or already exists");
+    await db.run(createShiftsTable);
+    logToFile("Shifts table created or already exists");
     try {
       await db.run(addStatusToSalesTable);
       logToFile("Sales table status column added or already exists");

@@ -62,6 +62,7 @@ export default function Panel() {
         setVentasMensuales(resultVentasMensuales); // Actualizar el estado con los datos obtenidos
       } catch (error) {
         console.error("Error fetching data: ", error);
+        return <div>Error obteniendo los datos</div>
       }
     };
     fetchData(); // Llamar a la función asíncrona
