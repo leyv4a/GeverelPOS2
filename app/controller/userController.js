@@ -12,6 +12,8 @@ class UserController {
     }
   }
 
+  
+
   static async createUser(req, res) {
     const { name, email } = req.body;
     if (!name || !email) {

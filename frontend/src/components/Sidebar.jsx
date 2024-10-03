@@ -1,7 +1,7 @@
 import { useContext, createContext, useState, useEffect } from "react";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa6";
 import { FiMoreVertical } from "react-icons/fi";
-import { Link as LinkRouter } from "react-router-dom";
+import { Link, Link as LinkRouter } from "react-router-dom";
 import { Avatar } from "@nextui-org/react";
 import { FaUser } from "react-icons/fa";
 import html2pdf from "html2pdf.js/dist/html2pdf.js";
@@ -153,58 +153,12 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
-import ReactDOMServer from 'react-dom/server';
 import { toast } from "react-toastify";
-import ShiftPdf from "./ShiftPdf";
+
 function UserSettings() {
 
   const [shift, setShift] = useState(false);
-  const getDate = () => {
-    const datetest = new Date();
-    const formattedDate =
-      datetest.getFullYear() +
-      "-" +
-      String(datetest.getMonth() + 1).padStart(2, "0") +
-      "-" +
-      String(datetest.getDate()).padStart(2, "0") +
-      " " +
-      String(datetest.getHours()).padStart(2, "0") +
-      ":" +
-      String(datetest.getMinutes()).padStart(2, "0") +
-      ":" +
-      String(datetest.getSeconds()).padStart(2, "0");
-    return formattedDate;
-  };
-  const printHandler =  () => {
-    try {
-      const printElement = ReactDOMServer.renderToStaticMarkup(<ShiftPdf />);
-    const pdfContainer = document.createElement('div');
-    pdfContainer.innerHTML = printElement;
-
-    // html2pdf().from(pdfContainer).save();
-     // Usar html2pdf para generar el PDF como Blob
-     html2pdf()
-     .from(pdfContainer)
-     .outputPdf('blob')
-     .then((pdfBlob) => {
-       // Crear un enlace URL para el Blob
-       const pdfUrl = URL.createObjectURL(pdfBlob);
-       
-       // Crear un enlace temporal para abrir el PDF con nombre
-       const link = document.createElement('a');
-       link.href = pdfUrl;
-       link.target = '_blank'; // Abrir en nueva ventana o pestaña
-       link.download = 'Reporte_semanal.pdf'; // Asignar el nombre del PDF
-       link.click();
-
-       // Limpiar la URL del Blob después de su uso
-       URL.revokeObjectURL(pdfUrl);
-     });
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-
+ 
   const startShift = async () => {
     let dat = getDate();
     try {
@@ -249,7 +203,22 @@ function UserSettings() {
       toast.error(error.message);
     }
   };
-
+  const getDate = () => {
+    const datetest = new Date();
+    const formattedDate =
+      datetest.getFullYear() +
+      "-" +
+      String(datetest.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(datetest.getDate()).padStart(2, "0") +
+      " " +
+      String(datetest.getHours()).padStart(2, "0") +
+      ":" +
+      String(datetest.getMinutes()).padStart(2, "0") +
+      ":" +
+      String(datetest.getSeconds()).padStart(2, "0");
+    return formattedDate;
+  };
   useEffect(() => {
     let preshift = localStorage.getItem("shift");
     if (preshift == "true") {
@@ -272,9 +241,12 @@ function UserSettings() {
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label="Static Actions">
-        <DropdownItem onClick={printHandler} key="new">
-          Perfil
+        <DropdownItem  key="new">
+          <Link to="/shift">
+          Cerrar turno
+          </Link>
         </DropdownItem>
+ 
         {/* {
           session ? 
           <DropdownItem onClick={finishSession} key="copy">Cerrar turno</DropdownItem> :
