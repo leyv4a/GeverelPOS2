@@ -27,7 +27,7 @@ function App() {
           <Route  path="/inventario/*" element={<Inventario/>}/>
           <Route path="/monedero/*" element={<Monedero/>}/>
           <Route path="/settings/*" element={<Settings/>}/>
-          <Route path="/shift/*" element={<ShiftPdf/>}/>
+          <Route path="/shift" element={<ShiftPdf/>}/>
         </Routes>
       </Suspense>
       <ToastContainer

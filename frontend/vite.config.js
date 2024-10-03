@@ -6,5 +6,8 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: '../static'
+  },
+  optimizeDeps: {
+    include: ["@react-pdf/renderer"],
   }
 })
