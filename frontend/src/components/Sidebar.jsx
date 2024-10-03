@@ -1,27 +1,27 @@
-import { useContext, createContext, useState, useEffect } from "react"
+import { useContext, createContext, useState, useEffect } from "react";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa6";
 import { FiMoreVertical } from "react-icons/fi";
-import { Link as LinkRouter } from 'react-router-dom';
-import {Avatar} from "@nextui-org/react";
+import { Link as LinkRouter } from "react-router-dom";
+import { Avatar } from "@nextui-org/react";
 import { FaUser } from "react-icons/fa";
+import html2pdf from "html2pdf.js/dist/html2pdf.js";
 
-const SidebarContext = createContext()
+const SidebarContext = createContext();
 
 export default function Sidebar({ children }) {
-  const [expanded, setExpanded] = useState(false)
-  
+  const [expanded, setExpanded] = useState(false);
+
   return (
     <aside className="h-screen ">
       <nav className="h-full flex flex-col bg-white border-r shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center">
           <img
-            // src="https://img.logoipsum.com/243.svg" 
-            src={'TheGevpoint.svg'}
+            // src="https://img.logoipsum.com/243.svg"
+            src={"TheGevpoint.svg"}
             // src={path.join(__dirname, '/static/TheGevpoint.svg')}
             className={`overflow-hidden transition-all ${
               expanded ? "w-40" : "w-0"
             }`}
-            
             alt="gevpoint"
           />
           <button
@@ -43,7 +43,12 @@ export default function Sidebar({ children }) {
             alt=""
             className="w-10 h-10 rounded-md"
           /> */}
-            <Avatar name="Gabriel" radius="md" className="bg-[#c13ffe] text-white" fallback={<FaUser size={20}/>}/>
+          <Avatar
+            name="Gabriel"
+            radius="md"
+            className="bg-[#c13ffe] text-white"
+            fallback={<FaUser size={20} />}
+          />
           <div
             className={`
               flex justify-between items-center
@@ -52,22 +57,31 @@ export default function Sidebar({ children }) {
           >
             <div className="leading-4">
               <h4 className="font-semibold">Gabriel Leyva</h4>
-              <span className="text-xs text-gray-600">gleyvaesquivel@gmail.com</span>
+              <span className="text-xs text-gray-600">
+                gleyvaesquivel@gmail.com
+              </span>
             </div>
           </div>
-            
-            <UserSettings/>
+
+          <UserSettings />
         </div>
       </nav>
-    </aside> 
-  )
+    </aside>
+  );
 }
-
-export function SidebarItem({ icon, text, active, alert, buttonRef, functionKey, to }) {
-  const { expanded } = useContext(SidebarContext)
+export function SidebarItem({
+  icon,
+  text,
+  active,
+  alert,
+  buttonRef,
+  functionKey,
+  to,
+}) {
+  const { expanded } = useContext(SidebarContext);
 
   const handleKeyDown = (event) => {
-    if (event.key === functionKey ) {
+    if (event.key === functionKey) {
       event.preventDefault(); // Previene la acción por defecto del F1
       if (buttonRef.current) {
         buttonRef.current.click();
@@ -76,159 +90,199 @@ export function SidebarItem({ icon, text, active, alert, buttonRef, functionKey,
   };
 
   useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-    document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
   return (
-    <LinkRouter ref={buttonRef} to={to}
+    <LinkRouter
+      ref={buttonRef}
+      to={to}
       className={`
       relative flex items-center py-2 px-3 my-1
       font-medium rounded-md cursor-pointer
       transition-colors group
       ${
         active
-        ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
-        : "hover:bg-foreground hover:text-background text-gray-600"
+          ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
+          : "hover:bg-foreground hover:text-background text-gray-600"
       }
       `}
       tabIndex="-1"
-      >
-      <small className="me-1 text-[10px]">{functionKey}</small>{icon}
+    >
+      <small className="me-1 text-[10px]">{functionKey}</small>
+      {icon}
       <span
         className={`overflow-hidden transition-all text-start ${
           expanded ? "w-52 ml-3 font-semibold" : "w-0"
         }`}
-        >
+      >
         {text}
       </span>
       {alert && (
         <div
-        className={`absolute right-2 w-2 h-2 rounded bg-indigo-400 ${
-          expanded ? "" : "top-2"
-        }`}
+          className={`absolute right-2 w-2 h-2 rounded bg-indigo-400 ${
+            expanded ? "" : "top-2"
+          }`}
         />
       )}
 
       {!expanded && (
         <div
-        className={`
+          className={`
         absolute left-full rounded-md px-2 py-1 ml-6
         bg-foreground text-background text-sm
         invisible opacity-0 transition-all duration-200
         group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
         `}
-        style={{ zIndex: 10 }}
+          style={{ zIndex: 10 }}
         >
           {text}
         </div>
-        
       )}
     </LinkRouter>
-  )
+  );
 }
-
-import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@nextui-org/react";
+// import html2pdf from "html2pdf.js/dist/html2pdf.min";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+} from "@nextui-org/react";
+import ReactDOMServer from 'react-dom/server';
 import { toast } from "react-toastify";
- function UserSettings() {
+import ShiftPdf from "./ShiftPdf";
+function UserSettings() {
 
   const [shift, setShift] = useState(false);
-  // const [date, setDate] = useState();
-
-  const getDate = ()=>{
+  const getDate = () => {
     const datetest = new Date();
     const formattedDate =
-    datetest.getFullYear() +
-    "-" +
-    String(datetest.getMonth() + 1).padStart(2, "0") +
-    "-" +
-    String(datetest.getDate()).padStart(2, "0") +
-    " " +
-    String(datetest.getHours()).padStart(2, "0") +
-    ":" +
-    String(datetest.getMinutes()).padStart(2, "0") +
-    ":" +
-    String(datetest.getSeconds()).padStart(2, "0");
+      datetest.getFullYear() +
+      "-" +
+      String(datetest.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(datetest.getDate()).padStart(2, "0") +
+      " " +
+      String(datetest.getHours()).padStart(2, "0") +
+      ":" +
+      String(datetest.getMinutes()).padStart(2, "0") +
+      ":" +
+      String(datetest.getSeconds()).padStart(2, "0");
     return formattedDate;
-  }
+  };
+  const printHandler =  () => {
+    try {
+      const printElement = ReactDOMServer.renderToStaticMarkup(<ShiftPdf />);
+    const pdfContainer = document.createElement('div');
+    pdfContainer.innerHTML = printElement;
+
+    // html2pdf().from(pdfContainer).save();
+     // Usar html2pdf para generar el PDF como Blob
+     html2pdf()
+     .from(pdfContainer)
+     .outputPdf('blob')
+     .then((pdfBlob) => {
+       // Crear un enlace URL para el Blob
+       const pdfUrl = URL.createObjectURL(pdfBlob);
+       
+       // Crear un enlace temporal para abrir el PDF con nombre
+       const link = document.createElement('a');
+       link.href = pdfUrl;
+       link.target = '_blank'; // Abrir en nueva ventana o pestaña
+       link.download = 'Reporte_semanal.pdf'; // Asignar el nombre del PDF
+       link.click();
+
+       // Limpiar la URL del Blob después de su uso
+       URL.revokeObjectURL(pdfUrl);
+     });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   const startShift = async () => {
     let dat = getDate();
-   try {
-    localStorage.setItem("shift", true);
-    setShift(true);
-    const response = await fetch('http://localhost:3001/api/shift/start', {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ usuarioId: 1, inicio: dat })
-    }).then(response => response.json());
-    if (!response.success) {
-     throw new Error(response.error ||response.message)
+    try {
+      localStorage.setItem("shift", true);
+      setShift(true);
+      const response = await fetch("http://localhost:3001/api/shift/start", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ usuarioId: 1, inicio: dat }),
+      }).then((response) => response.json());
+      if (!response.success) {
+        throw new Error(response.error || response.message);
+      }
+      toast.success(response.message);
+    } catch (error) {
+      toast.error(error.message);
     }
-    toast.success(response.message);
-   } catch (error) {
-    toast.error(error.message);
-   }
-  }
+  };
 
-  const finishShift =async () => {
+  const finishShift = async () => {
     let dat = getDate();
-   try {
-    localStorage.setItem("shift", false);
-    setShift(false);
-    const response = await fetch('http://localhost:3001/api/shift/end', {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ usuarioId: 1, cierre: dat })
-    }).then(response => response.json());
-    console.log(response)
-    if (!response.success) {
-      throw new Error(response.error ||response.message)
+    try {
+      localStorage.setItem("shift", false);
+      setShift(false);
+      const response = await fetch("http://localhost:3001/api/shift/end", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ usuarioId: 1, cierre: dat }),
+      }).then((response) => response.json());
+      console.log(response);
+      if (!response.success) {
+        throw new Error(response.error || response.message);
+      }
+      toast.success(response.message);
+    } catch (error) {
+      toast.error(error.message);
     }
-    toast.success(response.message);
-   } catch (error) {
-    toast.error(error.message)
-   }
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     let preshift = localStorage.getItem("shift");
-    if(preshift == 'true'){
+    if (preshift == "true") {
       setShift(true);
     }
     localStorage.removeItem("session");
-    
-  },[])
+  }, []);
 
   return (
     <Dropdown className="rounded-md mb-3 ms-3">
       <DropdownTrigger>
-        <Button 
-          variant="borderedasad" 
+        <Button
+          variant="borderedasad"
           size="sm"
           className="my-auto"
           isIconOnly
           disableRipple
         >
-         <FiMoreVertical className="my-auto cursor-pointer"  />
+          <FiMoreVertical className="my-auto cursor-pointer" />
         </Button>
       </DropdownTrigger>
-      <DropdownMenu  aria-label="Static Actions">
-        <DropdownItem  key="new">Perfil</DropdownItem>
+      <DropdownMenu aria-label="Static Actions">
+        <DropdownItem onClick={printHandler} key="new">
+          Perfil
+        </DropdownItem>
         {/* {
           session ? 
           <DropdownItem onClick={finishSession} key="copy">Cerrar turno</DropdownItem> :
           <DropdownItem onClick={startSession} key="copy">Iniciar turno</DropdownItem>
         } */}
-        <DropdownItem onClick={shift ? finishShift : startShift} key="shift">{shift ? "Cerrar turno" : "Iniciar turno"}</DropdownItem>
+        <DropdownItem onClick={shift ? finishShift : startShift} key="shift">
+          {shift ? "Cerrar turno" : "Iniciar turno"}
+        </DropdownItem>
         <DropdownItem key="session" className="text-danger" color="danger">
           Cerrar Sesion
         </DropdownItem>

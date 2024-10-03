@@ -315,7 +315,7 @@ export default function Tienda() {
 
   React.useEffect(
     () => {
-      inputRef.current.focus();
+      inputRef?.current?.focus();
     },
     [carritoItems.length],
     []
@@ -337,6 +337,18 @@ export default function Tienda() {
       String(date.getSeconds()).padStart(2, "0");
     setFecha(formattedDate);
   }, [codigo]);
+
+  const [isShiftStarted, setIsShiftStarted] = React.useState(false);
+  React.useEffect(()=>{
+    if (localStorage.getItem('shift') == 'true') {
+      setIsShiftStarted(true);
+    }
+  },[])
+
+  
+  if (!isShiftStarted) {
+    return <NoShift/>
+  }
   return (
     <div className="w-full h-screen p-5 bg-slate-100">
       <h2 className="text-4xl flex gap-2 mb-5">
@@ -415,4 +427,23 @@ export default function Tienda() {
       </div>
     </div>
   );
+}
+
+import { FaStoreSlash } from "react-icons/fa";
+
+const NoShift = () => {
+  return(
+    <div className='flex flex-col items-center justify-center w-full h-screen bg-slate-100'>
+      <div className="text-slate-300 flex w-full flex-col items-center" >
+      <FaStoreSlash size={200}/>
+      <h2 className="text-3xl font-bold ">No hay ningun turno abierto...</h2>
+      </div>
+      <ToastContainer
+          position="bottom-right"
+          autoClose="2000"
+          bodyClassName={() => "text-foreground"}
+          draggable
+        />
+    </div>
+  )
 }

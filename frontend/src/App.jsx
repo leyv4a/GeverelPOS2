@@ -12,6 +12,7 @@ const Monedero = lazy(()=> import('./pages/Monedero'));
 const Settings = lazy(()=> import('./pages/Settings'));
 
 import Loader from './components/Loader';
+import ShiftPdf from './components/ShiftPdf';
 function App() {
   
   return (
@@ -26,6 +27,8 @@ function App() {
           <Route  path="/inventario/*" element={<Inventario/>}/>
           <Route path="/monedero/*" element={<Monedero/>}/>
           <Route path="/settings/*" element={<Settings/>}/>
+          <Route path="/shift/*" element={<ShiftPdf/>}/>
+
         </Routes>
       </Suspense>
       <ToastContainer

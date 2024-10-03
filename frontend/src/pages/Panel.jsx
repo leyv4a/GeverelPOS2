@@ -11,6 +11,7 @@ import {
   getKeyValue,
 } from "@nextui-org/table";
 import Loader from "../components/Loader"
+import { ToastContainer } from "react-toastify";
 export default function Panel() {
   const [mensualData, setMensualData] = React.useState([]);
   const [totales, setTotales] = React.useState([]);
@@ -99,6 +100,12 @@ export default function Panel() {
       <div className="w-full h-[20%] ">
       <MonthlyChart data={ventasMensuales}/>
       </div>
+    <ToastContainer
+    position="bottom-right"
+    autoClose="2000"
+    bodyClassName={() => "text-foreground"}
+    draggable
+  />
     </div>
   );
 }

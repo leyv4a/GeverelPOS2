@@ -30,6 +30,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@react-pdf/renderer": "^4.0.0",
     "cors": "^2.8.5",
     "electron-squirrel-startup": "^1.0.1",
     "express": "^4.19.2",
