@@ -1,4 +1,4 @@
-import { useContext, createContext, useState, useEffect } from "react";
+import React, { useContext, createContext, useState, useEffect, useRef } from "react";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa6";
 import { FiMoreVertical } from "react-icons/fi";
 import { Link, Link as LinkRouter } from "react-router-dom";
@@ -158,6 +158,13 @@ import { toast } from "react-toastify";
 function UserSettings() {
 
   const [shift, setShift] = useState(false);
+  const [data, setData] = useState();
+
+  const { isOpen, onOpen, onOpenChange} = useDisclosure();
+
+    const handle = () => {
+      onOpen();
+    }
  
   const startShift = async () => {
     let dat = getDate();
@@ -195,6 +202,8 @@ function UserSettings() {
         body: JSON.stringify({ usuarioId: 1, cierre: dat }),
       }).then((response) => response.json());
       console.log(response);
+      setData(response);
+      onOpen();
       if (!response.success) {
         throw new Error(response.error || response.message);
       }
@@ -226,8 +235,8 @@ function UserSettings() {
     }
     localStorage.removeItem("session");
   }, []);
-
   return (
+   <>
     <Dropdown className="rounded-md mb-3 ms-3">
       <DropdownTrigger>
         <Button
@@ -240,18 +249,11 @@ function UserSettings() {
           <FiMoreVertical className="my-auto cursor-pointer" />
         </Button>
       </DropdownTrigger>
-      <DropdownMenu aria-label="Static Actions">
-        <DropdownItem  key="new">
-          <Link to="/shift">
-          Cerrar turno
-          </Link>
+      <DropdownMenu >
+        <DropdownItem onClick={()=> handle()}  textValue="Cerrar turno">
+           Test
         </DropdownItem>
  
-        {/* {
-          session ? 
-          <DropdownItem onClick={finishSession} key="copy">Cerrar turno</DropdownItem> :
-          <DropdownItem onClick={startSession} key="copy">Iniciar turno</DropdownItem>
-        } */}
         <DropdownItem onClick={shift ? finishShift : startShift} key="shift">
           {shift ? "Cerrar turno" : "Iniciar turno"}
         </DropdownItem>
@@ -260,5 +262,44 @@ function UserSettings() {
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>
+    <CloseShiftModal isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} data={data}/>
+    </>
+  );
+}
+
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import ShiftPdf from "./ShiftPdf";
+
+function CloseShiftModal({ isOpen, onOpenChange, data }) {
+ 
+  return (
+    <>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}  >
+        <ModalContent >
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Finalizar turno</ModalHeader>
+              <ModalBody>
+                <p> 
+                  OKA
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onClick={onClose}>
+                  Close
+                </Button>
+                {/* <Button color="primary" onPress={onClose}>
+                  Descargar PDF
+                </Button> */}
+                 <PDFDownloadLink document={<ShiftPdf data={data}/>} fileName="turno.pdf">
+                    Descargar PDF
+                 </PDFDownloadLink>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
   );
 }

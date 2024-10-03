@@ -37,7 +37,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const ShiftPdf = () => {
+const ShiftPdf = ({data}) => {
+  const data2 = data;
   return (
     <>
       <Document>
@@ -46,17 +47,17 @@ const ShiftPdf = () => {
           <View style={styles.section}>
             <Text style={{fontFamily: 'Helvetica-Bold'}}>Productos mas vendidos</Text>
             <View style={{fontSize: 12, marginTop: 3, width: '40%' }}>
-              <TableItem cantidad={'10kg'}>Tomate</TableItem>
-              <TableItem cantidad={'2kg'}>Manzana</TableItem>
-              <TableItem cantidad={'5U'}>Cilantro</TableItem>
+              <TableItem cantidad={data2.topTresProductos[0].TotalVendido}>{data2.topTresProductos[0].Producto}</TableItem>
+              <TableItem cantidad={data2.topTresProductos[1].TotalVendido}>{data2.topTresProductos[1].Producto}</TableItem>
+              <TableItem cantidad={data2.topTresProductos[2].TotalVendido}>{data2.topTresProductos[2].Producto}</TableItem>
             </View>
           </View>
           <View style={styles.section}>
             <Text style={{fontFamily: 'Helvetica-Bold'}}>Resumen de ingresos</Text>
             <View style={{fontSize: 12, marginTop: 3, width: '40%' }}>
-              <TableItem cantidad={'$1240.0'}>Ingresos</TableItem>
-              <TableItem cantidad={'$300.0'}>Gasto</TableItem>
-              <TableItem cantidad={'$940.0'}>Ganancia</TableItem>
+              <TableItem cantidad={data2.totalesPorTurno[0].GananciasBrutas || 0}>Ingresos</TableItem>
+              <TableItem cantidad={data2.totalesPorTurno[0].GastosTotales  || 0}>Gasto</TableItem>
+              <TableItem cantidad={data2.totalesPorTurno[0].GananciasNetas || 0}>Ganancia</TableItem> 
             </View>
           </View>
         </Page>
@@ -104,4 +105,4 @@ const Viewer = () => {
   );
 };
 
-export default Viewer;
+export default ShiftPdf;

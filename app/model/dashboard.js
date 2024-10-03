@@ -25,6 +25,27 @@ FROM (
     return rows;
   }
 
+  static async getTotalesPorTurno({inicio, fin}){
+    const sql = `SELECT GastosTotales, 
+       GananciasBrutas, 
+       (GananciasBrutas - GastosTotales) AS GananciasNetas, 
+       (GananciasNetas / GananciasBrutas * 100) AS Margen 
+FROM (
+  SELECT SUM(CASE WHEN tipo = 'ingreso' THEN monto ELSE 0 END) AS GananciasBrutas, 
+         SUM(CASE WHEN tipo = 'egreso' THEN monto ELSE 0 END) AS GastosTotales, 
+         SUM(CASE WHEN tipo = 'ingreso' THEN monto ELSE -monto END) AS GananciasNetas 
+  FROM cartera 
+  WHERE fecha BETWEEN strftime('%Y-%m-%d %H:%M:%S', ?) AND strftime('%Y-%m-%d %H:%M:%S', ?)
+);`
+try {
+  const rows = await db.all(sql,[inicio, fin]);
+  return rows;
+} catch (error) {
+  logToFile(`Error fetching total ventas: ${error.message}`);
+  return error.message
+}
+  }
+
   static async getTopCinco() {
     const sql = `SELECT strftime('%Y/%m', REPLACE(fecha, '/', '-')) AS Mes, P.nombre AS Producto, SUM(T.cantidad) AS TotalVendidoMes, P.unidad AS Unidad
 FROM transacciones T

@@ -48,6 +48,23 @@ class TransactionModel {
             return 0;
         }
     }
-}
 
+    static async getTopTres({inicio, fin}) {
+        const sql = `SELECT P.nombre AS Producto, 
+       SUM(T.cantidad) AS TotalVendido
+        FROM transacciones T
+        JOIN producto P ON T.productoId = P.id
+        WHERE T.motivo = 'venta'
+        AND T.fecha BETWEEN strftime('%Y-%m-%d %H:%M:%S', ?) AND strftime('%Y-%m-%d %H:%M:%S', ?)
+        GROUP BY P.id
+        ORDER BY TotalVendido DESC
+        LIMIT 3;`
+try {
+    const row = await db.all(sql, [inicio, fin]);
+    return row 
+} catch (error) {
+    logToFile(`Error fetching top three products: ${error.message}`);
+    }
+     }
+    }
 module.exports = TransactionModel;
