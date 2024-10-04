@@ -18,7 +18,7 @@ export default function CompleteSidebar () {
     <Sidebar >
     <div className='grid grid-cols-1 h-full content-between' >
       <div>
-        <SidebarItem text={"Tienda"} icon={<IoStorefront size={23}/>} buttonRef={tiendaRef} functionKey={'F1'} to={'/'} />  
+        <SidebarItem text={"Tienda"} icon={<IoStorefront size={23}/>} buttonRef={tiendaRef} functionKey={'F1'} to={'/pos'} />  
         <SidebarItem text={"Panel"} icon={<AiFillDashboard size={25}/>} buttonRef={panelRef} functionKey={'F2'} to={'/panel'}/>  
         <SidebarItem text={"Inventario"} icon={<FaTag size={23}/>} buttonRef={inventarioRef} functionKey={'F3'} to={'/inventario'}/>  
         <SidebarItem text={"Monedero"} icon={<TbCoinFilled size={25}/>} buttonRef={monederoRef} functionKey={'F4'} to={'/monedero'} active={false}/>  

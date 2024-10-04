@@ -10,9 +10,10 @@ const Panel = lazy(()=> import('./pages/Panel'));
 const Inventario = lazy(()=> import('./pages/Inventario'));
 const Monedero = lazy(()=> import('./pages/Monedero'));
 const Settings = lazy(()=> import('./pages/Settings'));
+const Login = lazy(()=> import('./components/Login'));
+const ShiftPdf = lazy(()=> import('./components/ShiftPdf'));
 
 import Loader from './components/Loader';
-import ShiftPdf from './components/ShiftPdf';
 function App() {
   
   return (
@@ -22,7 +23,8 @@ function App() {
       <CompleteSidebar/>
       <Suspense fallback={<Loader/>}>
         <Routes>
-          <Route path="/" element={<Tienda/>}/>
+          <Route path="/" element={<Login/>}/>
+          <Route path="/pos" element={<Tienda/>}/>
           <Route path="/panel" element={<Panel/>}/>
           <Route  path="/inventario/*" element={<Inventario/>}/>
           <Route path="/monedero/*" element={<Monedero/>}/>

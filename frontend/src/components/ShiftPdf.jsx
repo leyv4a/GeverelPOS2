@@ -1,4 +1,3 @@
-import { Table } from "@nextui-org/react";
 import {
   Page,
   Image,
@@ -8,7 +7,6 @@ import {
   StyleSheet,
   PDFViewer,
 } from "@react-pdf/renderer";
-import { MdBorderBottom } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 
 const styles = StyleSheet.create({
