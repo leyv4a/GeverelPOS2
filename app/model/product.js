@@ -111,42 +111,65 @@ class ProductModel {
 
   static async getWeight() {
     const port = new SerialPort({
-        path: 'COM4',
-        baudRate: 9600,
-        dataBits: 8,
-        parity: 'none',
-        stopBits: 1,
-        flowControl: false,
-        autoOpen: false
-      });
-  
-      return new Promise((resolve, reject) => {
-        port.open((err) => {
+      path: "COM4",
+      baudRate: 9600,
+      dataBits: 8,
+      parity: "none",
+      stopBits: 1,
+      flowControl: false,
+      autoOpen: false,
+    });
+
+    return new Promise((resolve, reject) => {
+      port.open((err) => {
+        if (err) {
+          logToFile(`Error al abrir el puerto: ${err.message}`);
+          return reject({ success: false, message: err.message });
+        }
+
+        port.write("P", (err) => {
           if (err) {
-            logToFile(`Error al abrir el puerto: ${err.message}`);
+            logToFile(`Error al enviar el comando: ${err.message}`);
             return reject({ success: false, message: err.message });
           }
-          
-          port.write('P', (err) => {
-            if (err) {
-              logToFile(`Error al enviar el comando: ${err.message}`);
-              return reject({ success: false, message: err.message });
-            }
-            logToFile('Comando "P" enviado a la báscula');
-          });
-  
-          port.on('data', (data) => {
-            logToFile(`Peso recibido: ${data.toString()}`);
-            resolve({ success: true, weight: data.toString() });
-            port.close();
-          });
-  
-          port.on('error', (err) => {
-            logToFile(`Error: ${err.message}`);
-            reject({ success: false, message: err.message });
-          });
+          logToFile('Comando "P" enviado a la báscula');
+        });
+
+        port.on("data", (data) => {
+          logToFile(`Peso recibido: ${data.toString()}`);
+          resolve({ success: true, weight: data.toString() });
+          port.close();
+        });
+
+        port.on("error", (err) => {
+          logToFile(`Error: ${err.message}`);
+          reject({ success: false, message: err.message });
         });
       });
+    });
   }
+
+  static async getProductToShop() {
+    const sql = `SELECT 
+    producto.nombre, 
+    producto.stockMin, 
+    producto.unidad
+    producto.precioCompra, 
+    producto.stock
+FROM 
+    producto
+WHERE 
+    producto.stock < producto.stockMin
+ORDER BY 
+    producto.id;`;
+    try {
+      const rows = await db.all(sql);
+      return rows
+    } catch (error) {
+      logToFile(error.message);
+      return  {error: error.message}
+    }
+  }
+
 }
 module.exports = ProductModel;

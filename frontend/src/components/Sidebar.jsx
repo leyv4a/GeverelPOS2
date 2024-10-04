@@ -1,13 +1,8 @@
-import React, {
-  useContext,
-  createContext,
-  useState,
-  useEffect,
-} from "react";
+import React, { useContext, createContext, useState, useEffect } from "react";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa6";
 import { FiMoreVertical } from "react-icons/fi";
 import { Link, Link as LinkRouter, useNavigate } from "react-router-dom";
-import { Avatar } from "@nextui-org/react";
+import { Avatar, Input } from "@nextui-org/react";
 import { FaUser } from "react-icons/fa";
 
 const SidebarContext = createContext();
@@ -280,8 +275,7 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/react";
-// import { PDFDownloadLink } from "@react-pdf/renderer";
-// import ShiftPdf from "./ShiftPdf";
+import { MdOutlineAttachMoney } from "react-icons/md";
 import { IoMdDownload } from "react-icons/io";
 import { FaCheckDouble } from "react-icons/fa";
 function CloseShiftModal({ isOpen, onOpenChange, data }) {
@@ -291,41 +285,47 @@ function CloseShiftModal({ isOpen, onOpenChange, data }) {
     navigate("/shift", { state: { data: data } });
   };
 
+  const [fondo, setFondo] = React.useState('');
+
   return (
     <>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {() => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                Finalizar turno
+              <ModalHeader className="flex flex-row items-center gap-5">
+                <FaCheckDouble className="text-slate-700" size={30} />
+                {fondo ? `Turno finalizado...` : `Finalizar turno`}
               </ModalHeader>
-              <ModalBody className="flex gap-2">
-                <FaCheckDouble className="color-slate-200" size={50} />
-                {/* <p className="text-2xl font-bold text-slate-200">
-                  {data.inicio} - {data.cierre}
-                </p> */}
-                <h2 className="text-slate-200 text-2xl">
-                  ¡Turno cerrado correctamente!
-                </h2>
+              <ModalBody className="flex flex-row ">
+                <Input
+                  value={fondo}
+                  onChange={(e)=>{setFondo(e.target.value)}}
+                  type="text"
+                  variant="borderer"
+                  size="sm"
+                  label="Fondo de caja"
+                  className="w-[90%]"
+                />
+                <Button
+                  size="lg"
+                  radius="sm"
+                  variant="light"
+                  className="w-[10%] "
+                >
+                  <MdOutlineAttachMoney />
+                </Button>
               </ModalBody>
               <ModalFooter>
                 <Button
-                  onClick={()=> handleClick()}
+                  isDisabled={!fondo}
+                  onClick={() => handleClick()}
                   className="rounded-md font-bold text-white bg-gray-800 hover:bg-gray-900"
                   variant="solid"
                   startContent={<IoMdDownload size={20} />}
                 >
-                  {/* <Link to={"/shift"}>Descargar PDF</Link> */}
                   Descargar PDF
                 </Button>
-                {/* <PDFDownloadLink 
-                 document={<ShiftPdf data={data}/>} fileName={`ResumenTurno${' '+data.inicio+'/'+data.cierre}.pdf`}
-                 >
-                     <Button className="rounded-md font-bold text-white bg-gray-800 hover:bg-gray-900" variant="solid" startContent={<IoMdDownload size={20}/>} >
-                     Descargar PDF
-                </Button>
-                 </PDFDownloadLink> */}
               </ModalFooter>
             </>
           )}

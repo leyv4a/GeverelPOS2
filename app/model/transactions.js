@@ -51,6 +51,7 @@ class TransactionModel {
 
     static async getTopTres({inicio, fin}) {
         const sql = `SELECT P.nombre AS Producto, 
+        P.unidad AS Unidad,
        SUM(T.cantidad) AS TotalVendido
         FROM transacciones T
         JOIN producto P ON T.productoId = P.id

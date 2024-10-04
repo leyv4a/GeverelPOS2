@@ -14,10 +14,10 @@ class Shift {
         }
     }
 
-    static async EndShift(shiftId, cierre, totalVendido, gastos){
-        const sql = `UPDATE turnos SET cierre = ?, totalVendido = ?, gastos = ? WHERE id = ?`;
+    static async EndShift(shiftId, cierre, totalVendido, gastos, fondo){
+        const sql = `UPDATE turnos SET cierre = ?, totalVendido = ?, gastos = ?, fondo = ? WHERE id = ?`;
         try {
-          await db.run(sql, [cierre, totalVendido, gastos, shiftId]);
+          await db.run(sql, [cierre, totalVendido, gastos, shiftId, fondo]);
           return { success: true, message: 'Turno cerrado correctamente' };
         } catch (error) {
           logToFile(`Error closing shift: ${error.message}`);

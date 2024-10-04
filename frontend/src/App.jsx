@@ -13,6 +13,7 @@ const Settings = lazy(()=> import('./pages/Settings'));
 
 import Loader from './components/Loader';
 import ShiftPdf from './components/ShiftPdf';
+import { ModalTest } from './components/Sidebar';
 function App() {
   
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/monedero/*" element={<Monedero/>}/>
           <Route path="/settings/*" element={<Settings/>}/>
           <Route path="/shift" element={<ShiftPdf/>}/>
+          {/* <Route path="/testing" element={<ModalTest/>}/> */}
         </Routes>
       </Suspense>
       <ToastContainer
