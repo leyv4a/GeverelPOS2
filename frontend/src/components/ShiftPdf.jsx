@@ -89,7 +89,8 @@ const ShiftPdf = ({ data }) => {
             {/* Datos */}
             <View style={{ fontSize: 12, marginTop: 3, width: "40%" }}>
               <Text style={{ fontFamily: "Helvetica-Bold" }}>Datos</Text>
-              <TableItem cantidad={2}>Clientes totales</TableItem>
+              <TableItem cantidad={'$'+data.fondo}>Fondo de caja</TableItem>
+              <TableItem cantidad={data.cantidadVentas}>Clientes totales</TableItem>
               <TableItem cantidad={4}>Ventas totales</TableItem>
               <TableItem cantidad={0}>Cancelaciones</TableItem>
             </View>
@@ -139,7 +140,7 @@ const ShiftPdf = ({ data }) => {
                 Lista de compras
               </Text>
              <TableHeader/>
-             <TableData/>
+             <TableData data={data.productosPorComprar}/>
             </View>
           </View>
         </Page>
@@ -151,7 +152,7 @@ const ShiftPdf = ({ data }) => {
 const columns = [
   {
     title: "Producto",
-    key: "producto",
+    key: "nombre",
   },
   {
     title: "Stock Min",
@@ -159,53 +160,16 @@ const columns = [
   },
   {
     title: "Ultimo precio de compra",
-    key: "ultimoPrecio",
+    key: "precioCompra",
   },
   {
     title: "Stock actual",
-    key: "stockActual",
+    key: "stock",
   },
   {
     title: "Compra",
     key: "compra",
   }
-];
-const tableData = [
-  {
-    producto: "Manzanas",
-    stockMin: 50,
-    ultimoPrecio: 1.20,
-    stockActual: 30,
-    compra: 20, // Faltan 20 para alcanzar 50
-  },
-  {
-    producto: "Bananas",
-    stockMin: 40,
-    ultimoPrecio: 0.50,
-    stockActual: 25,
-    compra: 15, // Faltan 15 para alcanzar 40
-  },
-  {
-    producto: "Naranjas",
-    stockMin: 60,
-    ultimoPrecio: 0.80,
-    stockActual: 55,
-    compra: 5, // Faltan 5 para alcanzar 60
-  },
-  {
-    producto: "Peras",
-    stockMin: 30,
-    ultimoPrecio: 1.00,
-    stockActual: 10,
-    compra: 20, // Faltan 20 para alcanzar 30
-  },
-  {
-    producto: "Uvas",
-    stockMin: 25,
-    ultimoPrecio: 2.00,
-    stockActual: 20,
-    compra: 5, // Faltan 5 para alcanzar 25
-  },
 ];
 
 const TableHeader = () => {
@@ -229,19 +193,91 @@ const TableHeader = () => {
    </>
   )
 };
+// const tableData = [
+//   {
+//     producto: "Manzanas",
+//     stockMin: 50,
+//     ultimoPrecio: 1.20,
+//     stockActual: 30,
+//     compra: 20, // Faltan 20 para alcanzar 50
+//   },
+//   {
+//     producto: "Bananas",
+//     stockMin: 40,
+//     ultimoPrecio: 0.50,
+//     stockActual: 25,
+//     compra: 15, // Faltan 15 para alcanzar 40
+//   },
+//   {
+//     producto: "Naranjas",
+//     stockMin: 60,
+//     ultimoPrecio: 0.80,
+//     stockActual: 55,
+//     compra: 5, // Faltan 5 para alcanzar 60
+//   },
+//   {
+//     producto: "Peras",
+//     stockMin: 30,
+//     ultimoPrecio: 1.00,
+//     stockActual: 10,
+//     compra: 20, // Faltan 20 para alcanzar 30
+//   },
+//   {
+//     producto: "Uvas",
+//     stockMin: 25,
+//     ultimoPrecio: 2.00,
+//     stockActual: 20,
+//     compra: 5, // Faltan 5 para alcanzar 25
+//   },
+// ];
 
-const TableData = () => {
+const TableData = ({data}) => {
   return (
     <View style={{width: '100%'}}>
-      {tableData.map((dataRow, index) => (
+      {data.map((dataRow, index) => (
         <View key={index} style={{width: '20%',flexDirection: "row", justifyContent: "space-between", width: "100%",borderTop: "1px solid #c8c8c8",
           paddingTop: 3,
           paddingBottom: 3,}}>
-          {columns.map((column) => (
-            <Text style={{width: '100%', textAlign: 'center'}} key={column.key} >
-              {dataRow[column.key]}
-            </Text>
-          ))}
+          {columns.map((column) => {
+            switch (column.key) {
+              case 'precioCompra':
+                return (
+                  <Text style={{width: '100%', textAlign: 'center'}} key={column.key}>
+                    {'$'+ dataRow[column.key]}
+                  </Text>
+                );
+                case 'nombre':
+                return (
+                  <Text style={{width: '100%', textAlign: 'center', textTransform: 'capitalize'}} key={column.key}>
+                    {dataRow[column.key]}
+                  </Text>
+                );
+                case 'compra':
+                return (
+                  <Text style={{width: '100%', textAlign: 'center'}} key={column.key}>
+                    {(dataRow.stockMin - dataRow.stock).toFixed(2)+(dataRow.unidad == 'kg' ? ' Kg' : ' U')}
+                  </Text>
+                );
+                case 'stockMin':
+                return (
+                  <Text style={{width: '100%', textAlign: 'center'}} key={column.key}>
+                    {(dataRow.stockMin).toFixed(2)+(dataRow.unidad == 'kg' ? ' Kg' : ' U')}
+                  </Text>
+                );
+                case 'stock':
+                return (
+                  <Text style={{width: '100%', textAlign: 'center', color: `${dataRow.stockMin > dataRow.stock ? 'red' : 'green'}`}} key={column.key}>
+                    {parseFloat(dataRow[column.key]).toFixed(2)+(dataRow.unidad == 'kg' ? ' Kg' : ' U')}
+                  </Text>
+                );
+              default:
+                return (
+                  <Text style={{width: '100%', textAlign: 'center'}} key={column.key}>
+                    {dataRow[column.key]}
+                  </Text>
+                );
+            }
+        })}
         </View>
       ))}
     </View>

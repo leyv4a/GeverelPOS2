@@ -1,4 +1,5 @@
 const Pruebas = require("../model/test");
+const logToFile = require("../utils/logger");
 
 class TestController {
 

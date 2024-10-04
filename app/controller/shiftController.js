@@ -63,7 +63,7 @@ class ShiftController {
             }
       
             logToFile(`Shift closed for user ${usuarioId+ closeResult.message}`);
-            return res.status(200).json({ success: true ,message: closeResult.message, cantidadVentas, topTresProductos, totalesPorTurno, inicio, cierre, productosPorComprar });
+            return res.status(200).json({ success: true ,message: closeResult.message, cantidadVentas, topTresProductos, totalesPorTurno, inicio, cierre, productosPorComprar, fondo });
           } catch (error) {
             logToFile(error.message);
             return res.status(500).json({ success: false, error: 'Algo salio mal...' });

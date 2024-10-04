@@ -153,23 +153,23 @@ class ProductModel {
     const sql = `SELECT 
     producto.nombre, 
     producto.stockMin, 
-    producto.unidad
+    producto.unidad,
     producto.precioCompra, 
     producto.stock
 FROM 
     producto
 WHERE 
-    producto.stock < producto.stockMin
+    producto.stock < producto.stockMin 
+    AND producto.precioCompra IS NOT NULL
 ORDER BY 
     producto.id;`;
     try {
       const rows = await db.all(sql);
-      return rows
+      return rows;
     } catch (error) {
       logToFile(error.message);
-      return  {error: error.message}
+      return { error: error.message };
     }
   }
-
 }
 module.exports = ProductModel;

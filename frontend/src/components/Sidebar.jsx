@@ -156,18 +156,24 @@ import { toast } from "react-toastify";
 
 function UserSettings() {
   const [shift, setShift] = useState(false);
-  const [data, setData] = useState();
+  // const [data, setData] = useState();
+  const [shiftIsEnded, setShiftIsEnded] = React.useState(false);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const handle = () => {
     onOpen();
   };
 
+  const handleSetShift = (value) => {
+    setShift(value);
+  }
+
   const startShift = async () => {
     let dat = getDate();
     try {
       localStorage.setItem("shift", true);
       setShift(true);
+      setShiftIsEnded(false);
       const response = await fetch("http://localhost:3001/api/shift/start", {
         method: "POST",
         mode: "cors",
@@ -185,26 +191,26 @@ function UserSettings() {
     }
   };
 
-  const finishShift = async () => {
-    let dat = getDate();
+  const handleShiftEnd =async (dat, fondo) => {
     try {
-      localStorage.setItem("shift", false);
-      setShift(false);
-      const response = await fetch("http://localhost:3001/api/shift/end", {
+       const response = await fetch("http://localhost:3001/api/shift/end", {
         method: "POST",
         mode: "cors",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ usuarioId: 1, cierre: dat }),
+        body: JSON.stringify({ usuarioId: 1, cierre: dat, fondo }),
       }).then((response) => response.json());
-      console.log(response);
-      setData(response);
+      return response;
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
+  const finishShift = async () => {
+  // getDate();
+    try {
       onOpen();
-      if (!response.success) {
-        throw new Error(response.error || response.message);
-      }
-      toast.success(response.message);
     } catch (error) {
       toast.error(error.message);
     }
@@ -261,7 +267,11 @@ function UserSettings() {
       <CloseShiftModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        data={data}
+        handleShiftEnd={handleShiftEnd}
+        getDate={getDate}
+        setShift={handleSetShift}
+        setShiftisEnded={setShiftIsEnded}
+        shiftIsEnded={shiftIsEnded}
       />
     </>
   );
@@ -278,14 +288,36 @@ import {
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { IoMdDownload } from "react-icons/io";
 import { FaCheckDouble } from "react-icons/fa";
-function CloseShiftModal({ isOpen, onOpenChange, data }) {
+
+function CloseShiftModal({ isOpen, onOpenChange, handleShiftEnd, getDate, setShift, setShiftisEnded , shiftIsEnded}) {
   const navigate = useNavigate();
+  const [fondo, setFondo] = React.useState('');
+  const [data, setData] = React.useState([]);
+
+  const handleSetFondo = async (e) => {
+    e.preventDefault();
+    try {
+      
+       let dat = getDate();
+       const response = await handleShiftEnd(dat, fondo);
+       if (!response.success) {
+         throw new Error(response.error || response.message);
+       }
+       toast.success(response.message);
+       localStorage.setItem("shift", false);
+       setShift(false);
+       setFondo(''); 
+       console.log(response)
+       setData(response)
+       setShiftisEnded(true);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
 
   const handleClick = () => {
     navigate("/shift", { state: { data: data } });
   };
-
-  const [fondo, setFondo] = React.useState('');
 
   return (
     <>
@@ -295,10 +327,11 @@ function CloseShiftModal({ isOpen, onOpenChange, data }) {
             <>
               <ModalHeader className="flex flex-row items-center gap-5">
                 <FaCheckDouble className="text-slate-700" size={30} />
-                {fondo ? `Turno finalizado...` : `Finalizar turno`}
+                {shiftIsEnded ? `Turno finalizado...` : `Finalizar turno`}
               </ModalHeader>
               <ModalBody className="flex flex-row ">
                 <Input
+                isDisabled={shiftIsEnded}
                   value={fondo}
                   onChange={(e)=>{setFondo(e.target.value)}}
                   type="text"
@@ -308,6 +341,8 @@ function CloseShiftModal({ isOpen, onOpenChange, data }) {
                   className="w-[90%]"
                 />
                 <Button
+                isDisabled={shiftIsEnded}
+                onClick={(e)=>{handleSetFondo(e)}}
                   size="lg"
                   radius="sm"
                   variant="light"
@@ -318,7 +353,7 @@ function CloseShiftModal({ isOpen, onOpenChange, data }) {
               </ModalBody>
               <ModalFooter>
                 <Button
-                  isDisabled={!fondo}
+                  isDisabled={!shiftIsEnded}
                   onClick={() => handleClick()}
                   className="rounded-md font-bold text-white bg-gray-800 hover:bg-gray-900"
                   variant="solid"

@@ -112,7 +112,7 @@ const initializeTables = async () => {
 
   // const addStatusToSalesTable = `ALTER TABLE ventas ADD COLUMN status TEXT NOT NULL DEFAULT 'success';`;
   // const addMotivoToSalesTable = `ALTER TABLE ventas ADD COLUMN motivoCancelacion TEXT DEFAULT NULL;`;
-  const addFondoToShiftsTable = `ALTER TABLE turnos ADD COLUMN fondo TEXT DEFAULT NULL;`;
+  const addFondoToShiftsTable = `ALTER TABLE turnos ADD COLUMN fondo REAL DEFAULT 0;`;
 
   try {
     await db.run(createUsersTable);

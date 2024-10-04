@@ -13,7 +13,6 @@ const Settings = lazy(()=> import('./pages/Settings'));
 
 import Loader from './components/Loader';
 import ShiftPdf from './components/ShiftPdf';
-import { ModalTest } from './components/Sidebar';
 function App() {
   
   return (
