@@ -160,9 +160,6 @@ function UserSettings() {
   const [shiftIsEnded, setShiftIsEnded] = React.useState(false);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const handle = () => {
-    onOpen();
-  };
 
   const handleSetShift = (value) => {
     setShift(value);
@@ -252,7 +249,7 @@ function UserSettings() {
           </Button>
         </DropdownTrigger>
         <DropdownMenu>
-          <DropdownItem onClick={() => handle()} key="profile">
+          <DropdownItem key="profile">
             Perfil
           </DropdownItem>
 

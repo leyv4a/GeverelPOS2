@@ -1,3 +1,4 @@
+import { Table } from "@nextui-org/react";
 import {
   Page,
   Image,
@@ -7,6 +8,7 @@ import {
   StyleSheet,
   PDFViewer,
 } from "@react-pdf/renderer";
+import { MdBorderBottom } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 
 const styles = StyleSheet.create({
@@ -35,6 +37,47 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
+const columns = [
+  {
+    title: "Producto",
+    key: "nombre",
+  },
+  {
+    title: "Stock Min",
+    key: "stockMin",
+  },
+  {
+    title: "Ultimo precio de compra",
+    key: "precioCompra",
+  },
+  {
+    title: "Stock actual",
+    key: "stock",
+  },
+  {
+    title: "Compra",
+    key: "compra",
+  }
+];
+
+const columns2 = [
+  {
+    title: "Empleado",
+    key: "nombre",
+  },
+  {
+    title: "Motivo",
+    key: "motivo",
+  },
+  {
+    title: "Hora",
+    key: "fecha",
+  },
+  {
+    title: "Monto",
+    key: "monto",
+  }
+];
 
 const ShiftPdf = ({ data }) => {
   return (
@@ -87,12 +130,25 @@ const ShiftPdf = ({ data }) => {
               </TableItem>
             </View>
             {/* Datos */}
-            <View style={{ fontSize: 12, marginTop: 3, width: "40%" }}>
+            <View style={{ fontSize: 12, marginTop: 3, width: "55%" }}>
               <Text style={{ fontFamily: "Helvetica-Bold" }}>Datos</Text>
               <TableItem cantidad={'$'+data.fondo}>Fondo de caja</TableItem>
-              <TableItem cantidad={data.cantidadVentas}>Clientes totales</TableItem>
-              <TableItem cantidad={4}>Ventas totales</TableItem>
-              <TableItem cantidad={0}>Cancelaciones</TableItem>
+              <TableItem cantidad={data.cantidadVentas}>Ventas totales</TableItem>
+              {/* <TableItem cantidad={4}>Clientes totales</TableItem> */}
+              <View style={{width: '100%'}}>
+              <View style={{borderTop: "1px solid #c8c8c8", paddingTop: 3,display: 'flex', justifyContent: 'space-between', flexDirection: 'row'}}>
+              <Text style={{ fontFamily: "Helvetica-Bold" }}>
+                Cancelaciones
+              </Text>
+              <Text style={{ fontFamily: "Helvetica-Bold" }}>
+                {data.cancelaciones.data[0]?.totalCancelaciones ? (data.cancelaciones.data[0].totalCancelaciones) : 0}
+              </Text>
+              </View>
+              <TableHeader  col={columns2} wid={'25%'} />
+              <View style={{fontSize: 8}}>
+              <TableData data={data.cancelaciones.data} col={columns2}/>
+              </View>
+              </View>
             </View>
           </View>
           {/* Columna 2 */}
@@ -107,7 +163,7 @@ const ShiftPdf = ({ data }) => {
                   "$" +
                   (data.totalesPorTurno[0].GananciasBrutas
                     ? data.totalesPorTurno[0].GananciasBrutas
-                    : 0)
+                    : 0).toFixed(2)
                 }
               >
                 Ingresos
@@ -117,7 +173,7 @@ const ShiftPdf = ({ data }) => {
                   "$" +
                   (data.totalesPorTurno[0].GastosTotales
                     ? data.totalesPorTurno[0].GastosTotales
-                    : 0)
+                    : 0).toFixed(2)
                 }
               >
                 Gasto
@@ -127,10 +183,20 @@ const ShiftPdf = ({ data }) => {
                   "$" +
                   (data.totalesPorTurno[0].GananciasNetas
                     ? data.totalesPorTurno[0].GananciasNetas
-                    : 0)
+                    : 0).toFixed(2)
                 }
               >
                 Ganancia
+              </TableItem>
+              <TableItem
+                cantidad={
+                   
+                  (data.totalesPorTurno[0].Margen
+                    ? data.totalesPorTurno[0].Margen
+                    : 0).toFixed(2)+"%"
+                }
+              >
+                Margin
               </TableItem>
             </View>
           </View>
@@ -139,8 +205,8 @@ const ShiftPdf = ({ data }) => {
               <Text style={{ fontFamily: "Helvetica-Bold" }}>
                 Lista de compras
               </Text>
-             <TableHeader/>
-             <TableData data={data.productosPorComprar}/>
+             <TableHeader col={columns} wid={'20%'}/>
+             <TableData data={data.productosPorComprar} col={columns}/>
             </View>
           </View>
         </Page>
@@ -149,39 +215,18 @@ const ShiftPdf = ({ data }) => {
   );
 };
 
-const columns = [
-  {
-    title: "Producto",
-    key: "nombre",
-  },
-  {
-    title: "Stock Min",
-    key: "stockMin",
-  },
-  {
-    title: "Ultimo precio de compra",
-    key: "precioCompra",
-  },
-  {
-    title: "Stock actual",
-    key: "stock",
-  },
-  {
-    title: "Compra",
-    key: "compra",
-  }
-];
 
-const TableHeader = () => {
+
+const TableHeader = ({col, wid}) => {
   return (
   <>
     <View style={{flexDirection: "row", justifyContent: "space-between", width: "100%",
         paddingTop: 3,
         paddingBottom: 3,}}>
     {
-    columns.map((column)=>
+    col.map((column)=>
         (
-          <Text style={{fontFamily: 'Helvetica-Bold', width: '20%', textAlign: 'center',borderTop: "1px solid #c8c8c8",
+          <Text style={{fontFamily: 'Helvetica-Bold', width: `${wid}`, textAlign: 'center',borderTop: "1px solid #c8c8c8",
             paddingTop: 3,
             paddingBottom: 3}} key={column.key}>
             {column.title}
@@ -193,54 +238,23 @@ const TableHeader = () => {
    </>
   )
 };
-// const tableData = [
-//   {
-//     producto: "Manzanas",
-//     stockMin: 50,
-//     ultimoPrecio: 1.20,
-//     stockActual: 30,
-//     compra: 20, // Faltan 20 para alcanzar 50
-//   },
-//   {
-//     producto: "Bananas",
-//     stockMin: 40,
-//     ultimoPrecio: 0.50,
-//     stockActual: 25,
-//     compra: 15, // Faltan 15 para alcanzar 40
-//   },
-//   {
-//     producto: "Naranjas",
-//     stockMin: 60,
-//     ultimoPrecio: 0.80,
-//     stockActual: 55,
-//     compra: 5, // Faltan 5 para alcanzar 60
-//   },
-//   {
-//     producto: "Peras",
-//     stockMin: 30,
-//     ultimoPrecio: 1.00,
-//     stockActual: 10,
-//     compra: 20, // Faltan 20 para alcanzar 30
-//   },
-//   {
-//     producto: "Uvas",
-//     stockMin: 25,
-//     ultimoPrecio: 2.00,
-//     stockActual: 20,
-//     compra: 5, // Faltan 5 para alcanzar 25
-//   },
-// ];
 
-const TableData = ({data}) => {
+const TableData = ({data, col}) => {
   return (
     <View style={{width: '100%'}}>
       {data.map((dataRow, index) => (
         <View key={index} style={{width: '20%',flexDirection: "row", justifyContent: "space-between", width: "100%",borderTop: "1px solid #c8c8c8",
           paddingTop: 3,
           paddingBottom: 3,}}>
-          {columns.map((column) => {
+          {col.map((column) => {
             switch (column.key) {
               case 'precioCompra':
+                return (
+                  <Text style={{width: '100%', textAlign: 'center'}} key={column.key}>
+                    {'$'+ dataRow[column.key]}
+                  </Text>
+                );
+                case 'monto':
                 return (
                   <Text style={{width: '100%', textAlign: 'center'}} key={column.key}>
                     {'$'+ dataRow[column.key]}
@@ -249,7 +263,7 @@ const TableData = ({data}) => {
                 case 'nombre':
                 return (
                   <Text style={{width: '100%', textAlign: 'center', textTransform: 'capitalize'}} key={column.key}>
-                    {dataRow[column.key]}
+                    {dataRow[column.key] ? dataRow[column.key] : 'Gabriel Leyva'}
                   </Text>
                 );
                 case 'compra':
@@ -258,6 +272,7 @@ const TableData = ({data}) => {
                     {(dataRow.stockMin - dataRow.stock).toFixed(2)+(dataRow.unidad == 'kg' ? ' Kg' : ' U')}
                   </Text>
                 );
+                
                 case 'stockMin':
                 return (
                   <Text style={{width: '100%', textAlign: 'center'}} key={column.key}>

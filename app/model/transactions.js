@@ -36,7 +36,7 @@ class TransactionModel {
     }
 
     static async getTotalVentas(fechaInicio, fechaFin) {
-        const sql = `SELECT SUM(cantidad) as totalVendido 
+        const sql = `SELECT COUNT(cantidad) as totalVendido 
                      FROM transacciones 
                      WHERE motivo = 'venta' 
                      AND fecha BETWEEN strftime('%Y-%m-%d %H:%M:%S', ?) AND strftime('%Y-%m-%d %H:%M:%S', ?)`;
@@ -66,6 +66,27 @@ try {
 } catch (error) {
     logToFile(`Error fetching top three products: ${error.message}`);
     }
+     }
+
+     static async getCancelaciones(fechaInicio, fechaFin) {
+        const sql = `SELECT V.fecha, V.monto, V.motivoCancelacion as motivo,
+        (SELECT COUNT(*) 
+        FROM ventas 
+        WHERE status = 'cancelled' 
+        AND fecha BETWEEN strftime('%Y-%m-%d %H:%M:%S', ?) 
+        AND strftime('%Y-%m-%d %H:%M:%S', ?)
+        ) as totalCancelaciones
+        FROM ventas V 
+        WHERE V.status = 'cancelled'
+        AND V.fecha BETWEEN strftime('%Y-%m-%d %H:%M:%S', ?) AND strftime('%Y-%m-%d %H:%M:%S', ?)`;
+        try {
+            const rows = await db.all(sql, [fechaInicio, fechaFin,fechaInicio, fechaFin]);
+            return {success : true , data : rows} 
+        } catch (error) {
+            logToFile(error.message)
+            return {success : false, error : error.message}
+        }
+        
      }
     }
 module.exports = TransactionModel;

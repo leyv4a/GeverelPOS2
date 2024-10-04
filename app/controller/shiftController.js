@@ -46,9 +46,8 @@ class ShiftController {
             logToFile('totalvendido' + cantidadVentas)
             const topTresProductos = await TransactionModel.getTopTres({inicio, fin: cierre});
       
-            // Calcular los gastos durante el turno
-            // const gastos = await WalletModel.getGastos(inicio, cierre);
-            // logToFile('gastos' + gastos)
+            const cancelaciones = await TransactionModel.getCancelaciones(inicio, cierre);
+         
             const totalesPorTurno = await DashboardModel.getTotalesPorTurno({inicio, fin: cierre});
 
             const productosPorComprar = await ProductModel.getProductToShop();
@@ -63,7 +62,7 @@ class ShiftController {
             }
       
             logToFile(`Shift closed for user ${usuarioId+ closeResult.message}`);
-            return res.status(200).json({ success: true ,message: closeResult.message, cantidadVentas, topTresProductos, totalesPorTurno, inicio, cierre, productosPorComprar, fondo });
+            return res.status(200).json({ success: true ,message: closeResult.message, cantidadVentas, topTresProductos, totalesPorTurno, inicio, cierre, productosPorComprar, fondo, cancelaciones });
           } catch (error) {
             logToFile(error.message);
             return res.status(500).json({ success: false, error: 'Algo salio mal...' });
