@@ -31,15 +31,15 @@ class UserController {
   static async loginUser(req, res) {
     const { user, password } = req.body;
     if (!user || !password) {
-      return res.status(400).json({ error: "Todos los campos son requeridos" });
+      return res.status(400).json({success: false, error: "Todos los campos son requeridos" });
     }
     const userData = await UserModel.login(user, password);
     if (!userData.success) {
       logToFile(`Error logging in user ${userData.error}`)
-      return res.status(500).json({ error: userData.error });
+      return res.status(404).json({success:false, error: userData.error });
     }
     logToFile(`User logged in`)
-    return res.status(200).json({ message: `Bienvenido ${userData.rows.usuario}`, user: userData.rows });
+    return res.status(200).json({ success: true,message: `Bienvenido ${userData.rows.usuario}`, user: userData.rows });
   }
 
 }

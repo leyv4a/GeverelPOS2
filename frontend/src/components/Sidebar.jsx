@@ -161,6 +161,14 @@ function UserSettings() {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  const navigate = useNavigate();
+
+  const logout = async () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('type');
+    navigate('/');
+  }
+
   const handleSetShift = (value) => {
     setShift(value);
   }
@@ -205,7 +213,6 @@ function UserSettings() {
   }
 
   const finishShift = async () => {
-  // getDate();
     try {
       onOpen();
     } catch (error) {
@@ -256,7 +263,7 @@ function UserSettings() {
           <DropdownItem onClick={shift ? finishShift : startShift} key="shift">
             {shift ? "Cerrar turno" : "Iniciar turno"}
           </DropdownItem>
-          <DropdownItem key="session" className="text-danger" color="danger">
+          <DropdownItem onClick={logout} key="session" className="text-danger" color="danger">
             Cerrar Sesion
           </DropdownItem>
         </DropdownMenu>

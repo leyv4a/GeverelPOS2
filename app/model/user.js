@@ -26,7 +26,6 @@ class UserModel {
         console.log(rows);
         return { success: true , rows: rows };
       }  
-      console.log(rows)
       return { success: false, error: 'Usuario o contraseña incorrectos'};	
     } catch (error) {
       console.log(error);

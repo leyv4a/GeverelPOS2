@@ -11,13 +11,48 @@ import {
   Button
 } from "@nextui-org/react";
 import { FaRegUserCircle, FaEye, FaEyeSlash,FaKey  } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 export default function Login() {
   const [isVisible, setIsVisible] = React.useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [usuario, setUsuario] = React.useState('');
+  const [contra, setContra] = React.useState('');
+
+  const resetData = () => {
+    setUsuario('');
+    setContra('');
+  }
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const response = await fetch("http://localhost:3001/api/login", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user: usuario, password: contra }),
+      }).then((response) => response.json());
+      if (!response.success) {
+        throw new Error(response.error);
+      }
+        localStorage.setItem('user', JSON.stringify(response.user.usuario));
+        localStorage.setItem('type', JSON.stringify(response.user.tipo));
+        navigate('/tienda');
+    } catch (error) {
+      setErrorMessage(error.message)
+    }finally{
+      setIsLoading(false);
+      resetData();
+    }
+  }
 
   const [imageSrc, setImageSrc] = React.useState('/background.png');
   const [textSrc, setTextSrc] = React.useState('¡Bienvenido!');
-  const [isLoading, setIsLoading] = React.useState(false);
 
   const images = ['/background1.png', '/background2.png','/background3.png','/background4.png','/background5.png','/background.png'];
   const text = [ 'Controla tus inventario', 'Registra tus salidas', '¡Haz tu venta mas facil!', 'Audita cualquier movimiento', 'Controla tus gastos','¡Bienvenido!'];
@@ -59,6 +94,12 @@ export default function Login() {
 //     };
 //   }, []);
 
+React.useEffect(()=>{
+  if (localStorage.getItem('user')) {
+    navigate('/tienda');
+  }
+},[])
+
   return (
     <div className="z-50 bg-slate-100 w-screen h-screen absolute top-0 left-0">
       <div className="flex w-full h-full items-center justify-evenly">
@@ -97,18 +138,24 @@ export default function Login() {
           </CardHeader>
           <Divider />
           <CardBody className="flex flex-col items-center justify-center gap-2">
-            <h1 className="text-center -mt-2 mb-2 text-lg font-bold">
+           <form className="flex w-full flex-col items-center justify-center gap-2" onSubmit={(e)=>handleLogin(e)}>
+           <h1 className="text-center -mt-2 mb-2 text-lg font-bold">
               Inicia sesion
             </h1>
+            <h2 className="text-red-700 bg-red-100 w-full text-center rounded-md">{errorMessage}</h2>
             <Input
               startContent={<FaRegUserCircle />}
               type="text"
+              value={usuario}
+              onChange={(e)=>{setUsuario(e.target.value)}}
               placeholder="Ingresa tu usuario"
               variant="bordered"
               radius="sm"
               size="md"
             />
             <Input
+            value={contra}
+            onChange={(e)=>{setContra(e.target.value)}}
             startContent={<FaKey />}
               variant="bordered"
               placeholder="Ingresa tu contraseña"
@@ -130,7 +177,8 @@ export default function Login() {
               }
               type={isVisible ? "text" : "password"}
             />
-            <Button isLoading className="w-full text-white font-bold " radius="sm" color="success" variant="solid" >Entrando...</Button>
+            <Button isLoading={isLoading} type="submit" className="w-full text-white font-bold " radius="sm" color="success" variant="solid" >Entrar</Button>
+           </form>
           </CardBody>
           <Divider />
           <CardFooter>

@@ -23,7 +23,7 @@ function App() {
       <Suspense fallback={<Loader/>}>
         <Routes>
           <Route path="/" element={<Login/>}/>
-          <Route path="/pos" element={<Tienda/>}/>
+          <Route path="/tienda" element={<Tienda/>}/>
           <Route path="/panel" element={<Panel/>}/>
           <Route  path="/inventario/*" element={<Inventario/>}/>
           <Route path="/monedero/*" element={<Monedero/>}/>
