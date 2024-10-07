@@ -10,6 +10,8 @@ const DashboardController = require('../controller/dashboardController');
 const TestController = require('../controller/testController');
 const ShiftController = require('../controller/shiftController');
 
+router.post('/login', UserController.loginUser)
+
 router.post('/dotest', TestController.doTest);
 router.get('/gettest', TestController.getTest);
 

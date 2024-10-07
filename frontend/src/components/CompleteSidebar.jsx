@@ -20,7 +20,7 @@ export default function CompleteSidebar () {
     <Sidebar >
     <div className='grid grid-cols-1 h-full content-between' >
       <div>
-        <SidebarItem active={location.pathname == '/'} text={"Tienda"} icon={<IoStorefront size={23}/>} buttonRef={tiendaRef} functionKey={'F1'} to={'/'} />  
+        <SidebarItem active={location.pathname == '/tienda'} text={"Tienda"} icon={<IoStorefront size={23}/>} buttonRef={tiendaRef} functionKey={'F1'} to={'/'} />  
         <SidebarItem active={location.pathname == '/panel'} text={"Panel"} icon={<IoStatsChart size={23}/>} buttonRef={panelRef} functionKey={'F2'} to={'/panel'}/>  
         <SidebarItem active={location.pathname.startsWith('/inventario')} text={"Inventario"} icon={<FaWarehouse size={23}/>} buttonRef={inventarioRef} functionKey={'F3'} to={'/inventario'}/>  
         <SidebarItem active={location.pathname.startsWith('/monedero')} text={"Monedero"} icon={<FaWallet size={23}/>} buttonRef={monederoRef} functionKey={'F4'} to={'/monedero'} />  

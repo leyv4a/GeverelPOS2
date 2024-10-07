@@ -15,6 +15,23 @@ class UserModel {
     } catch (error) {
         return false;
     }
+    
+ 
+  }
+  static async login(user, password){
+     const sql = "SELECT usuario, tipo FROM usuario WHERE usuario = ? AND password = ?";
+    try {
+      const rows = await db.get(sql, [user, password]);
+      if (rows) {
+        console.log(rows);
+        return { success: true , rows: rows };
+      }  
+      console.log(rows)
+      return { success: false, error: 'Usuario o contraseña incorrectos'};	
+    } catch (error) {
+      console.log(error);
+      return { success: false, error: error.message };	
+    }
   }
 }
 
