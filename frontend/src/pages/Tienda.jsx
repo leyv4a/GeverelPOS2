@@ -350,7 +350,7 @@ export default function Tienda() {
     return <NoShift/>
   }
   return (
-    <div className="w-full h-screen p-5 bg-slate-100">
+    <div className="w-full h-screen p-5 ">
       <h2 className="text-4xl flex gap-2 mb-5">
         <FaCashRegister /> PUNTO DE VENTA
       </h2>
@@ -433,7 +433,7 @@ import { FaStoreSlash } from "react-icons/fa";
 
 const NoShift = () => {
   return(
-    <div className='flex flex-col items-center justify-center w-full h-screen bg-slate-100'>
+    <div className='flex flex-col items-center justify-center w-full h-screen '>
       <div className="text-slate-300 flex w-full flex-col items-center" >
       <FaStoreSlash size={200}/>
       <h2 className="text-3xl font-bold ">No hay ningun turno abierto...</h2>

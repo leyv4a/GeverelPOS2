@@ -73,7 +73,7 @@ export default function Panel() {
     return <Loader/>
   }
   return (
-    <div className="px-5 w-full min-h-screen h-screen my-auto flex flex-col items-center justify-center bg-slate-100">
+    <div className="px-5 w-full min-h-screen h-screen my-auto flex flex-col items-center justify-center ">
       <div className="w-full h-[10%] text-3xl flex items-center">
         Registro Mensual {totales[0].Mes}
       </div>

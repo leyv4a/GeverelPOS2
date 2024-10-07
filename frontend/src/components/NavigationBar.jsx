@@ -1,7 +1,7 @@
 import React from 'react'
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Button} from "@nextui-org/react";
 import {Link} from 'react-router-dom';
-export default function NavigationBar({items, onSectionChange, currentSection}) {
+export default function NavigationBar({items, onSectionChange}) {
 
  const buttonRef = React.useRef(null);
 
@@ -21,14 +21,15 @@ export default function NavigationBar({items, onSectionChange, currentSection}) 
     };
   }, []);
   return (
-    <Navbar 
+    <Navbar
+    className='  justify-start py-7 max-h-[4rem]'
     isBordered
-    maxWidth='full'>
-    <NavbarContent className="hidden sm:flex gap-4 " justify="start">
+>
+    <NavbarContent className="sm:max-w-[70%] h-auto ">
      {items.map((item, key) => (
          <NavbarItem key={key}>
           <Link to={item.section}>
-            <Button tabIndex="-1" disableRipple color='foreground'  className={` cursor-pointer ${currentSection === item.section ? 'font-bold ' : ''}`}
+            <Button   tabIndex="-1" disableRipple color='foreground' className={` cursor-pointer ${item.isActive ? 'font-bold bg-[#f4f4f5] rounded-lg my-1' : ''}`}
             onPress={()=>onSectionChange(item.section)}
             ref={item.section === 'agregarProducto' ? buttonRef : null}>
               {item.name}

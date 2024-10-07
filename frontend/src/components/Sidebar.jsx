@@ -105,8 +105,8 @@ export function SidebarItem({
       transition-colors group
       ${
         active
-          ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
-          : "hover:bg-foreground hover:text-background text-gray-600"
+          ? "bg-foreground text-background"
+          : "hover:bg-foreground hover:text-background text-foreground"
       }
       `}
       tabIndex="-1"

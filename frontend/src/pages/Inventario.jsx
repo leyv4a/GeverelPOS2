@@ -5,41 +5,42 @@ import NavigationBar from '../components/NavigationBar';
  import RegistrarEntrada from '../inventario/RegistrarEntrada';
  import RegistrarSalida from '../inventario/RegistrarSalida';
 
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 
 
 export default function Inventario() {
 
-  const [section, setSection] = useState('agregarProducto');
 
-  const handleSectionChange = (section) => {
-    setSection(section);
-  };
+  const location = useLocation();
 
   const items = [
     {
       name: 'Productos',
-      section: 'agregarProducto'
+      section: 'agregarProducto',
+      isActive: location.pathname.startsWith('/inventario/agregarProducto')
     },
     {
       name: 'Categorias',
-      section: 'agregarCategoria'
+      section: 'agregarCategoria',
+      isActive: location.pathname.startsWith('/inventario/agregarCategoria')
     },
     {
       name: 'Entradas',
-      section:'registrarEntrada'
+      section:'registrarEntrada',
+      isActive: location.pathname.startsWith('/inventario/registrarEntrada')
     },
     {
       name: 'Salidas',
-      section:'registrarSalida'
+      section:'registrarSalida',
+      isActive: location.pathname.startsWith('/inventario/registrarSalida')
     }
 
   ]
 
   
   return (
-    <div className='w-full h-screen bg-slate-100'>
-      <NavigationBar items={items} currentSection={section} onSectionChange={handleSectionChange} />
+    <div className='w-full h-screen'>
+      <NavigationBar items={items} />
         <Routes>
           <Route path="/" element={<Navigate to="agregarProducto" replace />} />
           <Route path="agregarProducto" element={<AgregarProductos/>} />

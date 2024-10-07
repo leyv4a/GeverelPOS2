@@ -8,6 +8,7 @@ import {
   Link,
   Image,
   Input,
+  Button
 } from "@nextui-org/react";
 import { FaRegUserCircle, FaEye, FaEyeSlash,FaKey  } from "react-icons/fa";
 export default function Login() {
@@ -16,20 +17,32 @@ export default function Login() {
 
   const [imageSrc, setImageSrc] = React.useState('/background.png');
   const [textSrc, setTextSrc] = React.useState('¡Bienvenido!');
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const images = ['/background1.png', '/background2.png','/background3.png','/background4.png','/background5.png','/background.png'];
   const text = [ 'Controla tus inventario', 'Registra tus salidas', '¡Haz tu venta mas facil!', 'Audita cualquier movimiento', 'Controla tus gastos','¡Bienvenido!'];
   let imageIndex = 0;
+  let textIndex = 0;
 
   React.useEffect(() => {
     const interval = setInterval(() => {
       imageIndex = (imageIndex + 1) % images.length; // Cambiar al siguiente src cada 1.5 segundos
       setImageSrc(images[imageIndex]);
-      setTextSrc(text[imageIndex]);
-    },1300);
+    },900);
 
     return () => clearInterval(interval); // Limpiar el intervalo cuando el componente se desmonta
   }, []);
+  
+//   React.useEffect(() => {
+//     const interval = setInterval(() => {
+//         textIndex = (textIndex + 1) % text.length; // Cambiar al siguiente src cada 1.5 segundos
+//       setTextSrc(text[imageIndex]);
+
+//     },950);
+
+//     return () => clearInterval(interval); // Limpiar el intervalo cuando el componente se desmonta
+//   }, []);
+
 
 //   const handleAnimationIteration = () => {
 //     imageIndex = (imageIndex + 1) % images.length; // Cambiar al siguiente src
@@ -57,7 +70,7 @@ export default function Login() {
             height={800}
             />
             </Card>
-            <h2 className="text-6xl font-bold text-center -mt-24">{textSrc}</h2>
+            {/* <h2 className="text-5xl font-bold text-center -mt-24">{textSrc}</h2> */}
         </div>
         <Card radius="sm" isBlurred className="max-w-[400px] w-[400px]">
           <CardHeader className="flex gap-3">
@@ -117,6 +130,7 @@ export default function Login() {
               }
               type={isVisible ? "text" : "password"}
             />
+            <Button isLoading className="w-full text-white font-bold " radius="sm" color="success" variant="solid" >Entrando...</Button>
           </CardBody>
           <Divider />
           <CardFooter>

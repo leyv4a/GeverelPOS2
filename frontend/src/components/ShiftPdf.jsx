@@ -241,7 +241,7 @@ const TableData = ({data, col}) => {
   return (
     <View style={{width: '100%'}}>
       {data.map((dataRow, index) => (
-        <View key={index} style={{width: '20%',flexDirection: "row", justifyContent: "space-between", width: "100%",borderTop: "1px solid #c8c8c8",
+        <View key={index} style={{flexDirection: "row", justifyContent: "space-between", width: "100%",borderTop: "1px solid #c8c8c8",
           paddingTop: 3,
           paddingBottom: 3,}}>
           {col.map((column) => {
