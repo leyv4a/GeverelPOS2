@@ -36,6 +36,8 @@ router.get('/product', ProductController.getAllProducts);
 router.post('/product', ProductController.createProduct);
 router.delete('/product/:id', ProductController.deleteProductById);
 router.put('/product', ProductController.updateProductById);
+router.get('/prices', ProductController.getAllPrices)
+router.post('/prices', ProductController.changeProductsPrices)
 router.get('/product/:code', ProductController.getProductByCode);
 router.get('/weight', ProductController.getWeight);
 

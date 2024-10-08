@@ -13,6 +13,37 @@ class ProductController {
         .json({ error: "Error obteniendo productos de la base de datos" });
     }
   }
+
+  static async getAllPrices(req, res) {
+    try {
+      const products = await ProductModel.getPrices();
+      res.status(200).json(products);
+    } catch (error) {
+      logToFile(error.message);
+      res
+        .status(500)  
+        .json({ error: "Error obteniendo precios de los productos" });
+    }
+  }
+
+  static async changeProductsPrices(req, res){
+   try {
+    const {list} = req.body
+    if (!list || !Array.isArray(list) || list.length === 0) {
+      return res.status(400).json({ error: 'La lista esta vacia' });
+    }
+    const response = await ProductModel.changePrice(list);
+    if (!response.success) {
+      logToFile(response.error);
+      return res.status(400).json({success:false, error: response.error });
+    }
+    logToFile('Lista de precios actualizada');
+    res.status(201).json({ success: true , message: response.message });
+   } catch (error) {
+    logToFile(error.message)
+    return res.status(500).json({success:false,  error: error.message });
+   }
+  }
   
   static async getProductByCode(req, res){
     try {

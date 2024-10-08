@@ -3,7 +3,7 @@ const logToFile = require('../utils/logger');
 const sumarSubtotales = require('../utils/maths');
 
 class PosModel {
-    static async newEntry(productoId,tipo,motivo, cantidad, fecha , precioVenta, precioCompra) {
+    static async newEntry(productoId,tipo,motivo, cantidad, fecha , precioCompra) {
         try {
             await db.run('BEGIN TRANSACTION');
             logToFile('Transaccion empezada');
@@ -13,8 +13,9 @@ class PosModel {
             await db.run(sqlProduct, [productoId,tipo,motivo, cantidad, fecha]);
             logToFile('Transaccion agregada');
             //Actualizar stock de productos
-            const sqlStock = "UPDATE producto SET stock = stock + ?, precioVenta = ?, precioCompra = ?  WHERE id =?"
-            await db.run(sqlStock, [cantidad,precioVenta, precioCompra, productoId]);
+            const sqlStock = "UPDATE producto SET stock = stock + ?, precioCompra = ?  WHERE id =?"
+      
+            await db.run(sqlStock, [cantidad, precioCompra, productoId]);
             logToFile('Stock actualizado');
             await db.run('COMMIT');
             logToFile('Transaccion completada');

@@ -1,17 +1,17 @@
 
-import NavigationBar from '../components/NavigationBar';
- import AgregarProductos from '../inventario/AgregarProductos';
- import AgregarCategorias from '../inventario/AgregarCategorias';
- import RegistrarEntrada from '../inventario/RegistrarEntrada';
- import RegistrarSalida from '../inventario/RegistrarSalida';
-
+import React, { Suspense } from 'react';
+// Lazy loading de los componentes
+const AgregarProductos = React.lazy(() => import('../inventario/AgregarProductos'));
+const AgregarCategorias = React.lazy(() => import('../inventario/AgregarCategorias'));
+const RegistrarEntrada = React.lazy(() => import('../inventario/RegistrarEntrada'));
+const RegistrarSalida = React.lazy(() => import('../inventario/RegistrarSalida'));
 import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
-
 import { BiSolidCategory } from "react-icons/bi";
 import { FaTag } from "react-icons/fa6";
 import { RiInboxUnarchiveFill } from "react-icons/ri";
 import { RiInboxArchiveFill } from "react-icons/ri";
 import LinkBar from '../components/NaviBar';
+import Loader from '../components/Loader';
 
 
 export default function Inventario() {
@@ -52,19 +52,19 @@ export default function Inventario() {
     }
 
   ]
-
   
   return (
     <div className='w-full h-screen'>
-      {/* <NavigationBar items={items} /> */}
       <LinkBar items={items}/>
+      <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<Navigate to="agregarProducto" replace />} />
-          <Route path="agregarProducto" element={<AgregarProductos/>} />
+          <Route path="agregarProducto" element={<AgregarProductos />} />
           <Route path="agregarCategoria" element={<AgregarCategorias />} />
           <Route path="registrarEntrada" element={<RegistrarEntrada />} />
           <Route path="registrarSalida" element={<RegistrarSalida />} />
         </Routes>
+      </Suspense>
     </div>
   )
 }

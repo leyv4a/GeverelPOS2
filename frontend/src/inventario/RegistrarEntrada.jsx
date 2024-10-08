@@ -16,12 +16,6 @@ export default function RegistrarEntrada() {
   const [productoId, setProductoId] = React.useState("");
   //Guarda el precio de inversion para los calculos futuros
   const [inversion, setInversion] = React.useState("");
-  //Guarda el margen en caso ser ingresado por el radiobutton
-  const [margen, setMargen] = React.useState("");
-  //Guarda el margen ingresado manualmente para hacer los calculos
-  const [margenManual, setMargenManual] = React.useState("");
-  //Guarda el precio de venta en caso de ingresarse manualmente
-  const [precioVentaManual, setPrecioVentaManual] = React.useState("");
 
   const [isButtonLoading, setIsButtonLoading] = React.useState(false);
   const [isButtonLoading2, setIsButtonLoading2] = React.useState(false);
@@ -61,23 +55,6 @@ export default function RegistrarEntrada() {
     resetFields();
   };
 
-  const calculatePrecioVenta = async () => {
-    try {
-      let calculatedPrecioVenta = 0;
-
-      if (precioVentaManual > 0) {
-        calculatedPrecioVenta = precioVentaManual;
-      } else if (margenManual) {
-        calculatedPrecioVenta =
-          inversion * (1 + parseFloat(margenManual) / 100);
-      } else if (margen && margen !== "manual") {
-        calculatedPrecioVenta = inversion * (1 + parseFloat(margen) / 100);
-      }
-      return calculatedPrecioVenta;
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
 
   const resetFields = async () => {
     setProducto("");
@@ -87,9 +64,6 @@ export default function RegistrarEntrada() {
     setMotivo("");
     setCantidad("");
     setInversion("");
-    setMargen("");
-    setMargenManual("");
-    setPrecioVentaManual("");
     setIsManual(true);
     setIsButtonLoading(false);
     setIsButtonLoading2(false);
@@ -100,7 +74,6 @@ export default function RegistrarEntrada() {
     e.preventDefault();
     setIsButtonLoading2(true);
     try {
-      const calculatedPrecioVenta = await calculatePrecioVenta(); // Espera a que se resuelva la promesa
       // productoId,tipo,motivo, cantidad, fecha , precioVenta, precioCompra
       const response = await fetch("http://localhost:3001/api/pos/entry", {
         method: "POST",
@@ -114,7 +87,6 @@ export default function RegistrarEntrada() {
           motivo,
           cantidad,
           fecha,
-          precioVenta: calculatedPrecioVenta,
           precioCompra: inversion,
         }),
       });
@@ -215,11 +187,7 @@ export default function RegistrarEntrada() {
       setMotivo(value);
     }
   };
-  const handleRadioKeyDown2 = (event, value) => {
-    if (event.key === "Enter") {
-      setMargen(value);
-    }
-  };
+  
 
   const columns = [
     // { uid: 'id', nombre: 'Id', sortable: true },
@@ -424,79 +392,9 @@ export default function RegistrarEntrada() {
           ) : (
             ""
           )}
-          {motivo != "" ? (
-            <RadioGroup
-              label="Margen de ganancia"
-              value={margen}
-              onValueChange={setMargen}
-              orientation="horizontal"
-              size="sm"
-            >
-              <Radio
-                value="15"
-                onKeyDown={(e) => handleRadioKeyDown2(e, "15")}
-                tabIndex="0"
-              >
-                15%
-              </Radio>
-              <Radio
-                value="30"
-                onKeyDown={(e) => handleRadioKeyDown2(e, "30")}
-                tabIndex="0"
-              >
-                30%
-              </Radio>
-              <Radio
-                value="50"
-                onKeyDown={(e) => handleRadioKeyDown2(e, "50")}
-                tabIndex="0"
-              >
-                50%
-              </Radio>
-              <Radio
-                value="manual"
-                onKeyDown={(e) => handleRadioKeyDown2(e, "manual")}
-                tabIndex="0"
-              >
-                Manual
-              </Radio>
-            </RadioGroup>
-          ) : (
-            ""
-          )}
-          {margen === "manual" ? (
-            <div className="flex gap-3 items-center">
-              <Input
-                isDisabled={precioVentaManual != "" ? true : false}
-                isRequired
-                size="sm"
-                value={margenManual}
-                onChange={(e) =>
-                  setMargenManual(e.target.value.replace(/[^0-9.]/g, ""))
-                }
-                variant="underlined"
-                type="text"
-                maxLength={4}
-                label="Margen"
-              />
-              <p className="mx-4">ó</p>
-              <Input
-                isDisabled={margenManual != "" ? true : false}
-                isRequired
-                size="sm"
-                value={precioVentaManual}
-                onChange={(e) =>
-                  setPrecioVentaManual(e.target.value.replace(/[^0-9.]/g, ""))
-                }
-                variant="underlined"
-                label="Precio"
-              />
-            </div>
-          ) : (
-            ""
-          )}
+         
           <div className="flex gap-2">
-            {margen != "" || margenManual != "" ? (
+            {motivo != ""  ? (
               <Button
                 isLoading={isButtonLoading2}
                 size="md"

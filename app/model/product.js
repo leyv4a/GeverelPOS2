@@ -14,6 +14,38 @@ class ProductModel {
     return rows;
   }
 
+  static async getPrices(){
+    const sql = `SELECT P.id, P.nombre, P.precioVenta, P.precioCompra FROM producto P`
+    const rows = await db.all(sql);
+    return rows;
+  }
+
+  static async changePrice(list){
+    try {
+      await db.run('BEGIN TRANSACTION')
+      logToFile('Transaccion empezada')
+      for (const item of list) {
+        const {id, nuevoPrecio} = item;
+        const sql = `UPDATE producto SET precioVenta = ? WHERE id = ?`
+        await db.run(sql, [nuevoPrecio, id])
+        logToFile(`Precio actualizado para producto ${id}`)
+      }
+      await db.run('COMMIT')
+      logToFile('Transaccion completada')
+      return { success: true, message: 'Lista de precios actualizada con exito'}
+    } catch (error) {
+      logToFile(error.message);
+      try {
+          await db.run('ROLLBACK');
+          logToFile('Transaccion cancelada');
+          return { success: false, error: error.message};
+          } catch (error) {
+           logToFile(error.message);
+           return { success: false, error: error.message}
+      }
+    }
+  }
+
   static async getByCode(code) {
     const sql = `SELECT producto.id, producto.nombre, producto.descripcion,categoria.nombre AS categoria ,producto.codigo , producto.unidad ,producto.stock, producto.stockMin, producto.precioVenta, producto.precioCompra, producto.categoriaId, categoria.inicial
         FROM producto

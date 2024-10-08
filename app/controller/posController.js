@@ -2,21 +2,23 @@ const PosModel = require('../model/pos');
 const logToFile = require("../utils/logger");
 
 class PosController {
-    // productoId,tipo,motivo, cantidad, fecha , precioVenta, precioCompra
+    // productoId,tipo,motivo, cantidad, fecha , precioCompra
     static async CreateTransactionEntry (req, res) {
         try {
-            const {productoId,tipo,motivo, cantidad, fecha , precioVenta, precioCompra} = req.body;
-            if (!productoId || !tipo || !motivo || !cantidad || !fecha || !precioVenta || !precioCompra) {
-                res.status(400).json({ error: 'Todos los campos son requeridos' });
+            const {productoId,tipo,motivo, cantidad, fecha, precioCompra} = req.body;
+            if (!productoId || !tipo || !motivo || !cantidad || !fecha ||  !precioCompra) {
+                return res.status(400).json({ error: 'Todos los campos son requeridos' });
+                
             }
-            const response = await PosModel.newEntry(productoId,tipo.toLowerCase(),motivo.toLowerCase(), cantidad, fecha, precioVenta, precioCompra);
+            const response = await PosModel.newEntry(productoId,tipo.toLowerCase(),motivo.toLowerCase(), cantidad, fecha, precioCompra);
             if (!response.success) {
                 logToFile(response.message);
                 return res.status(500).json({ error: response.message });
             }
             logToFile('Transaccion creada');
-            res.status(201).json({ message: response.message });
+            return res.status(201).json({ message: response.message });
         } catch (error) {
+            console.log(error)
             logToFile(error.message);
             res.status(500).json({ error: "Error en el servidor" });
         }
