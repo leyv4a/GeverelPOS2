@@ -1,4 +1,4 @@
-import {useState} from 'react'
+
 import NavigationBar from '../components/NavigationBar';
  import AgregarProductos from '../inventario/AgregarProductos';
  import AgregarCategorias from '../inventario/AgregarCategorias';
@@ -7,31 +7,47 @@ import NavigationBar from '../components/NavigationBar';
 
 import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 
+import { BiSolidCategory } from "react-icons/bi";
+import { FaTag } from "react-icons/fa6";
+import { RiInboxUnarchiveFill } from "react-icons/ri";
+import { RiInboxArchiveFill } from "react-icons/ri";
+import LinkBar from '../components/NaviBar';
+
 
 export default function Inventario() {
 
+  const iconClasses = "text-xl text-default-500 pointer-events-none flex-shrink-0";
 
   const location = useLocation();
 
   const items = [
     {
+      icon: <FaTag className={iconClasses}/>,
+     
+      desc: 'Administra tus productos',
       name: 'Productos',
-      section: 'agregarProducto',
+      to: 'agregarProducto',
       isActive: location.pathname.startsWith('/inventario/agregarProducto')
     },
     {
+      icon: <BiSolidCategory className={iconClasses}/>,
       name: 'Categorias',
-      section: 'agregarCategoria',
+      desc: "Administra tus categorias",
+      to: 'agregarCategoria',
       isActive: location.pathname.startsWith('/inventario/agregarCategoria')
     },
     {
+      icon: <RiInboxArchiveFill className={iconClasses}/>,
       name: 'Entradas',
-      section:'registrarEntrada',
+      desc: "Registra tus entradas",
+      to:'registrarEntrada',
       isActive: location.pathname.startsWith('/inventario/registrarEntrada')
     },
     {
+      icon: <RiInboxUnarchiveFill className={iconClasses}/>,
       name: 'Salidas',
-      section:'registrarSalida',
+      desc : "Registra tus salidas", 
+      to:'registrarSalida',
       isActive: location.pathname.startsWith('/inventario/registrarSalida')
     }
 
@@ -40,7 +56,8 @@ export default function Inventario() {
   
   return (
     <div className='w-full h-screen'>
-      <NavigationBar items={items} />
+      {/* <NavigationBar items={items} /> */}
+      <LinkBar items={items}/>
         <Routes>
           <Route path="/" element={<Navigate to="agregarProducto" replace />} />
           <Route path="agregarProducto" element={<AgregarProductos/>} />

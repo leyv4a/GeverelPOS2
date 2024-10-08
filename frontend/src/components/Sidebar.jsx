@@ -10,6 +10,18 @@ const SidebarContext = createContext();
 export default function Sidebar({ children }) {
   const [expanded, setExpanded] = useState(false);
 
+  const handleExpanded = () => {
+    setExpanded(!expanded);
+    localStorage.setItem('sidebar', !expanded);
+  }
+
+  useEffect(()=> {
+    if (localStorage.getItem('sidebar') == 'true') {
+      setExpanded(true);
+    }
+  },[])
+
+
   return (
     <aside className="h-screen ">
       <nav className="h-full flex flex-col bg-white border-r shadow-sm">
@@ -24,7 +36,7 @@ export default function Sidebar({ children }) {
             alt="gevpoint"
           />
           <button
-            onClick={() => setExpanded((curr) => !curr)}
+            onClick={() => handleExpanded()}
             className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100"
           >
             {expanded ? <FaChevronLeft /> : <FaChevronRight />}

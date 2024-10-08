@@ -51,48 +51,7 @@ export default function Login() {
     }
   }
 
-  const [imageSrc, setImageSrc] = React.useState('/background.png');
-  const [textSrc, setTextSrc] = React.useState('¡Bienvenido!');
 
-  const images = ['/background1.png', '/background2.png','/background3.png','/background4.png','/background5.png','/background.png'];
-  const text = [ 'Controla tus inventario', 'Registra tus salidas', '¡Haz tu venta mas facil!', 'Audita cualquier movimiento', 'Controla tus gastos','¡Bienvenido!'];
-  let imageIndex = 0;
-  let textIndex = 0;
-
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      imageIndex = (imageIndex + 1) % images.length; // Cambiar al siguiente src cada 1.5 segundos
-      setImageSrc(images[imageIndex]);
-    },900);
-
-    return () => clearInterval(interval); // Limpiar el intervalo cuando el componente se desmonta
-  }, []);
-  
-//   React.useEffect(() => {
-//     const interval = setInterval(() => {
-//         textIndex = (textIndex + 1) % text.length; // Cambiar al siguiente src cada 1.5 segundos
-//       setTextSrc(text[imageIndex]);
-
-//     },950);
-
-//     return () => clearInterval(interval); // Limpiar el intervalo cuando el componente se desmonta
-//   }, []);
-
-
-//   const handleAnimationIteration = () => {
-//     imageIndex = (imageIndex + 1) % images.length; // Cambiar al siguiente src
-//     setImageSrc(images[imageIndex]);
-//     setTextSrc(text[imageIndex]);
-//   };
-
-//   React.useEffect(() => {
-//     const cardElement = document.getElementById('bounceCard');
-//     cardElement.addEventListener('animationiteration', handleAnimationIteration);
-    
-//     return () => {
-//       cardElement.removeEventListener('animationiteration', handleAnimationIteration);
-//     };
-//   }, []);
 
 React.useEffect(()=>{
   if (localStorage.getItem('user')) {
@@ -101,17 +60,13 @@ React.useEffect(()=>{
 },[])
 
   return (
-    <div className="z-50 bg-slate-100 w-screen h-screen absolute top-0 left-0">
-      <div className="flex w-full h-full items-center justify-evenly">
+    <div className="z-50  bg-background  w-screen h-screen absolute top-0 left-0">
+     <div className="w-full h-full relative">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r via-yellow-300 from-red-600 to-emerald-600">
+
+        </div>
+        <div className="absolute backdrop-blur-sm flex w-full h-full items-center justify-center">
        <div>
-       <Card id="bounceCard" className='animate-bounce' radius='sm' isBlurred>
-            <Image
-            src={imageSrc}
-            width={800}
-            height={800}
-            />
-            </Card>
-            {/* <h2 className="text-5xl font-bold text-center -mt-24">{textSrc}</h2> */}
         </div>
         <Card radius="sm" isBlurred className="max-w-[400px] w-[400px]">
           <CardHeader className="flex gap-3">
@@ -138,7 +93,7 @@ React.useEffect(()=>{
           </CardHeader>
           <Divider />
           <CardBody className="flex flex-col items-center justify-center gap-2">
-           <form className="flex w-full flex-col items-center justify-center gap-2" onSubmit={(e)=>handleLogin(e)}>
+           <form autoComplete="false"  className="flex w-full flex-col items-center justify-center gap-2" onSubmit={(e)=>handleLogin(e)}>
            <h1 className="text-center -mt-2 mb-2 text-lg font-bold">
               Inicia sesion
             </h1>
@@ -192,6 +147,7 @@ React.useEffect(()=>{
           </CardFooter>
         </Card>
       </div>
+     </div>
     </div>
   );
 }
