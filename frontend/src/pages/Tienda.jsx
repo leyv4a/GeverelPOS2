@@ -5,10 +5,9 @@ import TicketPreview from "../components/TicketPreview";
 import { Input, Button } from "@nextui-org/react";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import ProductTable from "../components/ProductTable";
-import {CheckPrice as ChecarPrecioComponente} from "../components/CheckPrice";
+import { CheckPrice as ChecarPrecioComponente } from "../components/CheckPrice";
 
 export default function Tienda() {
-
   const [fecha, setFecha] = React.useState("");
 
   const [carritoItems, addCarritoItems] = React.useState([]);
@@ -61,7 +60,7 @@ export default function Tienda() {
           return;
         }
 
-        if(precioVenta == undefined || precioVenta == null){
+        if (precioVenta == undefined || precioVenta == null) {
           toast.error("El producto no tiene entradas", {
             bodyClassName: "text-foreground",
           });
@@ -90,7 +89,7 @@ export default function Tienda() {
       }
     } catch (error) {
       console.log(error);
-    }finally{
+    } finally {
       setSelectedKeys("");
       resetFields();
     }
@@ -111,20 +110,23 @@ export default function Tienda() {
     if (unidad == "kg") {
       return;
     } else {
-      nuevaCantidad = Number(nuevaCantidad); // Asegúrate de que sea un número
-      if (isNaN(nuevaCantidad)) {
+      // Asegúrate de que sea un número positivo con decimales
+      const cantidadNumerica = parseFloat(nuevaCantidad);
+
+      if (isNaN(cantidadNumerica) || cantidadNumerica < 0) {
         toast.error("La cantidad debe ser un número positivo", {
           bodyClassName: "text-foreground",
         });
         return;
       }
+
       addCarritoItems((prevItems) => {
         const nuevosItems = prevItems.map((item) => {
           if (item.id === id) {
-            const nuevoSubtotal = item.precioVenta * nuevaCantidad;
+            const nuevoSubtotal = item.precioVenta * cantidadNumerica;
             return {
               ...item,
-              cantidad: nuevaCantidad,
+              cantidad: cantidadNumerica, // Usar el valor numérico con decimales
               subtotal: nuevoSubtotal,
             };
           }
@@ -147,9 +149,9 @@ export default function Tienda() {
         body: JSON.stringify({
           fecha: fecha,
           total: total,
-          motivoCancelacion: "Venta cancelada por el usuario"
+          motivoCancelacion: "Venta cancelada por el usuario",
         }),
-      })
+      });
       if (!response.ok) throw new Error("Error al cancelar la venta");
       const result = await response.json();
       toast.info(result.message, {
@@ -162,7 +164,7 @@ export default function Tienda() {
         bodyClassName: "text-foreground",
       });
     }
-  }
+  };
 
   const handleProcesar = async () => {
     console.log(carritoItems);
@@ -227,7 +229,6 @@ export default function Tienda() {
     }
   };
 
-
   const getProductByCode = async () => {
     try {
       if (codigo === "") throw new Error("Todos los campos son necesarios");
@@ -259,8 +260,8 @@ export default function Tienda() {
           }
           cantidad = parseFloat(cantidad2);
           console.log(cantidad);
-        } 
-      }else {
+        }
+      } else {
         cantidad = 1;
       }
 
@@ -310,17 +311,6 @@ export default function Tienda() {
     getProducts();
   }, []);
 
-
-  const inputRef = React.useRef(null);
-
-  React.useEffect(
-    () => {
-      inputRef?.current?.focus();
-    },
-    [carritoItems.length],
-    []
-  );
-
   React.useEffect(() => {
     const date = new Date();
     const formattedDate =
@@ -339,15 +329,14 @@ export default function Tienda() {
   }, [codigo]);
 
   const [isShiftStarted, setIsShiftStarted] = React.useState(false);
-  React.useEffect(()=>{
-    if (localStorage.getItem('shift') == 'true') {
+  React.useEffect(() => {
+    if (localStorage.getItem("shift") == "true") {
       setIsShiftStarted(true);
     }
-  },[])
+  }, []);
 
-  
   if (!isShiftStarted) {
-    return <NoShift/>
+    return <NoShift />;
   }
   return (
     <div className="w-full h-screen p-5 ">
@@ -361,7 +350,6 @@ export default function Tienda() {
           onSubmit={(e) => handleSearch(e)}
         >
           <Input
-            ref={inputRef}
             type="text"
             label="Codigo"
             color="default"
@@ -381,7 +369,11 @@ export default function Tienda() {
           >
             <FaPlus />
           </Button>
-          <ChecarPrecioComponente CarritoAdd={handleCarritoAdd} resetFields={resetFields} codigo={codigo}/>
+          <ChecarPrecioComponente
+            CarritoAdd={handleCarritoAdd}
+            resetFields={resetFields}
+            codigo={codigo}
+          />
         </form>
         <Autocomplete
           defaultItems={products}
@@ -394,7 +386,9 @@ export default function Tienda() {
           size="sm"
         >
           {(product) => (
-            <AutocompleteItem key={product.codigo} className="capitalize">{product.nombre +" "+product.codigo}</AutocompleteItem>
+            <AutocompleteItem key={product.codigo} className="capitalize">
+              {product.nombre + " " + product.codigo}
+            </AutocompleteItem>
           )}
         </Autocomplete>
       </div>
@@ -418,7 +412,7 @@ export default function Tienda() {
         </div>
       </div>
       <div>
-      <ToastContainer
+        <ToastContainer
           position="bottom-right"
           autoClose="2000"
           bodyClassName={() => "text-foreground"}
@@ -432,18 +426,18 @@ export default function Tienda() {
 import { FaStoreSlash } from "react-icons/fa";
 
 const NoShift = () => {
-  return(
-    <div className='flex flex-col items-center justify-center w-full h-screen '>
-      <div className="text-slate-300 flex w-full flex-col items-center" >
-      <FaStoreSlash size={200}/>
-      <h2 className="text-3xl font-bold ">No hay ningun turno abierto...</h2>
+  return (
+    <div className="flex flex-col items-center justify-center w-full h-screen ">
+      <div className="text-slate-300 flex w-full flex-col items-center">
+        <FaStoreSlash size={200} />
+        <h2 className="text-3xl font-bold ">No hay ningun turno abierto...</h2>
       </div>
       <ToastContainer
-          position="bottom-right"
-          autoClose="2000"
-          bodyClassName={() => "text-foreground"}
-          draggable
-        />
+        position="bottom-right"
+        autoClose="2000"
+        bodyClassName={() => "text-foreground"}
+        draggable
+      />
     </div>
-  )
-}
+  );
+};

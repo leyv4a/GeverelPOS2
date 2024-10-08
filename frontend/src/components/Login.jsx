@@ -63,19 +63,18 @@ React.useEffect(()=>{
     <div className="z-50  bg-background  w-screen h-screen absolute top-0 left-0">
      <div className="w-full h-full relative">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r via-yellow-300 from-red-600 to-emerald-600">
-
         </div>
         <div className="absolute backdrop-blur-sm flex w-full h-full items-center justify-center">
        <div>
         </div>
         <Card radius="sm" isBlurred className="max-w-[400px] w-[400px]">
           <CardHeader className="flex gap-3">
-            <Image
+            <img
               alt="Fruteria taky"
               height={100}
               width={100}
               radius="sm"
-              src="/FruteriaTaky.png"
+              src={"FruteriaTaky.png"}
             />
             <div className="flex flex-col">
               <p className="text-md font-bold">Fruteria Taky </p>

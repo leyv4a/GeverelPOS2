@@ -41,6 +41,7 @@ FROM (
   FROM cartera 
   WHERE fecha BETWEEN strftime('%Y-%m-%d %H:%M:%S', ?) AND strftime('%Y-%m-%d %H:%M:%S', ?)
 );`
+
 try {
   const rows = await db.all(sql,[inicio, fin]);
   return rows;
