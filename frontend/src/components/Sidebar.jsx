@@ -218,6 +218,7 @@ function UserSettings() {
         },
         body: JSON.stringify({ usuarioId: 1, cierre: dat, fondo }),
       }).then((response) => response.json());
+      console.log(response)
       return response;
     } catch (error) {
       toast.error(error.message);

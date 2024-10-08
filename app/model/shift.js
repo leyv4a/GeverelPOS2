@@ -17,7 +17,7 @@ class Shift {
     static async EndShift(shiftId, cierre, totalVendido, gastos, fondo){
         const sql = `UPDATE turnos SET cierre = ?, totalVendido = ?, gastos = ?, fondo = ? WHERE id = ?`;
         try {
-          await db.run(sql, [cierre, totalVendido, gastos, shiftId, fondo]);
+          await db.run(sql, [cierre, totalVendido, gastos, fondo,shiftId]);
           return { success: true, message: 'Turno cerrado correctamente' };
         } catch (error) {
           logToFile(`Error closing shift: ${error.message}`);

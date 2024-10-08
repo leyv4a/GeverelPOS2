@@ -8,12 +8,12 @@ class TestController {
         const { sql } = req.body;
         const result = await Pruebas.doTest(sql);
         if(!result){
-            res.status(400).json({error : 'error en la consulta'})
+           return res.status(400).json({error : 'error en la consulta'})
         }
-        res.status(200).json({success: 'consulta realizada correctamente'});
+        return res.status(200).json({success: 'consulta realizada correctamente'});
         } catch (error) {
         logToFile(error.message);
-        res.status(500).json({ error: "Error en el servidor" });
+       return res.status(500).json({ error: "Error en el servidor" });
         }
     }
 
@@ -21,10 +21,10 @@ class TestController {
         try {
         const { sql } = req.body;
         const result = await Pruebas.getTest(sql);
-        res.status(200).json(result);
+       return res.status(200).json(result);
         } catch (error) {
         logToFile(error.message);
-        res.status(500).json({ error: "Error en el servidor" });
+        return res.status(500).json({ error: "Error en el servidor" });
         }
     }
 }

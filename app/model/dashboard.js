@@ -26,10 +26,14 @@ FROM (
   }
 
   static async getTotalesPorTurno({inicio, fin}){
-    const sql = `SELECT GastosTotales, 
-       GananciasBrutas, 
-       (GananciasBrutas - GastosTotales) AS GananciasNetas, 
-       (GananciasNetas / GananciasBrutas * 100) AS Margen 
+    const sql = `SELECT 
+    IFNULL(GastosTotales, 0) AS GastosTotales, 
+    IFNULL(GananciasBrutas, 0) AS GananciasBrutas, 
+    IFNULL(GananciasBrutas - GastosTotales, 0) AS GananciasNetas, 
+    CASE 
+        WHEN GananciasBrutas = 0 THEN 0 
+        ELSE (GananciasNetas / GananciasBrutas * 100) 
+    END AS Margen  
 FROM (
   SELECT SUM(CASE WHEN tipo = 'ingreso' THEN monto ELSE 0 END) AS GananciasBrutas, 
          SUM(CASE WHEN tipo = 'egreso' THEN monto ELSE 0 END) AS GastosTotales, 

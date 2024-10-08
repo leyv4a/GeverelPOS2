@@ -112,7 +112,7 @@ const initializeTables = async () => {
 
   // const addStatusToSalesTable = `ALTER TABLE ventas ADD COLUMN status TEXT NOT NULL DEFAULT 'success';`;
   // const addMotivoToSalesTable = `ALTER TABLE ventas ADD COLUMN motivoCancelacion TEXT DEFAULT NULL;`;
-  const addFondoToShiftsTable = `ALTER TABLE turnos ADD COLUMN fondo REAL DEFAULT 0;`;
+  // const addFondoToShiftsTable = `ALTER TABLE turnos ADD COLUMN fondo REAL DEFAULT 0;`;
 
   try {
     await db.run(createUsersTable);
@@ -137,11 +137,11 @@ const initializeTables = async () => {
     //   await db.run(addMotivoToSalesTable);
     //   logToFile("Sales table motivo column added or already exists");
     // } catch (error) {}
-    try {
-      await db.run(addFondoToShiftsTable);
-      logToFile("Shifts table fondo column added or already exists");
-    } catch (error) {
-    }
+    // try {
+    //   await db.run(addFondoToShiftsTable);
+    //   logToFile("Shifts table fondo column added or already exists");
+    // } catch (error) {
+    // }
   } catch (err) {
     logToFile("Error initializing tables: " + err.message);
     console.log(err);
