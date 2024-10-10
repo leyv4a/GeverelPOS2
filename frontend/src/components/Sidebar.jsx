@@ -176,6 +176,7 @@ function UserSettings() {
   const logout = async () => {
     localStorage.removeItem('user');
     localStorage.removeItem('type');
+    localStorage.removeItem('name');
     navigate('/');
   }
 

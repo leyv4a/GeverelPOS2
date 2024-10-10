@@ -19,7 +19,7 @@ class UserModel {
  
   }
   static async login(user, password){
-     const sql = "SELECT usuario, tipo FROM usuario WHERE usuario = ? AND password = ?";
+     const sql = "SELECT usuario, tipo, nombre FROM usuario WHERE usuario = ? AND password = ?";
     try {
       const rows = await db.get(sql, [user, password]);
       if (rows) {

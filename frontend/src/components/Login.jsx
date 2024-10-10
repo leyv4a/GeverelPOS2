@@ -40,8 +40,7 @@ export default function Login() {
       if (!response.success) {
         throw new Error(response.error);
       }
-        localStorage.setItem('user', JSON.stringify(response.user.usuario));
-        localStorage.setItem('type', JSON.stringify(response.user.tipo));
+        localStorage.setItem('user', JSON.stringify(response.user));
         navigate('/tienda');
     } catch (error) {
       setErrorMessage(error.message)
@@ -50,8 +49,6 @@ export default function Login() {
       resetData();
     }
   }
-
-
 
 React.useEffect(()=>{
   if (localStorage.getItem('user')) {

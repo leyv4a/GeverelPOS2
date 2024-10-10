@@ -14,22 +14,22 @@ const Login = lazy(()=> import('./components/Login'));
 const ShiftPdf = lazy(()=> import('./components/ShiftPdf'));
 
 import Loader from './components/Loader';
+import ProtectedRoute from './components/ProtectedRoute';
 function App() {
   return (
     <>
    <HashRouter>
      <main className='flex max-w-screen max-h-screen overflow-hidden'>
-      <CompleteSidebar/>
       <Suspense fallback={<Loader/>}>
         <Routes>
           <Route path="/" element={<Login/>}/>
-          <Route path="/tienda" element={<Tienda/>}/>
-          <Route path="/panel" element={<Panel/>}/>
-          <Route  path="/inventario/*" element={<Inventario/>}/>
-          <Route path="/monedero/*" element={<Monedero/>}/>
-          <Route path="/settings/*" element={<Settings/>}/>
-          <Route path="/shift" element={<ShiftPdf/>}/>
-          {/* <Route path="/testing" element={<ModalTest/>}/> */}
+          {/* 3 */}
+          <Route path="/tienda" element={<ProtectedRoute type={3}><Tienda/></ProtectedRoute>}/>
+          <Route path="/panel" element={<ProtectedRoute type={2}><Panel/></ProtectedRoute>}/>
+          <Route  path="/inventario/*" element={<ProtectedRoute type={3}><Inventario/></ProtectedRoute>}/>
+          <Route path="/monedero/*" element={<ProtectedRoute type={2}><Monedero/></ProtectedRoute>}/>
+          <Route path="/settings/*" element={<ProtectedRoute type={1}><Settings/></ProtectedRoute>}/>
+          <Route path="/shift" element={<><CompleteSidebar /><ShiftPdf/></>}/>
         </Routes>
       </Suspense>
       <ToastContainer

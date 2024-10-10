@@ -1,12 +1,10 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 import { FaPlusCircle , FaMinusCircle } from "react-icons/fa";
 import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import LinkBar from '../components/NaviBar';
-import Loader from '../components/Loader';
 
-// Lazy loading de los componentes
-const Entradas = React.lazy(() => import('../monedero/Entradas'));
-const Salidas = React.lazy(() => import('../monedero/Salidas'));
+import Entradas from '../monedero/Entradas';
+import Salidas from '../monedero/Salidas';
 
 
 export default function Monedero() {
@@ -33,13 +31,11 @@ export default function Monedero() {
   return (
       <div className='w-full h-screen'>
       <LinkBar items={items}/>
-      <Suspense fallback={<Loader/>}>
-        <Routes>
+       <Routes>
           <Route path="/" element={<Navigate to="agregarEntrada" replace />} />
           <Route path="agregarEntrada" element={<Entradas />} />
           <Route path="agregarSalida" element={<Salidas />} />
         </Routes>
-      </Suspense>
     </div>
   )
 }

@@ -129,6 +129,39 @@ const initializeTables = async () => {
     logToFile("Transactions table created or already exists");
     await db.run(createShiftsTable);
     logToFile("Shifts table created or already exists");
+    const addNombreColumn = `
+        ALTER TABLE usuario ADD COLUMN nombre TEXT NOT NULL DEFAULT 'Sin Nombre'
+      `;
+
+    const makeUsuarioUnique = `
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_usuario ON usuario (usuario)
+      `;
+
+    const insertUser = `
+      INSERT INTO usuario (usuario, password, tipo, nombre)
+      VALUES ('gleyva', 'gleyva2511', 1, 'Gabriel Leyva Esquivel')
+    `;
+    try {
+      // Agregar columna 'nombre' si no existe
+      await db.run(addNombreColumn);
+      logToFile("Column 'nombre' added to 'usuario' table or already exists");
+    } catch (err) {
+      console.log(err);
+    }
+    try {
+      // Hacer que el campo 'usuario' sea único
+      await db.run(makeUsuarioUnique);
+      logToFile("Unique index on 'usuario' created or already exists");
+    } catch (err) {
+      console.log(err);
+    }
+    try {
+      // Insertar el nuevo usuario
+      await db.run(insertUser);
+      logToFile("User 'gleyva' inserted successfully");
+    } catch (err) {
+      console.log(err);
+    }
     // try {
     //   await db.run(addStatusToSalesTable);
     //   logToFile("Sales table status column added or already exists");
