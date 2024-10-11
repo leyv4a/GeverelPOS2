@@ -371,6 +371,7 @@ const Viewer = () => {
       setData(location.state.data); // Asignamos los datos
       setLoading(false); // Una vez los datos están disponibles, desactivamos el loading
     }
+    
   }, [location.state]);
 
   if (loading) {
@@ -378,7 +379,7 @@ const Viewer = () => {
   }
 
   return (
-    <PDFViewer style={{ width: "100%" }}>
+    <PDFViewer style={{ width: "100%", height: "100%" }}>
       <ShiftPdf data={data} />
     </PDFViewer>
   );

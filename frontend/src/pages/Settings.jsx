@@ -8,6 +8,7 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import LinkBar from "../components/NaviBar";
 import Productos from "../settings/Productos";
 import Usuarios from "../settings/Usuarios";
+import Turnos from "../settings/Turnos";
 export default function Settings() {
 
   const iconClasses =
@@ -63,6 +64,3 @@ export default function Settings() {
 }
 
 
-function Turnos() {
-  return <div className="w-full h-full"></div>;
-}

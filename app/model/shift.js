@@ -25,6 +25,18 @@ class Shift {
         }
     }
 
+    static async getAllShifts(){
+      // Hacer un inner join para obtener el nombre del usuario
+      const sql = `SELECT U.nombre, T.id, T.inicio, T.cierre, T.fondo FROM turnos T INNER JOIN usuario U ON T.usuarioId = U.id WHERE T.cierre IS NOT NULL ORDER BY T.id DESC`
+      try {
+        const rows = await db.all(sql);
+        return {success:true , result: rows};
+      } catch (error) {
+        logToFile(`Error fetching all shifts: ${error.message}`);
+        return { success: false, message: error.message };
+      }
+    }
+
     static async getOpenShiftByUser(usuarioId) {
         const sql = `SELECT * FROM turnos WHERE usuarioId = ? AND cierre IS NULL ORDER BY inicio DESC LIMIT 1`;
         try {

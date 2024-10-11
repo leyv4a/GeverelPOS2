@@ -338,7 +338,6 @@ const fetchData = async (inicio, cierre) => {
     console.log(error)
   }finally{
     setIsLoading(false)
-
   }
 }
 

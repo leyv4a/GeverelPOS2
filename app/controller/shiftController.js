@@ -66,6 +66,22 @@ class ShiftController {
     }
   }
 
+  static async getAllShift(req, res){
+    try {
+      const result = await Shift.getAllShifts();
+      if (!result.success) {
+        logToFile(`Error fetching all shifts: ${result.message}`);
+        return res.status(500).json({ success: false, error: result.message });
+      }
+      return res.status(200).json({success:true , result });
+    } catch (error) {
+      logToFile(error.message);
+      return res
+        .status(500)
+        .json({ success: false, error: "Algo salio mal..." });
+    }
+  }
+
   static async getShiftData(req, res) {
     const { inicio, cierre } = req.body;
     try {
