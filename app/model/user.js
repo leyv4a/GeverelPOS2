@@ -2,22 +2,41 @@ const db = require('../database/database'); // Importa la conexión a la base de
 
 class UserModel {
   static async getAll() {
-    const sql = "SELECT id, name, email FROM users"
+    const sql = "SELECT id, usuario, password, tipo, nombre FROM usuario"
     const rows = await db.all(sql);
     return rows;
     };
 
-  static async create(name, email) {
-   const sql = "INSERT INTO users (name, email) VALUES (?, ?)";
+  static async create(usuario,password,tipo,nombre) {
+   const sql = "INSERT INTO usuario (usuario,password,tipo,nombre) VALUES (?,?,?,?)";
    try {
-    await db.run(sql, [name, email]);
+    await db.run(sql, [usuario,password,tipo,nombre]);
     return true; // Retorna true si la inserción es exitosa
     } catch (error) {
         return false;
     }
-    
- 
   }
+
+  static async updateById(id, usuario, password, tipo, nombre) {
+    const sql = "UPDATE usuario SET usuario = ?, password = ?, tipo = ?, nombre = ? WHERE id = ?";
+    try {
+      await db.run(sql, [usuario, password, tipo, nombre, id]);
+      return true; // Retorna true si la inserción es exitosa
+    } catch (error) {
+      return false;
+    }
+  }
+
+  static async deleteById(id) {
+    const sql = "DELETE FROM usuario WHERE id = ?";
+    try {
+      await db.run(sql, [id]);
+      return true; // Retorna true si la eliminacion es exitosa
+    } catch (error) {
+      return false;
+    }
+  }
+
   static async login(user, password){
      const sql = "SELECT id, usuario, tipo, nombre FROM usuario WHERE usuario = ? AND password = ?";
     try {

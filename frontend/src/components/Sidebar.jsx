@@ -21,6 +21,8 @@ export default function Sidebar({ children }) {
     }
   },[])
 
+  const name = JSON.parse(localStorage.getItem('user')).nombre;
+  const usuario = JSON.parse(localStorage.getItem('user')).usuario;
 
   return (
     <aside className="h-screen ">
@@ -65,9 +67,9 @@ export default function Sidebar({ children }) {
           `}
           >
             <div className="leading-4">
-              <h4 className="font-semibold">Gabriel Leyva</h4>
+              <h4 className="font-semibold">{name}</h4>
               <span className="text-xs text-gray-600">
-                gleyvaesquivel@gmail.com
+                {"@"+usuario}
               </span>
             </div>
           </div>

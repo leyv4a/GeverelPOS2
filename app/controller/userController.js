@@ -8,24 +8,52 @@ class UserController {
       res.status(200).json(users);
     } catch (error) {
       logToFile(`Error getting users ${error}`)
-      res.status(500).json({ error: err.message });
+      res.status(500).json({ error: error.message });
     }
   }
 
   
 
   static async createUser(req, res) {
-    const { name, email } = req.body;
-    if (!name || !email) {
-      return res.status(400).json({ error: "All fields are required" });
+    const { usuario,password,tipo,nombre} = req.body;
+    if (!usuario || !password || !tipo || !nombre) {
+      return res.status(400).json({ error: "Todos los campos son requeridos" });
     }
-    const id = await UserModel.create(name, email);
+    const id = await UserModel.create(usuario,password,tipo,nombre);
     if (!id) {
-      logToFile(`Error creating user`)
-      return res.status(500).json({ error: 'Something went wrong'});
+      logToFile(`Error creando el usuario`)
+      return res.status(500).json({ error: 'Algo salio mal'});
     }
     logToFile(`User created`)
-    return res.status(201).json({ message: `User created sucessfully`});
+    return res.status(201).json({success: true, message: `Usuario creado con exito`});
+  }
+
+  static async updateUser(req, res) {
+    const { id, usuario, password, tipo, nombre } = req.body;
+    if (!id || !usuario || !password || !tipo || !nombre) {
+      return res.status(400).json({ error: "Todos los campos son requeridos" });
+    }
+    const userData = await UserModel.updateById(id, usuario, password, tipo, nombre);
+    if (!userData) {
+      logToFile(`Error actualizando el usuario`)
+      return res.status(500).json({ error: 'Algo salio mal'});
+    }
+    logToFile(`User updated`)
+    return res.status(200).json({success: true, message: `Usuario actualizado con exito`});
+  }
+
+  static async deleteUser(req, res) {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: "Todos los campos son requeridos" });
+    }
+    const userData = await UserModel.deleteById(id);
+    if (!userData) {
+      logToFile(`Error eliminando el usuario`)
+      return res.status(500).json({ error: 'Algo salio mal'});
+    }
+    logToFile(`User deleted`)
+    return res.status(200).json({success: true, message: `Usuario eliminado con exito`});
   }
 
   static async loginUser(req, res) {

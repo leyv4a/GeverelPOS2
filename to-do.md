@@ -3,19 +3,19 @@
 <!-- AGREGAR LA BASCULA A ENTRADAS/SALIDAS -->
 <!-- ORDENAR EN INGRESOS/EGRESOS LA FECHA QUE SEA LO ULTIMO AGREGADO AL PRINCIPIO -->
 <!-- AGREGAR REGISTROS A LA TABLA VENTAS -->
-CUANDO SE DEBE ASGINAR UN PRECIO? 
-AGREGAR OPCION DE MANTENER PRECIO ACTUAL AL DAR UNA ENTRADA
+<!-- CUANDO SE DEBE ASGINAR UN PRECIO?  -->
+<!-- AGREGAR OPCION DE MANTENER PRECIO ACTUAL AL DAR UNA ENTRADA -->
 ## REVISAR LOS DATOS DE LA BASE DE DATOS PARA VER SI CUADRAN CON LO QUE SE ESTA GRAFICANDO
 ## CAMBIAR LA OPCION DE RENDER EN PANEL, SI EL TOTALES. CONTIENE ERROR 
-## AL INICIAR LA TIENDA, SI NO HAY TURNO NO SE RENDERIZA, PERO SI HAY TURNO TIENES QUE REINICIAR LA PAIGNA PARA QUE RENDERIZE
-##que no deje ver el pdf al cerrar el turno, que sea un boton  navigate al settings/turnos, y que ahi pueda ver la lista de pdfs
-## cambiar el shift model y controller, que al cerrar el turno solo te regrese la informacion que se guarda en turnos, que el shift details se llame en la tabla de shift, ahi te de el pdf.
+<!-- ## AL INICIAR LA TIENDA, SI NO HAY TURNO NO SE RENDERIZA, PERO SI HAY TURNO TIENES QUE REINICIAR LA PAIGNA PARA QUE RENDERIZE -->
+<!-- ##que no deje ver el pdf al cerrar el turno, que sea un boton  navigate al settings/turnos, y que ahi pueda ver la lista de pdfs -->
+<!-- ## cambiar el shift model y controller, que al cerrar el turno solo te regrese la informacion que se guarda en turnos, que el shift details se llame en la tabla de shift, ahi te de el pdf. -->
 <!-- NO FUNCIONA LA NAVEGACION CON LAS FUNCTIONS KEYS (REF) -->
 <!-- QUE CON EL ENTER BUSQUE EL PRODUCTO AL AGREGAR ENTRADAS/SALIDA -->
 <!-- AGREGAR EN LA TALBA PRODUCTOS LAS UNIDADES EN STOCK = 124KG o 3U -->
 EN LA TABLA VENTAS MENSUALES TENER UN BOTON GO, Y QUE ACTUALICE EL DASHBOARD A ESE MES
 <!-- MANEJAR LAS CANCELACIONES -->
-HACER FIN DE TURNO (CORTE DE CAJA, ETC)
+<!-- HACER FIN DE TURNO (CORTE DE CAJA, ETC) -->
 <!-- DESHABILITAR EL EDITAR CANTIDAD EN PRODUCTOS DE KG -->
 <!-- HABILITAR TENER UN 0 EN EL PRODUCT CANTIDAD -->
 NO FUNCIONA LAZY, SUSPENSE EN INVENTARIO. (NI VA A JALAR)

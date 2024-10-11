@@ -7,6 +7,7 @@ import { IoPrint } from "react-icons/io5";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import LinkBar from "../components/NaviBar";
 import Productos from "../settings/Productos";
+import Usuarios from "../settings/Usuarios";
 export default function Settings() {
 
   const iconClasses =
@@ -61,9 +62,6 @@ export default function Settings() {
   );
 }
 
-function Usuarios() {
-  return <div className="w-full h-full "></div>;
-}
 
 function Turnos() {
   return <div className="w-full h-full"></div>;

@@ -27,6 +27,8 @@ router.get('/dashboard/ventasmensuales', DashboardController.getVentasMensuales)
 
 router.get('/users', UserController.getAllUsers);
 router.post('/users', UserController.createUser);
+router.put('/users', UserController.updateUser);
+router.delete('/users/:id', UserController.deleteUser);
 
 router.get('/category', CategoryController.getAllCategories);
 router.post('/category', CategoryController.createCategory);
