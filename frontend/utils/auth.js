@@ -1,12 +1,14 @@
+import { toast } from "react-toastify";
+
 export const isAuthenticated = () => {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   };
   
-  export const checkPermissions = (role) => {
+  export const checkPermissions = (type) => {
     const user = isAuthenticated();
-    if (!user || user.role !== role) {
-      console.info('No tienes permisos para realizar esta acción');
+    if (!user || user.tipo >  type) {
+      toast.info('No tienes permisos para realizar esta acción');
       return false;
     }
     return true;

@@ -171,6 +171,7 @@ function UserSettings() {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  const user = isAuthenticated();
   const navigate = useNavigate();
 
   const logout = async () => {
@@ -195,7 +196,7 @@ function UserSettings() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ usuarioId: 1, inicio: dat }),
+        body: JSON.stringify({ usuarioId: user.id, inicio: dat }),
       }).then((response) => response.json());
       if (!response.success) {
         throw new Error(response.error || response.message);
@@ -217,9 +218,8 @@ function UserSettings() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ usuarioId: 1, cierre: dat, fondo }),
+        body: JSON.stringify({ usuarioId: user.id, cierre: dat, fondo }),
       }).then((response) => response.json());
-      console.log(response)
       return response;
     } catch (error) {
       toast.error(error.message);
@@ -290,6 +290,7 @@ function UserSettings() {
         setShift={handleSetShift}
         setShiftisEnded={setShiftIsEnded}
         shiftIsEnded={shiftIsEnded}
+        userName={user.nombre}
       />
     </>
   );
@@ -306,11 +307,38 @@ import {
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { IoMdDownload } from "react-icons/io";
 import { FaCheckDouble } from "react-icons/fa";
+import { isAuthenticated } from "../../utils/auth";
 
-function CloseShiftModal({ isOpen, onOpenChange, handleShiftEnd, getDate, setShift, setShiftisEnded , shiftIsEnded}) {
+function CloseShiftModal({ isOpen, onOpenChange, handleShiftEnd, getDate, setShift, setShiftisEnded , shiftIsEnded, userName}) {
   const navigate = useNavigate();
   const [fondo, setFondo] = React.useState('');
   const [data, setData] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+const fetchData = async (inicio, cierre) => {
+  setIsLoading(true)
+  try {
+    const data = await fetch("http://localhost:3001/api/shift/data", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ inicio, cierre }),
+    }).then((data) => data.json());
+    const updatedResponse = {
+      ...data,  // Copia los datos actuales del response
+      userName: userName  // Agrega el nombre del usuario (verifica que el usuario esté definido)
+    };
+     setData(updatedResponse)
+     console.log(updatedResponse)
+  } catch (error) {
+    console.log(error)
+  }finally{
+    setIsLoading(false)
+
+  }
+}
 
   const handleSetFondo = async (e) => {
     e.preventDefault();
@@ -325,8 +353,7 @@ function CloseShiftModal({ isOpen, onOpenChange, handleShiftEnd, getDate, setShi
        localStorage.setItem("shift", false);
        setShift(false);
        setFondo(''); 
-       console.log(response)
-       setData(response)
+       await fetchData(response.inicio, response.cierre);
        setShiftisEnded(true);
     } catch (error) {
       toast.error(error.message);
@@ -371,7 +398,7 @@ function CloseShiftModal({ isOpen, onOpenChange, handleShiftEnd, getDate, setShi
               </ModalBody>
               <ModalFooter>
                 <Button
-                  isDisabled={!shiftIsEnded}
+                  isDisabled={!shiftIsEnded && !isLoading}
                   onClick={() => handleClick()}
                   className="rounded-md font-bold text-white bg-gray-800 hover:bg-gray-900"
                   variant="solid"

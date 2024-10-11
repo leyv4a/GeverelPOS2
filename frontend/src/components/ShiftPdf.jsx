@@ -7,7 +7,9 @@ import {
   StyleSheet,
   PDFViewer,
 } from "@react-pdf/renderer";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import Loader from "./Loader";
 
 const styles = StyleSheet.create({
   page: {
@@ -78,11 +80,12 @@ const columns2 = [
 ];
 
 const ShiftPdf = ({ data }) => {
+
   return (
     <>
       <Document>
         <Page size="A4" style={styles.page}>
-          <Header inicio={data.inicio} cierre={data.cierre} />
+          <Header inicio={data.result.inicio} cierre={data.result.cierre} user={data.userName} />
           {/* Columna 1 */}
           <View style={styles.section}>
             {/* Prductos mas vendidos */}
@@ -92,46 +95,46 @@ const ShiftPdf = ({ data }) => {
               </Text>
               <TableItem
                 cantidad={
-                  data.topTresProductos[0]
-                    ? data.topTresProductos[0].TotalVendido +
-                      (data.topTresProductos[0].Unidad === "kg" ? "Kg" : "U")
+                  data.result.topTres[0]
+                    ? data.result.topTres[0].TotalVendido +
+                      (data.result.topTres[0].Unidad === "kg" ? "Kg" : "U")
                     : 0
                 }
               >
-                {data.topTresProductos[0]
-                  ? data.topTresProductos[0].Producto
+                {data.result.topTres[0]
+                  ? data.result.topTres[0].Producto
                   : "Sin datos"}
               </TableItem>
               <TableItem
                 cantidad={
-                  data.topTresProductos[1]
-                    ? data.topTresProductos[1].TotalVendido +
-                      (data.topTresProductos[1].Unidad === "kg" ? "Kg" : "U")
+                  data.result.topTres[1]
+                    ? data.result.topTres[1].TotalVendido +
+                      (data.result.topTres[1].Unidad === "kg" ? "Kg" : "U")
                     : 0
                 }
               >
-                {data.topTresProductos[1]
-                  ? data.topTresProductos[1].Producto
+                {data.result.topTres[1]
+                  ? data.result.topTres[1].Producto
                   : "Sin datos"}
               </TableItem>
               <TableItem
                 cantidad={
-                  data.topTresProductos[2]
-                    ? data.topTresProductos[2].TotalVendido +
-                      (data.topTresProductos[2].Unidad === "kg" ? "Kg" : "U")
+                  data.result.topTres[2]
+                    ? data.result.topTres[2].TotalVendido +
+                      (data.result.topTres[2].Unidad === "kg" ? "Kg" : "U")
                     : 0
                 }
               >
-                {data.topTresProductos[2]
-                  ? data.topTresProductos[2].Producto
+                {data.result.topTres[2]
+                  ? data.result.topTres[2].Producto
                   : "Sin datos"}
               </TableItem>
             </View>
             {/* Datos */}
             <View style={{ fontSize: 12, marginTop: 3, width: "55%" }}>
               <Text style={{ fontFamily: "Helvetica-Bold" }}>Datos</Text>
-              <TableItem cantidad={'$'+data.fondo}>Fondo de caja</TableItem>
-              <TableItem cantidad={data.cantidadVentas}>Ventas totales</TableItem>
+              <TableItem cantidad={'$'+data.result.fondo.fondo}>Fondo de caja</TableItem>
+              <TableItem cantidad={data.result.totalVendido.totalVendido}>Ventas totales</TableItem>
               {/* <TableItem cantidad={4}>Clientes totales</TableItem> */}
               <View style={{width: '100%'}}>
               <View style={{borderTop: "1px solid #c8c8c8", paddingTop: 3,display: 'flex', justifyContent: 'space-between', flexDirection: 'row'}}>
@@ -139,12 +142,12 @@ const ShiftPdf = ({ data }) => {
                 Cancelaciones
               </Text>
               <Text style={{ fontFamily: "Helvetica-Bold" }}>
-                {data.cancelaciones.data[0]?.totalCancelaciones ? (data.cancelaciones.data[0].totalCancelaciones) : 0}
+                {data.result.cancelaciones[0]?.totalCancelaciones ? (data.result.cancelaciones[0].totalCancelaciones) : 0}
               </Text>
               </View>
               <TableHeader  col={columns2} wid={'25%'} />
               <View style={{fontSize: 8}}>
-              <TableData data={data.cancelaciones.data} col={columns2}/>
+              <TableData data={data.result.cancelaciones} col={columns2}/>
               </View>
               </View>
             </View>
@@ -159,8 +162,8 @@ const ShiftPdf = ({ data }) => {
               <TableItem
                 cantidad={
                   "$" +
-                  (data.totalesPorTurno[0].GananciasBrutas
-                    ? data.totalesPorTurno[0].GananciasBrutas
+                  (data.result.totalesPorTurno[0].GananciasBrutas
+                    ? data.result.totalesPorTurno[0].GananciasBrutas
                     : 0).toFixed(2)
                 }
               >
@@ -169,8 +172,8 @@ const ShiftPdf = ({ data }) => {
               <TableItem
                 cantidad={
                   "$" +
-                  (data.totalesPorTurno[0].GastosTotales
-                    ? data.totalesPorTurno[0].GastosTotales
+                  (data.result.totalesPorTurno[0].GastosTotales
+                    ? data.result.totalesPorTurno[0].GastosTotales
                     : 0).toFixed(2)
                 }
               >
@@ -179,8 +182,8 @@ const ShiftPdf = ({ data }) => {
               <TableItem
                 cantidad={
                   "$" +
-                  (data.totalesPorTurno[0].GananciasNetas
-                    ? data.totalesPorTurno[0].GananciasNetas
+                  (data.result.totalesPorTurno[0].GananciasNetas
+                    ? data.result.totalesPorTurno[0].GananciasNetas
                     : 0).toFixed(2)
                 }
               >
@@ -189,8 +192,8 @@ const ShiftPdf = ({ data }) => {
               <TableItem
                 cantidad={
                    
-                  (data.totalesPorTurno[0].Margen
-                    ? data.totalesPorTurno[0].Margen
+                  (data.result.totalesPorTurno[0].Margen
+                    ? data.result.totalesPorTurno[0].Margen
                     : 0).toFixed(2)+"%"
                 }
               >
@@ -204,7 +207,7 @@ const ShiftPdf = ({ data }) => {
                 Lista de compras
               </Text>
              <TableHeader col={columns} wid={'20%'}/>
-             <TableData data={data.productosPorComprar} col={columns}/>
+             <TableData data={data.result.productosPorComprar} col={columns}/>
             </View>
           </View>
         </Page>
@@ -212,8 +215,6 @@ const ShiftPdf = ({ data }) => {
     </>
   );
 };
-
-
 
 const TableHeader = ({col, wid}) => {
   return (
@@ -320,7 +321,7 @@ const TableItem = ({ children, cantidad }) => {
   );
 };
 
-const Header = ({ inicio, cierre }) => {
+const Header = ({ inicio, cierre, user }) => {
   return (
     <View style={styles.header}>
       <Image style={styles.image} src="FruteriaTaky.png" />
@@ -341,21 +342,45 @@ const Header = ({ inicio, cierre }) => {
         <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold" }}>
           Empleado
         </Text>
-        <Text style={{ fontSize: 12 }}>Gabriel Leyva</Text>
+        <Text style={{ fontSize: 12 }}>{user}</Text>
       </View>
     </View>
   );
 };
 
+// const Viewer = () => {
+//   const location = useLocation();
+//   const data = location.state?.data;
+//   return (
+//     <>
+//     <PDFViewer style={{ width: "100%" }}>
+//       <ShiftPdf data={data} />
+//     </PDFViewer>
+//     </>
+//   );
+// };
+// export default Viewer;
+
 const Viewer = () => {
   const location = useLocation();
-  const data = location.state?.data;
+  const [data, setData] = useState(null); // Estado para almacenar los datos
+  const [loading, setLoading] = useState(true); // Estado para manejar la carga
+
+  useEffect(() => {
+    if (location.state?.data) {
+      setData(location.state.data); // Asignamos los datos
+      setLoading(false); // Una vez los datos están disponibles, desactivamos el loading
+    }
+  }, [location.state]);
+
+  if (loading) {
+    return <Loader/>// Mensaje mientras se cargan los datos
+  }
+
   return (
-    <>
     <PDFViewer style={{ width: "100%" }}>
       <ShiftPdf data={data} />
     </PDFViewer>
-    </>
   );
 };
 

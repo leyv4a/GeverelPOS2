@@ -60,7 +60,7 @@ class PosModel {
                 }
             }
     }
-    static async PosSale(cart, tipo, motivo, fecha) {
+    static async PosSale(cart, tipo, motivo, fecha, usuarioId) {
       try {
           const total = sumarSubtotales(cart)
           await db.run('BEGIN TRANSACTION');
@@ -80,7 +80,7 @@ class PosModel {
             logToFile(`Stock actualizado para producto ${id}`);
             
             const sqlSales = "INSERT INTO ventas (fecha, monto, usuarioId,status) VALUES (?,?,?,?)";
-            await db.run(sqlSales, [fecha, total, 1, 'success']);
+            await db.run(sqlSales, [fecha, total, usuarioId , 'success']);
             logToFile(`Venta registrada para producto ${id}`);
           }
           const sqlWallet = 'INSERT INTO cartera (tipo,descripcion,monto, fecha) VALUES (?,?,?,?)'
@@ -102,17 +102,17 @@ class PosModel {
         }
       }
 
-     static async PosCancelSale(fecha, total,motivoCancelacion){
-      try {
-        const sqlSales = "INSERT INTO ventas (fecha, monto, usuarioId,status, motivoCancelacion) VALUES (?,?,?,?,?)";
-        await db.run(sqlSales, [fecha, total, 1, 'cancelled', motivoCancelacion]);
-        logToFile(`Venta cancelada por usuario :${1}`);
-        return { success: true, message: 'Venta cancelada correctamente' };
-      } catch (error) {
-        logToFile(error.message);
-        return { success: false, message: error.message };
-      }
-     } 
+    static async PosCancelSale(fecha, total,motivoCancelacion,usuarioId){
+    try {
+      const sqlSales = "INSERT INTO ventas (fecha, monto, usuarioId,status, motivoCancelacion) VALUES (?,?,?,?,?)";
+      await db.run(sqlSales, [fecha, total, usuarioId, 'cancelled', motivoCancelacion]);
+      logToFile(`Venta cancelada por usuario :${1}`);
+      return { success: true, message: 'Venta cancelada correctamente' };
+    } catch (error) {
+      logToFile(error.message);
+      return { success: false, message: error.message };
+    }
+    } 
 }
 
 

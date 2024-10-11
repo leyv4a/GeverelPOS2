@@ -17,6 +17,7 @@ router.get('/gettest', TestController.getTest);
 
 router.post('/shift/start', ShiftController.StartShift);
 router.post('/shift/end', ShiftController.EndShift);   
+router.post('/shift/data', ShiftController.getShiftData);
 
 router.get('/dashboard/ventadiaria', DashboardController.getVentaDiaria);
 router.get('/dashboard/totales', DashboardController.getTotales);

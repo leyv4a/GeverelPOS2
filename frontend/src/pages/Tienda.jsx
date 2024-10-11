@@ -9,6 +9,7 @@ import { CheckPrice as ChecarPrecioComponente } from "../components/CheckPrice";
 
 export default function Tienda() {
   const [fecha, setFecha] = React.useState("");
+  const user = isAuthenticated();
 
   const [carritoItems, addCarritoItems] = React.useState([]);
 
@@ -150,6 +151,7 @@ export default function Tienda() {
           fecha: fecha,
           total: total,
           motivoCancelacion: "Venta cancelada por el usuario",
+          usuarioId: user.id,
         }),
       });
       if (!response.ok) throw new Error("Error al cancelar la venta");
@@ -180,6 +182,7 @@ export default function Tienda() {
           tipo: "salida",
           motivo: "venta",
           fecha: fecha,
+          usuarioId: user.id,
         }),
       });
 
@@ -424,6 +427,7 @@ export default function Tienda() {
 }
 
 import { FaStoreSlash } from "react-icons/fa";
+import { isAuthenticated } from "../../utils/auth";
 
 const NoShift = () => {
   return (

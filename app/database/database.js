@@ -141,6 +141,10 @@ const initializeTables = async () => {
       INSERT INTO usuario (usuario, password, tipo, nombre)
       VALUES ('gleyva', 'gleyva2511', 1, 'Gabriel Leyva Esquivel')
     `;
+
+    const dropGastos = `ALTER TABLE turnos DROP COLUMN gastos;`;
+
+    const totalVendido = `ALTER TABLE turnos DROP COLUMN totalVendido;`;
     try {
       // Agregar columna 'nombre' si no existe
       await db.run(addNombreColumn);
@@ -161,6 +165,16 @@ const initializeTables = async () => {
       logToFile("User 'gleyva' inserted successfully");
     } catch (err) {
       console.log(err);
+    }
+    try {
+      await db.run(dropGastos)
+    } catch (error) {
+      console.log(error)
+    }
+    try {
+      await db.run(totalVendido)
+    } catch (error) {
+      console.log(error)
     }
     // try {
     //   await db.run(addStatusToSalesTable);
