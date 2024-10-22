@@ -389,9 +389,9 @@ export default function Usuarios() {
             </div>
           </form>
         </div>
-        <div>Por definirse</div>
+        <div></div>
       </div>
-      <div className="text-center w-1/2">
+      <div className="text-center w-[35%]">
         <h2 className="text-3xl font-bold mb-5">Logs</h2>
         <p className="text-gray-500 text-sm">No logs to display</p>
        </div> 

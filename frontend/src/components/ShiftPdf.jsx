@@ -379,7 +379,7 @@ const Viewer = () => {
   }
 
   return (
-    <PDFViewer style={{ width: "100%", height: "100%" }}>
+    <PDFViewer style={{ width: "100%", minHeight: "100%" }}>
       <ShiftPdf data={data} />
     </PDFViewer>
   );

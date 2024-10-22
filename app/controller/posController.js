@@ -45,8 +45,11 @@ class PosController {
     static async CreatePosSale(req, res) {
         try {
             const { productos, tipo, motivo, fecha, usuarioId } = req.body;
-            if (!productos || !Array.isArray(productos) || productos.length === 0 || !tipo || !motivo || !fecha || !usuarioId) {
-                return res.status(400).json({ error: 'Todos los campos son requeridos y el carrito no debe estar vacío' });
+            if (!productos || !Array.isArray(productos) || productos.length === 0 ) {
+                return res.status(400).json({ error: 'El carrito no debe estar vacío' });
+            }
+            if(!tipo || !motivo || !fecha || !usuarioId){
+                return res.status(400).json({ error: 'Todos los campos son requeridos' });
             }
             const response = await PosModel.PosSale(productos, tipo.toLowerCase(), motivo.toLowerCase(), fecha,usuarioId);
             if (!response.success) {

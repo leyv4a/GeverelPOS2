@@ -1,3 +1,5 @@
+
+// DOESN'T WORK CORRECTLY
 const getMasVendido= (callback)=>{
     try {
         const query = "SELECT substr(fecha, instr(fecha, '/')+1, 7) AS Mes, P.nombre AS Producto, SUM(T.cantidad) AS TotalVendidoMes FROM transacciones T JOIN productos P ON T.producto_id = P.id WHERE T.motivo = 'Venta' GROUP BY Mes, P.id ORDER BY TotalVendidoMes DESC LIMIT 1;"

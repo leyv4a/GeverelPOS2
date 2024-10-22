@@ -9,11 +9,17 @@ import { CheckPrice as ChecarPrecioComponente } from "../components/CheckPrice";
 
 export default function Tienda() {
   const [fecha, setFecha] = React.useState("");
-  const user = isAuthenticated();
-
+  const [products, setProducts] = React.useState([]);
   const [carritoItems, addCarritoItems] = React.useState([]);
-
   const [total, setTotal] = React.useState("");
+  const [codigo, setCodigo] = React.useState("");
+  const user = isAuthenticated();
+  //Guarda y maneja el cambio del Select para ponerlo en el codigowh
+  const [selectedKeys, setSelectedKeys] = React.useState("");
+  const handleSelectionChange = (keys) => {
+    setSelectedKeys(keys);
+    setCodigo(keys);
+  };
 
   const handleCarritoAdd = async (
     id,
@@ -24,6 +30,7 @@ export default function Tienda() {
     unidad
   ) => {
     try {
+      // VER SI EL OBJETO YA ESTA EN EL CARRITO
       const itemIndex = carritoItems.findIndex((item) => item.id === id);
       if (itemIndex !== -1) {
         const nuevosItems = [...carritoItems];
@@ -108,35 +115,55 @@ export default function Tienda() {
   };
 
   const handleEditarCantidad = (id, nuevaCantidad, unidad) => {
-    if (unidad == "kg") {
-      return;
-    } else {
-      // Asegúrate de que sea un número positivo con decimales
-      const cantidadNumerica = parseFloat(nuevaCantidad);
+    // if (unidad == "kg") {
+    //   return;
+    // } else {
+    //   // Asegúrate de que sea un número positivo con decimales
+    //   const cantidadNumerica = parseFloat(nuevaCantidad);
 
-      if (isNaN(cantidadNumerica) || cantidadNumerica < 0) {
-        toast.error("La cantidad debe ser un número positivo", {
-          bodyClassName: "text-foreground",
-        });
-        return;
-      }
+    //   if (isNaN(cantidadNumerica) || cantidadNumerica < 0) {
+    //     toast.error("La cantidad debe ser un número positivo", {
+    //       bodyClassName: "text-foreground",
+    //     });
+    //     return;
+    //   }
 
-      addCarritoItems((prevItems) => {
-        const nuevosItems = prevItems.map((item) => {
-          if (item.id === id) {
-            const nuevoSubtotal = item.precioVenta * cantidadNumerica;
-            return {
-              ...item,
-              cantidad: cantidadNumerica, // Usar el valor numérico con decimales
-              subtotal: nuevoSubtotal,
-            };
-          }
-          return item;
-        });
-        setTotal(sumarSubtotales(nuevosItems));
-        return nuevosItems;
-      });
+    //   addCarritoItems((prevItems) => {
+    //     const nuevosItems = prevItems.map((item) => {
+    //       if (item.id === id) {
+    //         const nuevoSubtotal = item.precioVenta * cantidadNumerica;
+    //         return {
+    //           ...item,
+    //           cantidad: cantidadNumerica, // Usar el valor numérico con decimales
+    //           subtotal: nuevoSubtotal,
+    //         };
+    //       }
+    //       return item;
+    //     });
+    //     setTotal(sumarSubtotales(nuevosItems));
+    //     return nuevosItems;
+    //   });
+    // }
+    if (unidad === "kg") return;
+
+    const cantidadNumerica = parseFloat(nuevaCantidad);
+    if (cantidadNumerica < 0) {
+      return toast.error("La cantidad debe ser un número positivo");
     }
+
+    addCarritoItems((prevItems) => {
+      const nuevosItems = prevItems.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              cantidad: cantidadNumerica,
+              subtotal: item.precioVenta * cantidadNumerica,
+            }
+          : item
+      );
+      setTotal(sumarSubtotales(nuevosItems));
+      return nuevosItems;
+    });
   };
 
   const handleCancelSale = async () => {
@@ -168,6 +195,29 @@ export default function Tienda() {
     }
   };
 
+  const handlePauseCar = async () => {
+    try {
+      if (!carritoItems || carritoItems.length === 0)
+        throw new Error("No hay productos en el carrito");
+
+      let items = localStorage.getItem("carts");
+      if (items) {
+        items = JSON.parse(items);
+        if (items.length >= 2)  throw new Error("Solo puedes pausar dos tickets");
+        localStorage.setItem("carts", JSON.stringify([...items, carritoItems[0]]));
+        handleCancelar();
+        toast.info("Carrito pausado correctamente")
+        return
+      }
+      localStorage.setItem("carts", JSON.stringify(carritoItems));
+      handleCancelar();
+      toast.info("Carrito pausado correctamente")
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
+    }
+  };
+
   const handleProcesar = async () => {
     console.log(carritoItems);
     try {
@@ -185,16 +235,15 @@ export default function Tienda() {
           usuarioId: user.id,
         }),
       });
-
-      if (!response.ok) throw new Error("Error al procesar la venta");
-
       const result = await response.json();
+      if (!response.ok) throw new Error(result.error);
+      console.log(result);
       toast.success(result.message, {
         bodyClassName: "text-foreground",
       });
       handleCancelar(); // Limpiar el carrito después de procesar la venta
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
       toast.error(error.message || "Error al procesar la venta", {
         bodyClassName: "text-foreground",
       });
@@ -202,37 +251,49 @@ export default function Tienda() {
   };
   const handleCancelar = () => {
     resetFields();
+    setSelectedKeys(new Set([]));
     addCarritoItems([]);
     setTotal(0);
   };
+  // Función para redondear al múltiplo más cercano de 0.5
+  const redondearAlCercano = (numero) => {
+    return Math.round(numero * 2) / 2;
+  };
 
   const sumarSubtotales = (carritoItems) => {
-    return carritoItems
-      .reduce((total, item) => total + item.subtotal, 0)
-      .toFixed(2);
+    // return carritoItems
+    //   .reduce((total, item) => total + item.subtotal, 0)
+    //   .toFixed(2);
+    // Sumar los subtotales y redondear al múltiplo más cercano de 0.5
+    const total = carritoItems.reduce(
+      (total, item) => total + item.subtotal,
+      0
+    );
+
+    return redondearAlCercano(total).toFixed(2);
   };
   const resetFields = () => {
     setFecha("");
     setCodigo("");
-    setSelectedKeys(new Set([]));
   };
 
-  const handleSearch = async (e) => {
+  // const handleSearch = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     await getProductByCode(); // Espera a que getProductByCode termine
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error(
+  //       error.message || "Error en la comunicacion con la base de datos",
+  //       {
+  //         bodyClassName: "text-foreground",
+  //       }
+  //     );
+  //   }
+  // };
+
+  const getProductByCode = async (e) => {
     e.preventDefault();
-    try {
-      await getProductByCode(); // Espera a que getProductByCode termine
-    } catch (error) {
-      console.error(error);
-      toast.error(
-        error.message || "Error en la comunicacion con la base de datos",
-        {
-          bodyClassName: "text-foreground",
-        }
-      );
-    }
-  };
-
-  const getProductByCode = async () => {
     try {
       if (codigo === "") throw new Error("Todos los campos son necesarios");
       const response = await fetch(
@@ -245,8 +306,9 @@ export default function Tienda() {
           },
         }
       );
-      if (!response.ok) throw new Error("Error al buscar el producto");
       const result = await response.json();
+      if (!response.ok)
+        throw new Error(result.error || "Error al buscar el producto");
       console.log(result);
 
       let cantidad;
@@ -277,13 +339,17 @@ export default function Tienda() {
         result.unidad
       );
     } catch (error) {
-      // console.log(error.message);
       resetFields();
-      throw error;
+      console.error(error);
+      toast.error(
+        error.message || "Error en la comunicacion con la base de datos",
+        {
+          bodyClassName: "text-foreground",
+        }
+      );
     }
   };
   //Guarda los productos para mostrarlos en el Select
-  const [products, setProducts] = React.useState([]);
   const getProducts = async () => {
     try {
       const response = await fetch(`http://localhost:3001/api/product`, {
@@ -302,18 +368,6 @@ export default function Tienda() {
     }
   };
 
-  const [codigo, setCodigo] = React.useState("");
-  //Guarda y maneja el cambio del Select para ponerlo en el codigowh
-  const [selectedKeys, setSelectedKeys] = React.useState("");
-  const handleSelectionChange = (keys) => {
-    setSelectedKeys(keys);
-    setCodigo(keys);
-  };
-
-  React.useEffect(() => {
-    getProducts();
-  }, []);
-
   React.useEffect(() => {
     const date = new Date();
     const formattedDate =
@@ -329,10 +383,11 @@ export default function Tienda() {
       ":" +
       String(date.getSeconds()).padStart(2, "0");
     setFecha(formattedDate);
-  }, [codigo]);
+  }, [codigo, products, carritoItems]);
 
   const [isShiftStarted, setIsShiftStarted] = React.useState(false);
   React.useEffect(() => {
+    getProducts();
     if (localStorage.getItem("shift") == "true") {
       setIsShiftStarted(true);
     }
@@ -341,6 +396,7 @@ export default function Tienda() {
   if (!isShiftStarted) {
     return <NoShift />;
   }
+
   return (
     <div className="w-full h-screen p-5 ">
       <h2 className="text-4xl flex gap-2 mb-5">
@@ -350,7 +406,7 @@ export default function Tienda() {
         <form
           autoComplete="off"
           className="flex"
-          onSubmit={(e) => handleSearch(e)}
+          onSubmit={(e) => getProductByCode(e)}
         >
           <Input
             type="text"
@@ -405,6 +461,8 @@ export default function Tienda() {
         </div>
         <div className="w-[30%]">
           <TicketPreview
+            handlePauseCar={handlePauseCar}
+            handleCarritoAdd={handleCarritoAdd}
             total={total}
             handleCancelarSale={handleCancelSale}
             handleProcesar={handleProcesar}

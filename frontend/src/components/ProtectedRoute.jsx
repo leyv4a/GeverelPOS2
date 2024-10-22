@@ -8,7 +8,7 @@ export default function ProtectedRoute({ children, type }) {
 
   if (!user) {
     // Si no está autenticado, redirige al login
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
 
   if (user.tipo > type) {

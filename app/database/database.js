@@ -110,10 +110,6 @@ const initializeTables = async () => {
   )
 `;
 
-  // const addStatusToSalesTable = `ALTER TABLE ventas ADD COLUMN status TEXT NOT NULL DEFAULT 'success';`;
-  // const addMotivoToSalesTable = `ALTER TABLE ventas ADD COLUMN motivoCancelacion TEXT DEFAULT NULL;`;
-  // const addFondoToShiftsTable = `ALTER TABLE turnos ADD COLUMN fondo REAL DEFAULT 0;`;
-
   try {
     await db.run(createUsersTable);
     logToFile("Users table created or already exists");
@@ -129,36 +125,11 @@ const initializeTables = async () => {
     logToFile("Transactions table created or already exists");
     await db.run(createShiftsTable);
     logToFile("Shifts table created or already exists");
-    const addNombreColumn = `
-        ALTER TABLE usuario ADD COLUMN nombre TEXT NOT NULL DEFAULT 'Sin Nombre'
-      `;
-
-    const makeUsuarioUnique = `
-        CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_usuario ON usuario (usuario)
-      `;
-
     const insertUser = `
       INSERT INTO usuario (usuario, password, tipo, nombre)
       VALUES ('gleyva', 'gleyva2511', 1, 'Gabriel Leyva Esquivel')
     `;
-
-    const dropGastos = `ALTER TABLE turnos DROP COLUMN gastos;`;
-
-    const totalVendido = `ALTER TABLE turnos DROP COLUMN totalVendido;`;
-    try {
-      // Agregar columna 'nombre' si no existe
-      await db.run(addNombreColumn);
-      logToFile("Column 'nombre' added to 'usuario' table or already exists");
-    } catch (err) {
-      console.log(err);
-    }
-    try {
-      // Hacer que el campo 'usuario' sea único
-      await db.run(makeUsuarioUnique);
-      logToFile("Unique index on 'usuario' created or already exists");
-    } catch (err) {
-      console.log(err);
-    }
+    
     try {
       // Insertar el nuevo usuario
       await db.run(insertUser);
@@ -166,29 +137,7 @@ const initializeTables = async () => {
     } catch (err) {
       console.log(err);
     }
-    try {
-      await db.run(dropGastos)
-    } catch (error) {
-      console.log(error)
-    }
-    try {
-      await db.run(totalVendido)
-    } catch (error) {
-      console.log(error)
-    }
-    // try {
-    //   await db.run(addStatusToSalesTable);
-    //   logToFile("Sales table status column added or already exists");
-    // } catch (error) {}
-    // try {
-    //   await db.run(addMotivoToSalesTable);
-    //   logToFile("Sales table motivo column added or already exists");
-    // } catch (error) {}
-    // try {
-    //   await db.run(addFondoToShiftsTable);
-    //   logToFile("Shifts table fondo column added or already exists");
-    // } catch (error) {
-    // }
+
   } catch (err) {
     logToFile("Error initializing tables: " + err.message);
     console.log(err);

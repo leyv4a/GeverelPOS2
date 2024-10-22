@@ -63,7 +63,7 @@ export default function Sidebar({ children }) {
           <div
             className={`
               flex justify-between items-center
-              overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}
+              overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0 h-0"}
           `}
           >
             <div className="leading-4">

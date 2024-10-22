@@ -8,6 +8,7 @@ import {
   TableCell,
   Tooltip,
   getKeyValue,
+  Pagination,
 } from "@nextui-org/react";
 import { FaEye } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -37,27 +38,30 @@ export default function Turnos() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ inicio, cierre }),
-        
       }).then((data) => data.json());
       const updatedResponse = {
-        ...data1,  // Copia los datos actuales del response
-        userName: userName  // Agrega el nombre del usuario (verifica que el usuario esté definido)
+        ...data1, // Copia los datos actuales del response
+        userName: userName, // Agrega el nombre del usuario (verifica que el usuario esté definido)
       };
       setData(updatedResponse);
       setIsDataLoaded(true);
     } catch (error) {
       console.log(error);
     } finally {
-     
     }
   };
 
-//   const handleClick = async (inicio, cierre) => {
-//     await fetchData(inicio, cierre);
-//     // if (isDataLoaded) {
-//     //   navigate(location.pathname, { state: { data: data } });
-//     // }
-//   };
+  //   const handleClick = async (inicio, cierre) => {
+  //     await fetchData(inicio, cierre);
+  //     // if (isDataLoaded) {
+  //     //   navigate(location.pathname, { state: { data: data } });
+  //     // }
+  //   };
+
+  const [page, setPage] = React.useState(1);
+  const rowsPerPage = 9;
+
+  
 
   const [shifts, setShifts] = React.useState([]);
   const [data, setData] = React.useState([]);
@@ -121,10 +125,34 @@ export default function Turnos() {
         return cellValue;
     }
   }, []);
+
+  const pages = Math.ceil(shifts.length / rowsPerPage);
+
+  const items = React.useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return shifts.slice(start, end);
+  }, [page, shifts]);
   return (
     <div className="w-full h-full flex p-4 gap-5">
-      <div className="h-full">
-        <Table aria-label="Example table with custom cells">
+      <div className="min-h-full">
+        <Table
+          bottomContent={
+            <div className="flex w-full justify-center">
+              <Pagination
+                isCompact
+                showControls
+                showShadow
+                color="secondasry"
+                page={page}
+                total={pages == 0 ? 1 : pages}
+                onChange={(page) => setPage(page)}
+              />
+            </div>
+          }
+          className="min-h-full"
+        >
           <TableHeader columns={columns}>
             {(column) => (
               <TableColumn
@@ -135,7 +163,7 @@ export default function Turnos() {
               </TableColumn>
             )}
           </TableHeader>
-          <TableBody emptyContent={"No hay turnos"} items={shifts}>
+          <TableBody emptyContent={"No hay turnos"} items={items}>
             {(item) => (
               <TableRow key={item.id}>
                 {(columnKey) => (
@@ -146,7 +174,7 @@ export default function Turnos() {
           </TableBody>
         </Table>
       </div>
-      <div className="h-full w-[60%] ">
+      <div className="w-[60%] ">
         {isDataLoaded ? (
           <ShiftPdf />
         ) : (

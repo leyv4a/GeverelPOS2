@@ -78,10 +78,10 @@ export default function ProductTable({data, handleEditarCantidad,handleRemove}) 
             </Button>
           ) : column.key === 'cantidad' ? (
             <Input size='sm' className='max-w-[130px]' type='number' variant='underlined' value={item.cantidad}
-             onChange={(e) => handleEditarCantidad(item.id, e.target.value, item.unidad)} 
+             onChange={(e) => handleEditarCantidad(item.id, e.target.value, item.unidad)}
              />
           ) : column.key === 'precioVenta' || column.key === 'subtotal'  ? (
-            `$${(getKeyValue(item, column.key)).toFixed(2)}`
+            `$${getKeyValue(item, column.key) !== null && !isNaN(getKeyValue(item, column.key)) ? getKeyValue(item, column.key).toFixed(2) : 0}`
           ) : (
             <p className='capitalize'>{getKeyValue(item, column.key)}</p>
           )}
